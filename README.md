@@ -53,7 +53,28 @@ Make sure you have the virtual env activated before proceeding, your terminal sh
 Install Python Packages:  
 `pipenv sync`  
 
+
+Install Node Version Manager:  
+`brew install nvm`  
+
+Add NVM shims to your profile:  
+        mkdir ~/.nvm
+        echo 'export NVM_DIR="$HOME/.nvm" # nvm' >> ~/.profile
+        echo '. $(brew --prefix)/opt/nvm/nvm.sh # nvm' >> ~/.profile  
+
+Restart your terminal and then run:  
+`nvm install 10.16.2`  
+
+Install Yarn (NPM Package Manager):  
+`brew install yarn --without-node`  
+
+
+### To run this project:
 Run the Flask server:  
+`cd api`  
+`pipenv sync`  
 `flask run`  
 
-You can then test
+Run the React server:
+`cd frontend`  
+`yarn start`  
