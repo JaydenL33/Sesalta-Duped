@@ -37,12 +37,12 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-### `npm styleguide`
+### `npm run styleguide`
 
 Run the styleguide server
 
 [learn how to document components](https://react-styleguidist.js.org/docs/documenting.html)
 
-### `npm styleguide:build`
+### `npm run styleguide:build`
 
 Build a production HTML version
