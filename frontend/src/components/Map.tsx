@@ -12,16 +12,20 @@ const wrapperStyles = {
   margin: "0 auto"
 };
 
-class Map extends Component {
+interface MapProp {
+  country: string;
+}
+
+class Map extends Component<MapProp> {
   state = {
     highlighted: "",
     hovered: false
   };
-  handleMove = geo => {
+  handleMove = (geo: any) => {
     if (this.state.hovered) return;
     this.setState({
       hovered: true,
-      highlighted: geo.properties.CONTINENT
+      highlighted: geo.properties.NAME
     });
   };
   handleLeave = () => {
@@ -45,13 +49,13 @@ class Map extends Component {
             height: "auto"
           }}
         >
-          <ZoomableGroup center={[0, 20]} disablePanning>
+          <ZoomableGroup center={[10, 20]} disablePanning>
             <Geographies
               geography="https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json"
               disableOptimization
             >
               {(geographies, projection) =>
-                geographies.map((geography, i) => (
+                geographies.map((geography: any, i) => (
                   <Geography
                     key={i}
                     cacheId={geography.properties.ISO_A3 + i}
