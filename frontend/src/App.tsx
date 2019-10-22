@@ -2,6 +2,8 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import Map from "./components/Map.js";
+
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -19,6 +21,7 @@ const App: React.FC = () => {
           Learn React
         </a>
       </header>
+      <Map country="Australia"/>
     </div>
   );
 }
