@@ -8,41 +8,54 @@ import ListItemText from '@material-ui/core/ListItemText';
 // import InboxIcon from '@material-ui/icons/Inbox';
 // import DraftsIcon from '@material-ui/icons/Drafts';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  }),
-);
+
 
 // function ListItemLink(props: ListItemProps<'a', { button?: true }>) {
 //   return <ListItem button component="a" {...props} />;
 // }
 
-export default function SimpleList() {
-  const classes = useStyles();
 
-  return (
-    <div className={classes.root}>
-      <List component="nav" aria-label="main mailbox folders">
-        <ListItem button>
-          <ListItemText primary="Country 1" />
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Country 2" />
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Country 3" />
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Country 4" />
-        </ListItem>
-      </List>
-      <List component="nav" aria-label="secondary mailbox folders">
-      </List>
-    </div>
-  );
+
+interface IState {
+	isCorrect?: boolean
+}
+
+interface IProps { }
+
+
+export default class SimpleList extends React.Component<IProps, IState> {
+
+	constructor(props: any) {
+		super(props)
+		this.state = {
+			isCorrect: undefined,
+		};
+
+	};
+
+	render() {
+		console.log(this.state);
+		return (
+			<div>
+				<List component="nav" aria-label="main mailbox folders">
+					<ListItem button onClick={() => this.setState({ isCorrect: false })}>
+						<ListItemText primary="New Zealand" />
+					</ListItem>
+					<ListItem button onClick={() => this.setState({ isCorrect: true })}>
+						<ListItemText primary="Australia" />
+					</ListItem>
+					<ListItem button onClick={() => this.setState({ isCorrect: false })}>
+						<ListItemText primary="Austria" />
+					</ListItem>
+					<ListItem button onClick={() => this.setState({ isCorrect: false })}>
+						<ListItemText primary="China" />
+					</ListItem>
+				</List>
+				<List component="nav" aria-label="secondary mailbox folders">
+					{this.state.isCorrect !== undefined &&
+						(this.state.isCorrect ? (<p>Correct!</p>) : (<p>Incorrect!</p>))}
+				</List>
+			</div>
+		);
+	}
 }

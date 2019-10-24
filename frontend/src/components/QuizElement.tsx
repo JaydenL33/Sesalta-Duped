@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 14,
+    fontSize: 24,
   },
   pos: {
     marginBottom: 12,
@@ -32,7 +32,7 @@ export default function QuizElement() {
 
   return (
     <Container maxWidth="sm">
-        <Card className={classes.card}  >
+        <Card className={classes.card} >
         <CardContent>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
                 What is the name of the highlighted country?
