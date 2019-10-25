@@ -6,13 +6,13 @@ import NavBar from './components/Navbar';
 import QuizElement from './components/QuizElement';
 
 const App: React.FC = () => {
-  return (
-    <div className="App">
-      <NavBar/>
-      <QuizElement/>
-      
-    </div>
-  );
+	return (
+		<div className="App">
+			<NavBar />
+			<QuizElement />
+
+		</div>
+	);
 }
 
 export default App;

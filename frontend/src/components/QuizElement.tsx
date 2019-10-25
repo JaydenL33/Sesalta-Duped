@@ -10,42 +10,45 @@ import AnswerComponent from './AnswerComponent';
 import Map from './Map';
 
 const useStyles = makeStyles({
-  card: {
-    minWidth: 275,
-    marginTop: 30,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 24,
-  },
-  pos: {
-    marginBottom: 12,
-  },
+	card: {
+		minWidth: 275,
+		marginTop: 30,
+	},
+	bullet: {
+		display: 'inline-block',
+		margin: '0 2px',
+		transform: 'scale(0.8)',
+	},
+	title: {
+		fontSize: 24,
+	},
+	pos: {
+		marginBottom: 12,
+	},
 });
 
 export default function QuizElement() {
-  const classes = useStyles();
+	const classes = useStyles();
 
-  return (
-    <Container maxWidth="sm">
-        <Card className={classes.card} >
-        <CardContent>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-                What is the name of the highlighted country?
+	// // Choose a country something like this (error unless await is removed):
+	// const chosenCountry = await fetch("/api/v1/countries/random");
+
+	return (
+		<Container maxWidth="sm">
+			<Card className={classes.card} >
+				<CardContent>
+					<Typography className={classes.title} color="textSecondary" gutterBottom>
+						What is the name of the highlighted country?
             </Typography>
-            <div>
-              <Map country="Australia"/>
-            </div>
-        </CardContent>
-        <AnswerComponent/>
-        <CardActions>
-            <Button size="small">Next</Button>
-        </CardActions>
-        </Card>
-    </Container>
-  );
+					<div>
+						<Map country="Australia" />
+					</div>
+				</CardContent>
+				<AnswerComponent />
+				<CardActions>
+					<Button size="small">Next</Button>
+				</CardActions>
+			</Card>
+		</Container>
+	);
 }
