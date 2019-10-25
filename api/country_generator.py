@@ -25,11 +25,3 @@ class CountryGenerator:
                 countries.append(selection)
 
         return countries
-
-    # Returns a country object given the country's name
-    # Returns None if country is not found. Maybe change to an exception
-    def country_from_name(name) -> dict:
-        for country in countries:
-            if country["name"] == name:
-                return country
-        return None

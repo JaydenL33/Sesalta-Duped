@@ -30,8 +30,8 @@ countries = [country1,
              country2,
              country3,
              country4]
-
 country_names = [country["name"] for country in countries]
+country_capitals = [country["capital"] for country in countries]
 
 @pytest.fixture
 def system_fixture():
@@ -45,14 +45,19 @@ def system_fixture():
 
 class TestRandomCountry:
 
-    def test_country(self, system_fixture):
+    def test_random_country(self, system_fixture):
         country = system_fixture.random_country()
         assert country in countries
 
-    def test_country_name(self, system_fixture):
+    def test_random_country_name(self, system_fixture):
         country = system_fixture.random_country()
         country_name = system_fixture.format_country(country, "name")
         assert country_name in country_names
+
+    def test_random_country_capital(self, system_fixture):
+        country = system_fixture.random_country()
+        capital = system_fixture.format_country(country, "capital")
+        assert capital in country_capitals
 
     def test_random_countries_including(self, system_fixture):
         chosen_country = country1
