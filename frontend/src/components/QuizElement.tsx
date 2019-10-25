@@ -31,7 +31,7 @@ export default function QuizElement() {
 	const classes = useStyles();
 
 	// // Choose a country something like this (error unless await is removed):
-	// const chosenCountry = await fetch("/api/v1/countries/random");
+	// const chosenCountry = await fetch("/api/v1/countries/random_country/name/");
 
 	return (
 		<Container maxWidth="sm">

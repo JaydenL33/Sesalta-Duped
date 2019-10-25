@@ -1,16 +1,12 @@
-from country import Country
 from country_generator import CountryGenerator
+import json
+from system import System
 
-# Just a placeholder - add all countries from map_dump.json
-countries = [
-    Country("Australia", "Canberra", None),
-    Country("Austria", "Vienna", None),
-    Country("Solomon Islands", "Honiara", None),
-    Country("Serbia", "Belgrade", None),
-    Country("Sweden", "Stockholm", None),
-    Country("Chad", "N'Djamena", None),
-    Country("Indonesia", "Jakarta", None),
-    Country("United Kingdom", "London", None)
-]
+country_data_file = "country_data.json"
 
-country_gen = CountryGenerator(countries)
+with open(country_data_file, "r", encoding="utf-8") as file:
+    json_str = str(file.read())
+
+country_data = json.loads(json_str)
+
+system = System(country_data)
