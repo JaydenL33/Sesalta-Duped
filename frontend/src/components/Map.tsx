@@ -66,7 +66,7 @@ class Map extends Component<MapProp> {
 										style={{
 											default: {
 												fill:
-													geography.properties.NAME === `${this.props.country}`
+													geography.properties.NAME_LONG === `${this.props.country}`
 														? "#DD4132"
 														: "#F0EAD6",
 												stroke:
