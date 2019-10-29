@@ -6,8 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import AnswerComponent from './AnswerComponent';
-import Map from './Map';
+// import AnswerComponent from './AnswerComponent';
+import Map from '../Map';
 
 const useStyles = makeStyles({
   card: {
@@ -29,7 +29,6 @@ const useStyles = makeStyles({
 
 export default function QuizElement() {
   const classes = useStyles();
-
   return (
     <Container maxWidth="sm">
         <Card className={classes.card} >
@@ -38,10 +37,10 @@ export default function QuizElement() {
                 What is the name of the highlighted country?
             </Typography>
             <div>
-              <Map country="Australia"/>
+              <Map country=""/>
             </div>
         </CardContent>
-        <AnswerComponent/>
+        {/* <AnswerComponent/> */}
         <CardActions>
             <Button size="small">Next</Button>
         </CardActions>
