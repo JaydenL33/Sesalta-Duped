@@ -1,8 +1,9 @@
 from exceptions import *
 from flask import Flask, jsonify, request
+from game import Game
 import json
 import random
-from setup import system
+from setup import country_system
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -10,47 +11,71 @@ app.config["DEBUG"] = True
 """
 
 Proposed API format:
-    api / v<version> / <subject> / <request> / <format> / ?<key>=<value & ...
+    api / <subject> / <request> / ?<key>=<value> & ...
+
+    Keys may include: id, amount,
 
 Example usage:
-    /api/v1/countries/random_countries_including/capital/?country=Canada&amount=4
-    ^ returns a json list of the capital cities of 4 countries, including Canada.
-    This can be used to generate multiple choice answers.
+
+    /api/country/random/?amount=4&id=1234
+    ^ Returns a json list of 4 countries not yet used in game number 1234.
+    ^ This can be used to generate multiple choice answers.
+
+    /api/country/check/?expected=australia&observed=canada&id=1234
+    ^ Checks if the observed answer (Canada) matches the expected (Australia)
+    ^ and returns True or False. Game score will also be updated as needed.
 
 """
 
-# Returns a random country as json
-# Same as calling random_country_formatted("json")
-@app.route("/api/v1/countries/random_country/")
-def random_country():
-    return random_country_formatted("json")
 
+def get_arg(args, param_name, required=False):
+    if param_name in args:
+        return args[param_name]
+    elif required == True:
+        raise ParameterNotFoundError(param_name, args)
+    else:
+        return None
 
-# Returns a property of a random country
-# Properties: "name", "capital", "json"
-@app.route("/api/v1/countries/random_country/<format>/")
-def random_country_formatted(format):
-    format = format.lower()
-    selection = system.random_country()
-    return system.format_country(selection, format)
-
-# Include parameters:
-# "country" (country name) and
-# "amount" (number of countries including the given one). Default = 4
-@app.route("/api/v1/countries/random_countries_including/<format>/")
-def random_countries_including_formatted(format):
+# Returns the id of a new game of Sesalta
+# Params:
+# given: the given game mode for each question (not yet needed)
+# asked_for: the answer mode for each question (not yet needed)
+@app.route("/api/country/new_game/")
+def new_game():
     args = request.args
-    return_str = args
 
-    try:
-        chosen_country = args["country"]
-    except KeyError:
-        raise CountryNotFoundError()
+    given = get_arg(args, "given", required=False)
+    asked_for = get_arg(args, "given", required=False)
 
-    try:
-        amount = int(args["amount"])
-    except (TypeError, ValueError, KeyError):
-        amount = 4
+    new_game = country_system.new_game(given, asked_for)
 
-    countries = system.random_countries_including(chosen_country, amount)
-    return json.dumps(system.format_countries(countries, format))
+    return str(new_game.id)
+
+
+# Returns a list of jsons for random distinct countries
+# that have not been asked about in the given game
+# Params:
+# id: the game ID. Raises ParameterNotFoundError if not given
+# amount: the number of countries requested. Default = 1
+@app.route("/api/country/random/")
+def random_country_formatted():
+    args = request.args
+
+    id = get_arg(args, "id", required=True)
+    if amount in args:
+        amount = get_arg(args, "amount", required=False)
+    else:
+        amount = 1
+    return country_system.random_countries()
+
+# To be implemented
+@app.route("/api/country/check/")
+def check_country():
+    pass
+#     args = request.args
+#
+#     id = get_arg(args, "id", required=True)
+#     expected = get_arg(args, "expected", required=True)
+#     observed = get_arg(args, "expected", required=True)
+#
+#     country_system.answer_given(id, expected, observed)
