@@ -1,6 +1,5 @@
 from exceptions import *
 from flask import Flask, jsonify, request
-from game import Game
 import json
 import random
 from setup import country_system
@@ -49,7 +48,7 @@ def new_game():
 
     new_game = country_system.new_game(given, asked_for)
 
-    return str(new_game.id)
+    return new_game.id
 
 
 # Returns a list of jsons for random distinct countries
@@ -62,11 +61,11 @@ def random_country_formatted():
     args = request.args
 
     id = get_arg(args, "id", required=True)
-    if amount in args:
-        amount = get_arg(args, "amount", required=False)
+    if "amount" in args:
+        amount = int(get_arg(args, "amount", required=False))
     else:
         amount = 1
-    return country_system.random_countries()
+    return json.dumps(country_system.random_countries(id, amount))
 
 # To be implemented
 @app.route("/api/country/check/")
