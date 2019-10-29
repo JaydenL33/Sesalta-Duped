@@ -16,7 +16,7 @@ class ParameterNotFoundError(Exception):
 
 
 class GameNotFoundError(Exception):
-    def __init__(self, game, games):
+    def __init__(self, game=None, games=None):
         super()
         print(
             f"Could not find game {game if game else ''} in games {games.keys() if games else ''}")
