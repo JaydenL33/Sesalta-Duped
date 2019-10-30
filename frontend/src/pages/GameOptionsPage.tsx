@@ -70,8 +70,6 @@ export default function QuizElement(props: Props) {
           <Typography className={classes.title} color="textSecondary" gutterBottom>
             Choose given information & solution
           </Typography>
-        </CardContent>
-        <CardActions>
           <List className={classes.list}>
             <ListItem key={0} button>
               <ListItemText primary={'country name'} />
@@ -114,15 +112,18 @@ export default function QuizElement(props: Props) {
               </ListItemSecondaryAction>
             </ListItem>
           </List>
+          </CardContent>
+        <CardActions style={{justifyContent: 'center'}}>
+          <Button 
+            component={RouterLink}
+            to="/game/play"
+            size="medium"
+            className={classes.button}
+            color="secondary"
+          >
+            Start
+          </Button>
         </CardActions>
-        <Button 
-          component={RouterLink}
-          to="/game/play"
-          size="medium"
-          className={classes.button}
-        >
-          Next
-        </Button>
       </Card>
     </Container>
   );

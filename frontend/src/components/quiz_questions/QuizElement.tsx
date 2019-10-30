@@ -10,21 +10,21 @@ import Container from '@material-ui/core/Container';
 import Map from '../Map';
 
 const useStyles = makeStyles({
-  card: {
-    minWidth: 275,
-    marginTop: 30,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 24,
-  },
-  pos: {
-    marginBottom: 12,
-  },
+	card: {
+		minWidth: 275,
+		marginTop: 30,
+	},
+	bullet: {
+		display: 'inline-block',
+		margin: '0 2px',
+		transform: 'scale(0.8)',
+	},
+	title: {
+		fontSize: 24,
+	},
+	pos: {
+		marginBottom: 12,
+	},
 });
 
 export default function QuizElement() {
