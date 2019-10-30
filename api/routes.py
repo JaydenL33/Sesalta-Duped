@@ -87,3 +87,14 @@ def check_country():
     observed = get_arg(args, "observed", required=True)
 
     return str(country_system.check_answer(id, expected, observed))
+
+# Returns a list containing a JSON for each question that has been asked.
+# JSON contains keys:
+# "points": the number of points scored for that question.
+# "potential": the maximum number of points that could be scored in that question.
+@app.route("/api/country/results/")
+def get_results():
+    args = request.args
+
+    id = get_arg(args, "id", required=True)
+    return json.dumps(country_system.get_results(id))

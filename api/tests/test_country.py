@@ -72,35 +72,51 @@ class TestRandomCountry:
 
 class TestCheckAnswer:
 
-    def testCorrectSingleAnswer(self, system_fixture):
+    def test_correct_single_answer(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
         answer = system_fixture.random_countries(id, 1)[0]
         answer_name = answer["name"]
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
+        assert system_fixture.get_results(
+            id) == [{"points": 100, "potential": 100}]
 
-    def testCorrectWithMultipleAnswers(self, system_fixture):
+    def test_correct_with_multiple_answers(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
         answer = system_fixture.random_countries(id, 4)[2]
         answer_name = answer["name"]
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
+        assert system_fixture.get_results(
+            id) == [{"points": 100, "potential": 100}]
 
-    def testIncorrectSingleAnswer(self, system_fixture):
+    def test_incorrect_single_answer(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
         answer = system_fixture.random_countries(id, 1)[0]
         answer_name = answer["name"]
         assert system_fixture.check_answer(id, answer_name, "Zimbabwe") == 0
+        assert system_fixture.check_answer(id, answer_name, answer_name) == 1
+        assert system_fixture.get_results(
+            id) == [{"points": 0, "potential": 100}]
 
-    def testIncorrectMultipleAnswer(self, system_fixture):
+    def test_incorrect_multiple_answer(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
         options = system_fixture.random_countries(id, 3)
         expected_answer_name = (options[0])["name"]
         given_answer_name = (options[1])["name"]
-        assert system_fixture.check_answer(id, expected_answer_name, given_answer_name) == 0
+
+        assert system_fixture.check_answer(
+            id, expected_answer_name, given_answer_name) == 0
+        assert system_fixture.check_answer(
+            id, given_answer_name, given_answer_name) == 0
+        assert system_fixture.check_answer(
+            id, expected_answer_name, expected_answer_name) == 1
+
+        assert system_fixture.get_results(
+            id) == [{"points": 0, "potential": 100}]
