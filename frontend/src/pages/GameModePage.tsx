@@ -51,20 +51,8 @@ interface Props {
   classes: any
 }
 
-export default function QuizElement(props: Props) {
+export default function GameHome(props: Props) {
   const classes = useStyles(props);
-  const [checked, setChecked] = React.useState([1]);
-
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-    setChecked(newChecked);
-  };
 
   return (
     <Container maxWidth="md" className={classes.root} >
