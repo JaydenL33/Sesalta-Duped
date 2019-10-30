@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Container, Box, Chip } from '@material-ui/core';
 import mainLogo from '../assets/sesaltaLogo.png';
 import Typography from '@material-ui/core/Typography';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
@@ -53,19 +54,21 @@ interface Props {
 
 export default function GameHome(props: Props) {
   const classes = useStyles(props);
+  const history = useHistory();
 
   return (
     <Container maxWidth="md" className={classes.root} >
         <Box component="span" m={1}>
-            <img src={mainLogo} className={classes.img} alt="fireSpot"/>
+            <img src={mainLogo} className={classes.img}/>
         </Box>
         <Typography variant="h2" color="textSecondary">
                 Welcome To Sesalta!
         </Typography>
         <div className={classes.horizontalItems}>
-            <Chip clickable color="secondary" className={classes.chip} label="Lone Warrior" />
-            <Chip clickable color="primary" className={classes.chip} label="I Have Friends To Dethrone" />
+            <Chip clickable onClick={() => history.push("/game/options")} color="secondary" className={classes.chip} label="Lone Warrior" />
+            <Chip clickable onClick={() => history.push("/game/options")} color="primary" className={classes.chip} label="I Have Friends To Dethrone" />
         </div>
     </Container>
   );
+
 }
