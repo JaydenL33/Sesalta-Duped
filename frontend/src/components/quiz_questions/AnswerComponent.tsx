@@ -1,9 +1,10 @@
 import React from 'react';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import { ListItem, ListItemText, ListItemSecondaryAction, Checkbox } from '@material-ui/core';
 
-interface IState {}
+interface IState {
+	selectedIndex: any,
+}
 
 interface IProps {
 	optionsList: string[],
@@ -12,17 +13,19 @@ interface IProps {
 
 
 export default class SimpleList extends React.Component<IProps, IState> {
-
-	public setOption(option: string) {
-		this.props.callback(option)
-	}
+	constructor(props: any) {
+		super(props);
+		this.state = {
+			selectedIndex: undefined,
+		};
+  	};
 
 	render() {
 		return (
 			<div>
 				<List component="nav" aria-label="main mailbox folders">
 					{this.props.optionsList.map((option, index) => {
-						return <ListItem key={index} button onClick={() => this.setOption(option)}>
+						return <ListItem key={index} selected={this.state.selectedIndex == index} button onClick={() => this.handleListItemClick(index,option)}>
 						   <ListItemText primary={option} />
 					   </ListItem>;
                   	})}
@@ -30,4 +33,9 @@ export default class SimpleList extends React.Component<IProps, IState> {
 			</div>
 		);
 	}
+
+	public handleListItemClick = (index: number, option: string) => {
+		this.props.callback(option);
+		this.setState({selectedIndex: index});
+	};
 }

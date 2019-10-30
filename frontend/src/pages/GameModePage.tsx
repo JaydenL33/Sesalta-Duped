@@ -59,7 +59,7 @@ export default function GameHome(props: Props) {
   return (
     <Container maxWidth="md" className={classes.root} >
         <Box component="span" m={1}>
-            <img src={mainLogo} className={classes.img}/>
+            <img src={mainLogo} className={classes.img} alt="Logo"/>
         </Box>
         <Typography variant="h2" color="textSecondary">
                 Welcome To Sesalta!
