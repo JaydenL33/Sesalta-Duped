@@ -72,7 +72,7 @@ export default function QuizElement(props: Props) {
           </Typography>
           <List className={classes.list}>
             <ListItem key={0} button>
-              <ListItemText primary={'country name'} />
+              <ListItemText primary={'Guess The Country Name'} />
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"
@@ -82,7 +82,7 @@ export default function QuizElement(props: Props) {
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem key={1} button>
-              <ListItemText primary={'world map'} />
+              <ListItemText primary={'Find The Country On The Map'} />
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"
@@ -92,7 +92,7 @@ export default function QuizElement(props: Props) {
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem key={2} button>
-              <ListItemText primary={'caputal city'} />
+              <ListItemText primary={'Guess The Capital City'} />
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"
@@ -102,7 +102,7 @@ export default function QuizElement(props: Props) {
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem key={3} button>
-              <ListItemText primary={'national flag'} />
+              <ListItemText primary={'Guess The National Flag'} />
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"

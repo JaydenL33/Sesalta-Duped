@@ -21,7 +21,7 @@ const Routes : React.FC<RouteProps> =
       <AppliedRoute path="/game/options" exact component={GameOptionsPage} props={appProps} />
       <AppliedRoute path="/game" exact component={GameModePage} props={appProps} />
       { /*  catch all unmatched routes */ }
-      <Route component={NotFound} />
+      <Route component={GameModePage} />
     </Switch>
 
 export default Routes ;
