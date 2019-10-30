@@ -29,14 +29,17 @@ const styles = ({
 
 interface IState {
   isCorrect?: boolean,
+  isTried: boolean
   countryObserved: string,
+  bgColor: string
 }
 
 interface IProps {
   gameID?: string,
   countryExpected: string,
   optionsList: string[],
-  classes: any
+  classes: any,
+  callback: any
 }
 
 class SelectCountryFromMap extends React.Component<IProps, IState> {
@@ -44,11 +47,32 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
 		super(props);
 		this.state = {
       isCorrect: undefined,
+      isTried: false,
       countryObserved: "",
+      bgColor: "primary"
 		};
   };
 
-  answerVerifier() {
+  /*
+    check with backend
+  */
+  async answerVerifier() {
+    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${this.state.countryObserved}&id=${this.props.gameID}`
+    const res: Promise<string> = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response: any) => response.json())
+    .then((response: any) => {
+      console.log(response);
+      return response;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+    console.log(res);
     console.log(this.props.countryExpected, this.state.countryObserved)
   }
 
@@ -56,8 +80,18 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     console.log("observed: ", countryObserved);
     this.setState({countryObserved: countryObserved})
   }
+  
+  handleButtonClick = (e: React.SyntheticEvent) => {
+    if (this.state.isTried) {
+      this.setState({ isTried: false });
+      this.props.callback(); // trigger getting new quiz and render
+    } else {
+      this.setState({ isTried: true });
+      this.answerVerifier(); 
+    }
+  }
 
-	render() {
+  render() {
     const { classes } = this.props;
     // if (this.props.gameID && this.state.optionsList.length !== 0) {
     return (
@@ -72,9 +106,16 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
                 What is the name of the highlighted country?
             </Typography>
         </CardContent>
-        <AnswerComponent optionsList={this.props.optionsList} callback={this.answerComponentCallback}/>
+        <AnswerComponent disabled={this.state.isTried} optionsList={this.props.optionsList} callback={this.answerComponentCallback}/>
         <CardActions style={{justifyContent: 'center'}}>
-            <Button className={classes.button} variant="contained" color="primary" onClick={this.answerVerifier.bind(this)} size="medium">Next</Button>
+            <Button className={classes.button} 
+              variant="contained"
+              color={this.state.isTried? "primary": "secondary"}
+              size="medium"
+              onClick={this.handleButtonClick}
+            >
+              {this.state.isTried? "next question": "Check" }
+            </Button>
         </CardActions>
         </Card>
       </Container>

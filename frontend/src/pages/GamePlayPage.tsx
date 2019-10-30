@@ -11,6 +11,7 @@ interface P {
 interface S {
   gameID: string,
   optionsList: string[],
+  needNext: boolean,
 }
 
 export default class GamePlayPage extends React.Component<P, S> {
@@ -19,6 +20,7 @@ export default class GamePlayPage extends React.Component<P, S> {
     this.state = {
       gameID: "",
       optionsList: [],
+      needNext: false, // need to get next question or not
     }
   }
 
@@ -87,6 +89,22 @@ export default class GamePlayPage extends React.Component<P, S> {
     });
   }
 
+  nextQuestionPlsCallback = async() => {
+    // this.setState({ needNext: next })
+    try {
+      const id: string = await this.getGameID();
+      console.log(id);
+      this.setState({ gameID: id });
+      
+      const ops: [] = await this.getRandomCountryOptions();
+      const countrylist: string[] = this.getCountries(ops);
+      console.log(countrylist);
+      this.setState({ optionsList: countrylist });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   render() {
     if (this.state.gameID !== "") {
       return (
@@ -95,6 +113,7 @@ export default class GamePlayPage extends React.Component<P, S> {
             gameID={this.state.gameID}
             countryExpected={this.state.optionsList[Math.floor(Math.random() * this.state.optionsList.length)]}
             optionsList={this.state.optionsList}
+            callback={this.nextQuestionPlsCallback}
           />
         </div>
       )

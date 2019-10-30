@@ -4,7 +4,6 @@ import GamePlayPage from "./pages/GamePlayPage";
 import GameModePage from "./pages/GameModePage";
 import GameOptionsPage from "./pages/GameOptionsPage";
 import AppliedRoute from "./components/AppliedRoute";
-import NotFound from "./pages/NotFound";
 // import AuthenticatedRoute from "./components/AuthenticatedRoute";
 // import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
