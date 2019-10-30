@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, BrowserRouter, Route } from "react-router-dom";
 import GamePlayPage from "./pages/GamePlayPage";
-// import GameModePage from "./pages/GameModePage";
+import GameModePage from "./pages/GameModePage";
 import GameOptionsPage from "./pages/GameOptionsPage";
 import AppliedRoute from "./components/AppliedRoute";
 import NotFound from "./pages/NotFound";
@@ -20,6 +20,7 @@ const Routes : React.FC<RouteProps> =
       {/* <AppliedRoute path="/mode" exact component={GameModePage} props={appProps} /> */}
       <AppliedRoute path="/game/play" exact component={GamePlayPage} props={appProps} />
       <AppliedRoute path="/game/options" exact component={GameOptionsPage} props={appProps} />
+      <AppliedRoute path="/game/mode" exact component={GameModePage} props={appProps} />
       { /*  catch all unmatched routes */ }
       <Route component={NotFound} />
     </Switch>
