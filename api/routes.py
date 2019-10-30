@@ -71,14 +71,19 @@ def random_country_formatted():
         amount = 1
     return json.dumps(country_system.random_countries(id, amount))
 
-# To be implemented
+# Takes the answer given in a game.
+# Returns: string "1" if answer was correct. Otherwise string "0"
+# Handles score updates for the question
+# Params:
+# id: the game ID
+# expected: the name of the correct answer (e.g. "Australia")
+# observed: the name of the given answer (e.g. "Canada")
 @app.route("/api/country/check/")
 def check_country():
-    pass
-#     args = request.args
-#
-#     id = get_arg(args, "id", required=True)
-#     expected = get_arg(args, "expected", required=True)
-#     observed = get_arg(args, "expected", required=True)
-#
-#     country_system.answer_given(id, expected, observed)
+    args = request.args
+
+    id = get_arg(args, "id", required=True)
+    expected = get_arg(args, "expected", required=True)
+    observed = get_arg(args, "observed", required=True)
+
+    return str(country_system.check_answer(id, expected, observed))
