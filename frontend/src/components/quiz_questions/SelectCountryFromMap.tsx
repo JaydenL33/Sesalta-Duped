@@ -8,9 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import AnswerComponent from './AnswerComponent';
 import Map from '../Map';
-import { withTheme, Theme } from '@material-ui/core/styles';
 
-const styles = (theme: Theme) => ({
+const styles = ({
   card: {
     minWidth: 275,
     marginTop: 50,
@@ -30,14 +29,13 @@ const styles = (theme: Theme) => ({
 
 interface IState {
   isCorrect?: boolean,
-  countryExpected: string,
   countryObserved: string,
-  optionsList: string[],
-  gameID?: string,
 }
 
 interface IProps {
-  gameID: string,
+  gameID?: string,
+  countryExpected: string,
+  optionsList: string[],
   classes: any
 }
 
@@ -46,63 +44,45 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
 		super(props);
 		this.state = {
       isCorrect: undefined,
-      countryExpected: "",
-      optionsList: [],
       countryObserved: "",
-      gameID: "",
 		};
   };
 
-  getRandomCountryAndOptions() {
-    
-  }
-
   answerVerifier() {
-    console.log(this.state.countryExpected, this.state.countryObserved)
-  }
-
-  componentDidMount() {
-    this.setState({
-      gameID : this.props.gameID,
-    });
-  }
-
-  UNSAFE_componentWillMount() {
-    let optionsList = this.getRandomCountryAndOptions();
-    // this.setState({ optionsList });
+    console.log(this.props.countryExpected, this.state.countryObserved)
   }
 
   answerComponentCallback = (countryObserved: string) => {
+    console.log("observed: ", countryObserved);
     this.setState({countryObserved: countryObserved})
   }
 
-
 	render() {
     const { classes } = this.props;
-    if (this.state.gameID && this.state.optionsList) {
-      return (
-        <Container maxWidth="sm">
-          <Card className={classes.card}>
-          <CardContent>
-            {/* Debugging purposes {this.state.countryExpected} {this.state.countryObserved} */}
-              <div>
-                <Map country={this.state.countryExpected}/>
-              </div>
-              <Typography className={classes.title} gutterBottom>
-                  What is the name of the highlighted country?
-              </Typography>
-          </CardContent>
-          <AnswerComponent optionsList={this.state.optionsList} callback={this.answerComponentCallback}/>
-          <CardActions style={{justifyContent: 'center'}}>
-              <Button className={classes.button} variant="contained" color="primary" onClick={this.answerVerifier.bind(this)} size="medium">Next</Button>
-          </CardActions>
-          </Card>
-        </Container>
-      );
-      } else {
-        return null
-      }
+    // if (this.props.gameID && this.state.optionsList.length !== 0) {
+    return (
+      <Container maxWidth="sm">
+        <Card className={classes.card}>
+        <CardContent>
+          {/* Debugging purposes {this.state.countryExpected} {this.state.countryObserved} */}
+            <div>
+              <Map country={this.props.countryExpected}/>
+            </div>
+            <Typography className={classes.title} gutterBottom>
+                What is the name of the highlighted country?
+            </Typography>
+        </CardContent>
+        <AnswerComponent optionsList={this.props.optionsList} callback={this.answerComponentCallback}/>
+        <CardActions style={{justifyContent: 'center'}}>
+            <Button className={classes.button} variant="contained" color="primary" onClick={this.answerVerifier.bind(this)} size="medium">Next</Button>
+        </CardActions>
+        </Card>
+      </Container>
+    );
+    // } else {
+    //   return null
+    // }
 	}
 }
 
-export default withStyles(styles)(withTheme(SelectCountryFromMap));
+export default withStyles(styles)(SelectCountryFromMap);

@@ -10,6 +10,7 @@ interface P {
 
 interface S {
   gameID: string,
+  optionsList: string[],
 }
 
 export default class GamePlayPage extends React.Component<P, S> {
@@ -17,14 +18,28 @@ export default class GamePlayPage extends React.Component<P, S> {
     super(props);
     this.state = {
       gameID: "",
+      optionsList: [],
     }
+  }
+
+  getCountries(optionlist: any) {
+    let res: any[] = []
+    optionlist.forEach((item: { name: any; }) => {
+      res.push(item.name);
+    })
+    return res;
   }
 
   async componentDidMount() {
     try {
-      const res: string = await this.getGameID();
-      console.log(res);
-      this.setState({ gameID: res });
+      const id: string = await this.getGameID();
+      console.log(id);
+      this.setState({ gameID: id });
+      
+      const ops: [] = await this.getRandomCountryOptions();
+      const countrylist: string[] = this.getCountries(ops);
+      console.log(countrylist);
+      this.setState({ optionsList: countrylist });
     } catch (e) {
       console.log(e);
     }
@@ -51,11 +66,36 @@ export default class GamePlayPage extends React.Component<P, S> {
     });
   }
 
+  /*
+    get random options
+  */
+  getRandomCountryOptions() {
+    const url = `http://127.0.0.1:5000/api/country/random/?amount=4&id=${this.state.gameID}`
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response: any) => response.json())
+    .then((response: any) => {
+      console.log(response);
+      return response;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  }
+
   render() {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <SelectCountryFromMap gameID={this.state.gameID}/>
+          <SelectCountryFromMap 
+            gameID={this.state.gameID}
+            countryExpected={this.state.optionsList[Math.floor(Math.random() * this.state.optionsList.length)]}
+            optionsList={this.state.optionsList}
+          />
         </div>
       )
     } else {
