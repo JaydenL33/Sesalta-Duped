@@ -16,11 +16,16 @@ import { Link as RouterLink} from 'react-router-dom'
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
     root: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      alignContent: 'center'
     },
     card: {
       marginTop: theme.spacing(5),
       marginBottom: theme.spacing(4),
-      maxHeight: 400,
+      maxHeight: 500,
+      minWidth: 300,
     },
     title: {
       fontSize: 25,
@@ -59,7 +64,7 @@ export default function QuizElement(props: Props) {
   };
 
   return (
-    <Container maxWidth="md" className={classes.root} >
+    <Container className={classes.root} >
       <Card className={classes.card} >
         <CardContent>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
