@@ -3,8 +3,11 @@ from flask import Flask, jsonify, request
 import json
 import random
 from setup import country_system
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 app.config["DEBUG"] = True
 
 """
