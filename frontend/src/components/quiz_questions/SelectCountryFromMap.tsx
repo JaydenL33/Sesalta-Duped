@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import AnswerComponent from './AnswerComponent';
 import Map from '../Map';
 
-const useStyles = makeStyles({
+const styles = ({
   card: {
     minWidth: 275,
     marginTop: 30,
@@ -36,7 +36,7 @@ interface IState {
 
 interface IProps { }
 
-export default class SelectCountryFromMap extends React.Component<IProps, IState> {
+class SelectCountryFromMap extends React.Component<IProps, IState> {
 
   public getRandomCountryAndOptions() {
     // axios call
@@ -87,3 +87,5 @@ export default class SelectCountryFromMap extends React.Component<IProps, IState
 		);
 	}
 }
+
+export default withStyles(styles)(SelectCountryFromMap);
