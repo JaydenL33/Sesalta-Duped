@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, BrowserRouter, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import GamePlayPage from "./pages/GamePlayPage";
 import GameModePage from "./pages/GameModePage";
 import GameOptionsPage from "./pages/GameOptionsPage";
@@ -14,7 +14,6 @@ interface RouteProps {
 
 const Routes : React.FC<RouteProps> = 
  ({ appProps }) =>
-  <BrowserRouter>
     <Switch>
       {/* <AppliedRoute path="/" exact component={Home} props={childProps} /> */}
       {/* <AppliedRoute path="/mode" exact component={GameModePage} props={appProps} /> */}
@@ -24,6 +23,5 @@ const Routes : React.FC<RouteProps> =
       { /*  catch all unmatched routes */ }
       <Route component={NotFound} />
     </Switch>
-  </BrowserRouter>;
 
 export default Routes ;

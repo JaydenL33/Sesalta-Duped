@@ -46,31 +46,30 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
 		super(props);
 		this.state = {
       isCorrect: undefined,
-      countryExpected: '',
+      countryExpected: "",
       optionsList: [],
-      countryObserved: '',
+      countryObserved: "",
       gameID: "",
 		};
   };
 
-  public getRandomCountryAndOptions() {
-    // axios call
-    return { countryExpected: 'New Zealand', optionsList: ['New Zealand', 'Australia', 'India', 'Vietnam']};
+  getRandomCountryAndOptions() {
+    
   }
 
-  public answerVerifier() {
+  answerVerifier() {
     console.log(this.state.countryExpected, this.state.countryObserved)
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.setState({
       gameID : this.props.gameID,
-    })
+    });
   }
 
-  componentWillMount() {
-    let countryAndOptions = this.getRandomCountryAndOptions();
-    this.setState({ countryExpected: countryAndOptions.countryExpected, optionsList: countryAndOptions.optionsList });
+  UNSAFE_componentWillMount() {
+    let optionsList = this.getRandomCountryAndOptions();
+    // this.setState({ optionsList });
   }
 
   answerComponentCallback = (countryObserved: string) => {
@@ -80,26 +79,29 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
 
 	render() {
     const { classes } = this.props;
-
-		return (
-      <Container maxWidth="sm">
-        <Card className={classes.card}>
-        <CardContent>
-          {/* Debugging purposes {this.state.countryExpected} {this.state.countryObserved} */}
-            <div>
-              <Map country={this.state.countryExpected}/>
-            </div>
-            <Typography className={classes.title} gutterBottom>
-                 What is the name of the highlighted country?
-            </Typography>
-        </CardContent>
-        <AnswerComponent optionsList={this.state.optionsList} callback={this.answerComponentCallback}/>
-        <CardActions style={{justifyContent: 'center'}}>
-            <Button className={classes.button} variant="contained" color="primary" onClick={this.answerVerifier.bind(this)} size="medium">Next</Button>
-        </CardActions>
-        </Card>
-    </Container>
-		);
+    if (this.state.gameID && this.state.optionsList) {
+      return (
+        <Container maxWidth="sm">
+          <Card className={classes.card}>
+          <CardContent>
+            {/* Debugging purposes {this.state.countryExpected} {this.state.countryObserved} */}
+              <div>
+                <Map country={this.state.countryExpected}/>
+              </div>
+              <Typography className={classes.title} gutterBottom>
+                  What is the name of the highlighted country?
+              </Typography>
+          </CardContent>
+          <AnswerComponent optionsList={this.state.optionsList} callback={this.answerComponentCallback}/>
+          <CardActions style={{justifyContent: 'center'}}>
+              <Button className={classes.button} variant="contained" color="primary" onClick={this.answerVerifier.bind(this)} size="medium">Next</Button>
+          </CardActions>
+          </Card>
+        </Container>
+      );
+      } else {
+        return null
+      }
 	}
 }
 

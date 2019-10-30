@@ -22,9 +22,9 @@ export default class GamePlayPage extends React.Component<P, S> {
 
   async componentDidMount() {
     try {
-      const res = await this.getGameID()
+      const res: string = await this.getGameID();
       console.log(res);
-      // this.setState({ gameID: res. });
+      this.setState({ gameID: res });
     } catch (e) {
       console.log(e);
     }
@@ -33,9 +33,9 @@ export default class GamePlayPage extends React.Component<P, S> {
   /*
     get game id for this game
   */
-  async getGameID() {
+  getGameID(): Promise<string> {
     const url = "http://127.0.0.1:5000/api/country/new_game/"
-    await fetch(url, {
+    return fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +43,8 @@ export default class GamePlayPage extends React.Component<P, S> {
     })
     .then((response: any) => response.json())
     .then((response: any) => {
-      return response
+      console.log(response);
+      return response;
     })
     .catch((e) => {
       console.log(e);
@@ -51,11 +52,15 @@ export default class GamePlayPage extends React.Component<P, S> {
   }
 
   render() {
-    return (
-      <div>
-        <SelectCountryFromMap gameID={this.state.gameID}/>
-      </div>
-    )
+    if (this.state.gameID !== "") {
+      return (
+        <div>
+          <SelectCountryFromMap gameID={this.state.gameID}/>
+        </div>
+      )
+    } else {
+      return null
+    }
   }
 }
 
