@@ -3,6 +3,9 @@ from exceptions import *
 from game import Game
 import random
 
+# Make ID_RANGE this much larger for release
+ID_RANGE = 1000
+
 
 class CountrySystem:
 
@@ -40,17 +43,21 @@ class CountrySystem:
         game = self._get_game(id)
         return game.check_answer(expected, observed)
 
-    def game_score(id):
-        pass
+    def get_results(self, id):
+        game = self._get_game(id)
+        return game.get_results()
 
-        # ========================================
-        #   Private functions
-        # ========================================
+    # ========================================
+    #   Private functions
+    # ========================================
 
+    # ISSUE: Currently, this function will hang when too many games are in
+    # progress. We will need to implement a way to remove the oldest/completed
+    # games.
     def _generate_new_id(self):
-        id = random.randrange(1000)
+        id = str(random.randrange(ID_RANGE))
         while id in self._games:
-            id = random.randrange(1000)
+            id = str(random.randrange(ID_RANGE))
         return id
 
     def _get_game(self, id):
