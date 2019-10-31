@@ -50,7 +50,7 @@ interface Props {
 
 export default function QuizElement(props: Props) {
   const classes = useStyles(props);
-  const [checked, setChecked] = React.useState([1]);
+  const [checked, setChecked] = React.useState([0]);
 
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
@@ -116,7 +116,7 @@ export default function QuizElement(props: Props) {
         <CardActions style={{justifyContent: 'center'}}>
           <Button 
             component={RouterLink}
-            to="/game/play"
+            to={checked[0] === 0 ? "/game/play" : "/game/play/map"}
             size="medium"
             className={classes.button}
             color="secondary"

@@ -1,6 +1,6 @@
 // import QuizElement from '../components/quiz_questions/QuizElement';
 import React from 'react';
-import SelectCountryFromMap from '../components/quiz_questions/SelectCountryFromMap'
+import SelectCountryOnMap from '../components/quiz_questions/SelectCountryOnMap'
 // import AnswerComponent from "../components/quiz_questions/AnswerComponent";
 
 
@@ -109,12 +109,7 @@ export default class GamePlayPage extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <SelectCountryFromMap 
-            gameID={this.state.gameID}
-            countryExpected={this.state.optionsList[Math.floor(Math.random() * this.state.optionsList.length)]}
-            optionsList={this.state.optionsList}
-            callback={this.nextQuestionPlsCallback}
-          />
+          <SelectCountryOnMap />
         </div>
       )
     } else {
