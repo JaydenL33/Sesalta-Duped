@@ -24,7 +24,6 @@ class Map extends Component<MapProp> {
 		selected: "",
 	};
 	handleMove = (geo: any) => {
-		// console.log("handleMove",geo.properties.NAME);
 		if (this.state.hovered) return;
 		this.setState({
 			hovered: true,
@@ -32,14 +31,12 @@ class Map extends Component<MapProp> {
 		});
 	};
 	handleLeave = (geo: any) => {
-		// console.log("handleLeave",geo.properties.NAME);
 		this.setState({
 			highlighted: "",
 			hovered: false
 		});
 	};
 	handleOnClick = (geo: any) => {
-		console.log(geo.properties.NAME)
 		// my way of separating the two game modes 
 		if (!this.props.country) 
 			this.props.callback(geo.properties.NAME)

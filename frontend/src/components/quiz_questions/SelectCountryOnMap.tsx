@@ -28,55 +28,86 @@ const styles = ({
 
 interface IState {
   isCorrect?: boolean,
-  countrySelected: string,
-  countryToFind: string
+  countryObserved: string,
+  isTried: boolean
 }
 
-interface IProps { }
+
+interface IProps {
+  gameID?: string,
+  countryExpected: string,
+  classes: any,
+  callback: any
+}
 
 class SelectCountryOnMap extends React.Component<IProps, IState> {
 
-  public getRandomCountry() {
-    // axios call
-    return 'New Zealand';
-  }
-
-  public sendDataToBackend() {
-    console.log(this.state.countryToFind, this.state.countrySelected)
-  }
-  componentWillMount() {
-    let country = this.getRandomCountry();
-    this.setState({ countryToFind: country });
-  }
-
-	constructor(props: any) {
+  constructor(props: any) {
 		super(props)
 		this.state = {
       isCorrect: undefined,
-      countryToFind: '',
-      countrySelected: '',
+      countryObserved: '',
+      isTried: false,
 		};
   };
+
+  async answerVerifier() {
+    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${this.state.countryObserved}&id=${this.props.gameID}`
+    const res: Promise<string> = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response: any) => response.json())
+    .then((response: any) => {
+      console.log(response);
+      this.setState({isCorrect: response})
+      return response;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+    console.log(res);
+    console.log(this.props.countryExpected, this.state.countryObserved)
+  }
+
+  handleNextQuestion = () => {
+    this.setState({ isTried: false, isCorrect: undefined });
+    this.props.callback(); // trigger getting new quiz and render
+  }
   
-  mapCallback = (countryClicked: string) => {
-    this.setState({ countrySelected: countryClicked })
+  handleMapClickCallback = (countryClicked: string) => {
+    this.setState({ countryObserved: countryClicked, isTried: true }, () => {
+      this.answerVerifier(); 
+    })
   }
 
 	render() {
+    const { classes } = this.props;
 		return (
       <Container maxWidth="sm">
-        <Card >
+        <Card className={classes.card}>
         <CardContent>
-          Debugging purposes {this.state.countrySelected} {this.state.countryToFind}
             <div>
-              <Map callback={this.mapCallback}/>
+              <Map callback={this.handleMapClickCallback}/>
             </div>
             <Typography color="textSecondary" gutterBottom>
-                Find {this.state.countryToFind} 
+                Find {this.props.countryExpected} 
             </Typography>
         </CardContent>
-        <CardActions>
-            <Button onClick={this.sendDataToBackend.bind(this)} size="small">Next</Button>
+        <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>
+        <CardActions style={{justifyContent: 'center'}}>
+            { this.state.isTried === true &&
+              <Button  className={classes.button} 
+                variant="contained"
+                color="primary"
+                size="medium"
+                onClick={this.handleNextQuestion}
+              >
+                Next Question
+              </Button>
+            }
         </CardActions>
         </Card>
     </Container>

@@ -48,19 +48,12 @@ interface Props {
   classes: any
 }
 
-export default function QuizElement(props: Props) {
+export default function OptionsPage(props: Props) {
   const classes = useStyles(props);
-  const [checked, setChecked] = React.useState([0]);
+  const [checked,setChecked] = React.useState([0]);
 
   const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-    setChecked(newChecked);
+    setChecked([value])
   };
 
   return (
@@ -76,8 +69,8 @@ export default function QuizElement(props: Props) {
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"
-                  onChange={handleToggle(0)}
-                  checked={checked.indexOf(0) !== -1}
+                  onChange={handleToggle(1)}
+                  checked={checked.indexOf(1) === 0}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -86,8 +79,8 @@ export default function QuizElement(props: Props) {
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"
-                  onChange={handleToggle(1)}
-                  checked={checked.indexOf(1) !== -1}
+                  onChange={handleToggle(2)}
+                  checked={checked.indexOf(2) === 0}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -96,8 +89,8 @@ export default function QuizElement(props: Props) {
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"
-                  onChange={handleToggle(2)}
-                  checked={checked.indexOf(2) !== -1}
+                  onChange={handleToggle(3)}
+                  checked={checked.indexOf(3) === 0}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -106,8 +99,8 @@ export default function QuizElement(props: Props) {
               <ListItemSecondaryAction>
                 <Checkbox
                   edge="end"
-                  onChange={handleToggle(3)}
-                  checked={checked.indexOf(3) !== -1}
+                  onChange={handleToggle(4)}
+                  checked={checked.indexOf(4) === 0}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -116,7 +109,7 @@ export default function QuizElement(props: Props) {
         <CardActions style={{justifyContent: 'center'}}>
           <Button 
             component={RouterLink}
-            to={checked[0] === 0 ? "/game/play" : "/game/play/map"}
+            to={checked.indexOf(1) === 0 ? "/game/play" : "/game/play/map"}
             size="medium"
             className={classes.button}
             color="secondary"

@@ -10,8 +10,8 @@ interface P {
 
 interface S {
   gameID: string,
-  optionsList: string[],
   needNext: boolean,
+  countryExpected: string,
 }
 
 export default class GamePlayPage extends React.Component<P, S> {
@@ -19,7 +19,7 @@ export default class GamePlayPage extends React.Component<P, S> {
     super(props);
     this.state = {
       gameID: "",
-      optionsList: [],
+      countryExpected: '',
       needNext: false, // need to get next question or not
     }
   }
@@ -38,10 +38,9 @@ export default class GamePlayPage extends React.Component<P, S> {
       console.log(id);
       this.setState({ gameID: id });
       
-      const ops: [] = await this.getRandomCountryOptions();
-      const countrylist: string[] = this.getCountries(ops);
-      console.log(countrylist);
-      this.setState({ optionsList: countrylist });
+      const ops: any = await this.getRandomCountryOptions();
+      const country: string = ops[0].name
+      this.setState({countryExpected: country})
     } catch (e) {
       console.log(e);
     }
@@ -72,7 +71,7 @@ export default class GamePlayPage extends React.Component<P, S> {
     get random options
   */
   getRandomCountryOptions() {
-    const url = `http://127.0.0.1:5000/api/country/random/?amount=4&id=${this.state.gameID}`
+    const url = `http://127.0.0.1:5000/api/country/random/?amount=1&id=${this.state.gameID}`
     return fetch(url, {
       method: "GET",
       headers: {
@@ -96,10 +95,10 @@ export default class GamePlayPage extends React.Component<P, S> {
       console.log(id);
       this.setState({ gameID: id });
       
-      const ops: [] = await this.getRandomCountryOptions();
-      const countrylist: string[] = this.getCountries(ops);
-      console.log(countrylist);
-      this.setState({ optionsList: countrylist });
+      const ops: any = await this.getRandomCountryOptions();
+      const country: string = ops[0].name
+      this.setState({countryExpected: country})
+      // console.log(countrylist)
     } catch (e) {
       console.log(e);
     }
@@ -109,7 +108,11 @@ export default class GamePlayPage extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <SelectCountryOnMap />
+          <SelectCountryOnMap 
+            gameID={this.state.gameID}
+            countryExpected={this.state.countryExpected}
+            callback={this.nextQuestionPlsCallback}
+          />
         </div>
       )
     } else {
