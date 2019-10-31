@@ -67,6 +67,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     .then((response: any) => response.json())
     .then((response: any) => {
       console.log(response);
+      this.setState({isCorrect: response})
       return response;
     })
     .catch((e) => {
@@ -83,7 +84,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
   
   handleButtonClick = (e: React.SyntheticEvent) => {
     if (this.state.isTried) {
-      this.setState({ isTried: false });
+      this.setState({ isTried: false, isCorrect: undefined });
       this.props.callback(); // trigger getting new quiz and render
     } else {
       this.setState({ isTried: true });
@@ -107,6 +108,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
             </Typography>
         </CardContent>
         <AnswerComponent disabled={this.state.isTried} optionsList={this.props.optionsList} callback={this.answerComponentCallback}/>
+        <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>
         <CardActions style={{justifyContent: 'center'}}>
             <Button className={classes.button} 
               variant="contained"
