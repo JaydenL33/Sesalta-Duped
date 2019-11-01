@@ -39,7 +39,7 @@ class Map extends Component<MapProp> {
 	handleOnClick = (geo: any) => {
 		// my way of separating the two game modes 
 		if (!this.props.country) 
-			this.props.callback(geo.properties.NAME)
+			this.props.callback(geo.properties.NAME_LONG)
 		this.setState({
 			selected: geo.properties.NAME,
 			highlighted: geo.properties.NAME
