@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,111 +13,136 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Link as RouterLink} from 'react-router-dom'
 
-const useStyles = makeStyles((theme: Theme) => 
-  createStyles({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      alignContent: 'center'
-    },
-    card: {
-      marginTop: theme.spacing(5),
-      marginBottom: theme.spacing(4),
-      maxHeight: 500,
-      minWidth: 300,
-    },
-    title: {
-      fontSize: 25,
-    },
-    list: {
-      width: '100%',
-      display: 'block',
-      backgroundColor: theme.palette.background.paper,
-    },
-    button: {
-      display: 'block',
-      maxWidth: 50,
-      marginBottom: theme.spacing(),
-      marginLeft: theme.spacing(),
-    },
-  }),
-);
+const styles = ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+  card: {
+    marginTop: 5,
+    marginBottom: 4,
+    maxHeight: 500,
+    minWidth: 400,
+  },
+  title: {
+    fontSize: 25,
+  },
+  list: {
+    width: '100%',
+    display: 'block',
+    backgroundColor: "white",
+  },
+  button: {
+    display: 'block',
+    maxWidth: 50,
+    marginBottom: 1,
+    marginLeft: 1,
+  },
+});
 
 interface Props {
   classes: any
 }
 
-export default function OptionsPage(props: Props) {
-  const classes = useStyles(props);
-  const [checked,setChecked] = React.useState([0]);
+interface States {
+  checked: boolean[]
+  selected: number,
+}
 
-  const handleToggle = (value: number) => () => {
-    setChecked([value])
+class OptionsPage extends React.Component <Props, States> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      checked: [true, false, false, false],
+      selected: 0,
+    }
+  }
+
+  handleToggle = (value: number) => () => {
+    let newChecked = [false, false, false, false];
+    newChecked[value] = this.state.checked[value] === false;
+    console.log(newChecked);
+    console.log(this.state.selected);
+    this.setState({
+      selected: value,
+      checked: newChecked,
+    });
   };
 
-  return (
-    <Container className={classes.root} >
-      <Card className={classes.card} >
-        <CardContent>
-          <Typography className={classes.title} color="textSecondary" gutterBottom>
-            Choose given information & solution
-          </Typography>
-          <List className={classes.list}>
-            <ListItem key={0} button>
-              <ListItemText primary={'Guess The Country Name'} />
-              <ListItemSecondaryAction>
-                <Checkbox
-                  edge="end"
-                  onChange={handleToggle(1)}
-                  checked={checked.indexOf(1) === 0}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem key={1} button>
-              <ListItemText primary={'Find The Country On The Map'} />
-              <ListItemSecondaryAction>
-                <Checkbox
-                  edge="end"
-                  onChange={handleToggle(2)}
-                  checked={checked.indexOf(2) === 0}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem key={2} button>
-              <ListItemText primary={'Guess The Capital City'} />
-              <ListItemSecondaryAction>
-                <Checkbox
-                  edge="end"
-                  onChange={handleToggle(3)}
-                  checked={checked.indexOf(3) === 0}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem key={3} button>
-              <ListItemText primary={'Guess The National Flag'} />
-              <ListItemSecondaryAction>
-                <Checkbox
-                  edge="end"
-                  onChange={handleToggle(4)}
-                  checked={checked.indexOf(4) === 0}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
-          </CardContent>
-        <CardActions style={{justifyContent: 'center'}}>
-          <Button 
-            component={RouterLink}
-            to={checked.indexOf(1) === 0 ? "/game/play" : "/game/play/map"}
-            size="medium"
-            className={classes.button}
-            color="secondary"
-          >
-            Start
-          </Button>
-        </CardActions>
-      </Card>
-    </Container>
-  );
+  render () {
+    const { classes } = this.props;
+    const URLs: string[] = [
+      "/game/play",
+      "/game/play/map",
+      "/game/play/capital",
+      "/game/play/map",
+    ]
+    return (
+      <Container style={{justifyContent: 'center'}} className={classes.root} >
+        <Card className={classes.card} >
+          <CardContent>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+              Choose Game Mode
+            </Typography>
+            <List className={classes.list}>
+              <ListItem key={0} button>
+                <ListItemText primary={'Guess The Country Name'} />
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    edge="end"
+                    onChange={this.handleToggle(0)}
+                    checked={this.state.checked[0]}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem key={1} button>
+                <ListItemText primary={'Find The Country On The Map'} />
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    edge="end"
+                    onChange={this.handleToggle(1)}
+                    checked={this.state.checked[1]}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem key={2} button>
+                <ListItemText primary={'Guess The Capital City'} />
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    edge="end"
+                    onChange={this.handleToggle(2)}
+                    checked={this.state.checked[2]}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem key={3} button>
+                <ListItemText primary={'Guess The National Flag'} />
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    edge="end"
+                    onChange={this.handleToggle(3)}
+                    checked={this.state.checked[3]}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
+            </CardContent>
+          <CardActions style={{justifyContent: 'center'}}>
+            <Button
+              component={RouterLink}
+              to={URLs[this.state.selected]}
+              size="medium"
+              className={classes.button}
+              color="secondary"
+            >
+              Start
+            </Button>
+          </CardActions>
+        </Card>
+      </Container>
+    );
+  }
 }
+
+export default withStyles(styles)(OptionsPage);
