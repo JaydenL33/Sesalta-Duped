@@ -26,16 +26,22 @@ class Game:
         return random_countries
 
     def _new_question(self, countries_used):
-        new_question = Question(countries_used, len(self._questions))
+        country_names = [country["name"] for country in countries_used]
+        new_question = Question(country_names, len(self._questions))
         self._questions.append(new_question)
 
     def check_answer(self, expected, observed):
         question = self._questions[-1]
-        return question.check_answer(expected, observed, key="name")
+        return question.check_answer(expected, observed)
 
-    # To be implemented
-    def correct_answer_given(self, expected, observed):
-        self._questions[-1].correct_answer()
+    # def correct_answer_given(self, expected, observed):
+    #     self._questions[-1].correct_answer()
+
+    def get_results(self):
+        results = []
+        for question in self._questions:
+            results.append(question.to_dict())
+        return results
 
     @property
     def id(self):

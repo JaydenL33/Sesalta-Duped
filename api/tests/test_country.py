@@ -39,6 +39,10 @@ def system_fixture():
     # system.System MUST be imported after sys.path.append() code runs
     # to allow pythonpath to update
     from country_system import CountrySystem
+    from exceptions import (FormatNotFoundError,
+                            CountryNotFoundError,
+                            ParameterNotFoundError,
+                            GameNotFoundError)
 
     system_fixture = CountrySystem(countries)
     return system_fixture
@@ -72,7 +76,7 @@ class TestRandomCountry:
 
 class TestCheckAnswer:
 
-    def testCorrectSingleAnswer(self, system_fixture):
+    def test_correct_single_answer(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
@@ -80,7 +84,14 @@ class TestCheckAnswer:
         answer_name = answer["name"]
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
-    def testCorrectWithMultipleAnswers(self, system_fixture):
+        results = system_fixture.get_results(id)[0]
+        print(results)
+        assert results["points"] == 100
+        assert results["potential"] == 100
+        assert results["expected_answer"] == answer_name
+        assert results["observed_answers"] == [answer_name]
+
+    def test_correct_with_multiple_answers(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
@@ -88,19 +99,47 @@ class TestCheckAnswer:
         answer_name = answer["name"]
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
-    def testIncorrectSingleAnswer(self, system_fixture):
+        results = system_fixture.get_results(id)[0]
+        print(results)
+        assert results["points"] == 100
+        assert results["potential"] == 100
+        assert results["expected_answer"] == answer_name
+        assert results["observed_answers"] == [answer_name]
+
+    def test_incorrect_single_answer(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
         answer = system_fixture.random_countries(id, 1)[0]
         answer_name = answer["name"]
-        assert system_fixture.check_answer(id, answer_name, "Zimbabwe") == 0
+        wrong_answer = "Zimbabwe"
+        with pytest.raises(Exception):
+            system_fixture.check_answer(id, answer_name, wrong_answer) == 0
+        assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
-    def testIncorrectMultipleAnswer(self, system_fixture):
+        results = system_fixture.get_results(id)[0]
+        assert results["potential"] == 100
+        assert results["expected_answer"] == answer_name
+        assert results["observed_answers"] == [answer_name]
+
+    def test_incorrect_multiple_answer(self, system_fixture):
         game = system_fixture.new_game(None, None)
         id = game.id
 
         options = system_fixture.random_countries(id, 3)
         expected_answer_name = (options[0])["name"]
-        given_answer_name = (options[1])["name"]
-        assert system_fixture.check_answer(id, expected_answer_name, given_answer_name) == 0
+        wrong_answer_name = (options[1])["name"]
+
+        assert system_fixture.check_answer(
+            id, expected_answer_name, wrong_answer_name) == 0
+        assert system_fixture.check_answer(
+            id, wrong_answer_name, wrong_answer_name) == 0
+        assert system_fixture.check_answer(
+            id, expected_answer_name, expected_answer_name) == 1
+
+        results = system_fixture.get_results(id)[0]
+        assert results["points"] == 50
+        assert results["potential"] == 100
+        assert results["expected_answer"] == expected_answer_name
+        assert results["observed_answers"].sort() == [
+            wrong_answer_name, expected_answer_name].sort()
