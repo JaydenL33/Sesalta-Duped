@@ -91,10 +91,6 @@ export default class GamePlayPage extends React.Component<P, S> {
   nextQuestionPlsCallback = async() => {
     // this.setState({ needNext: next })
     try {
-      const id: string = await this.getGameID();
-      console.log(id);
-      this.setState({ gameID: id });
-      
       const ops: any = await this.getRandomCountryOptions();
       const country: string = ops[0].name
       this.setState({countryExpected: country})
