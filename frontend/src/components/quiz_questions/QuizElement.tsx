@@ -6,8 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import AnswerComponent from './AnswerComponent';
-import Map from './Map';
+// import AnswerComponent from './AnswerComponent';
+import Map from '../Map';
 
 const useStyles = makeStyles({
 	card: {
@@ -28,27 +28,23 @@ const useStyles = makeStyles({
 });
 
 export default function QuizElement() {
-	const classes = useStyles();
-
-	// // Choose a country something like this (error unless await is removed):
-	// const chosenCountry = await fetch("/api/v1/countries/random_country/name/");
-
-	return (
-		<Container maxWidth="sm">
-			<Card className={classes.card} >
-				<CardContent>
-					<Typography className={classes.title} color="textSecondary" gutterBottom>
-						What is the name of the highlighted country?
+  const classes = useStyles();
+  return (
+    <Container maxWidth="sm">
+        <Card className={classes.card} >
+        <CardContent>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+                What is the name of the highlighted country?
             </Typography>
-					<div>
-						<Map country="Australia" />
-					</div>
-				</CardContent>
-				<AnswerComponent />
-				<CardActions>
-					<Button size="small">Next</Button>
-				</CardActions>
-			</Card>
-		</Container>
-	);
+            <div>
+              <Map country=""/>
+            </div>
+        </CardContent>
+        {/* <AnswerComponent/> */}
+        <CardActions>
+            <Button size="small">Next</Button>
+        </CardActions>
+        </Card>
+    </Container>
+  );
 }

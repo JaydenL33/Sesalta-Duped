@@ -3,8 +3,11 @@ from flask import Flask, jsonify, request
 import json
 import random
 from setup import country_system
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 app.config["DEBUG"] = True
 
 """
@@ -20,7 +23,7 @@ Example usage:
 
     /api/country/check/?expected=australia&observed=canada&id=1234
     ^ Checks if the observed answer (Canada) matches the expected (Australia)
-    ^ and returns True or False. Game score will also be updated as needed.
+    ^ and returns "1" or "0". Game score will also be updated as needed.
 
 """
 
@@ -61,7 +64,7 @@ def new_game():
 # id: the game ID. Raises ParameterNotFoundError if not given
 # amount: the number of countries requested. Default = 1
 @app.route("/api/country/random/")
-def random_country_formatted():
+def random_countries():
     args = request.args
 
     id = get_arg(args, "id", required=True)
@@ -76,8 +79,8 @@ def random_country_formatted():
 # Handles score updates for the question
 # Params:
 # id: the game ID
-# expected: the name of the correct answer (e.g. "Australia")
-# observed: the name of the given answer (e.g. "Canada")
+# expected: the NAME_LONG of the correct answer (e.g. "Australia")
+# observed: the NAME_LONG of the given answer (e.g. "Canada")
 @app.route("/api/country/check/")
 def check_country():
     args = request.args
@@ -87,3 +90,18 @@ def check_country():
     observed = get_arg(args, "observed", required=True)
 
     return str(country_system.check_answer(id, expected, observed))
+
+# Returns a list containing a JSON for each question that has been asked.
+# JSON contains keys:
+# "question_num": an integer from 0-9 inclusive. Should be the same as that
+# JSON's index in the list.
+# "expected_answer": The NAME_LONG of the expected answer
+# "observed_answers": The NAME_LONGs of the observed answers
+# "points": the number of points scored for that question.
+# "potential": the maximum number of points that could be scored in that question.
+@app.route("/api/country/results/")
+def get_results():
+    args = request.args
+
+    id = get_arg(args, "id", required=True)
+    return json.dumps(country_system.get_results(id))

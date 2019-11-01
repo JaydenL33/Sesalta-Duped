@@ -13,13 +13,15 @@ const wrapperStyles = {
 };
 
 interface MapProp {
-	country: string;
+	country?: string;
+	callback?: any;
 }
 
 class Map extends Component<MapProp> {
 	state = {
 		highlighted: "",
-		hovered: false
+		hovered: false,
+		selected: "",
 	};
 	handleMove = (geo: any) => {
 		if (this.state.hovered) return;
@@ -28,12 +30,21 @@ class Map extends Component<MapProp> {
 			highlighted: geo.properties.NAME
 		});
 	};
-	handleLeave = () => {
+	handleLeave = (geo: any) => {
 		this.setState({
 			highlighted: "",
 			hovered: false
 		});
 	};
+	handleOnClick = (geo: any) => {
+		// my way of separating the two game modes 
+		if (!this.props.country) 
+			this.props.callback(geo.properties.NAME_LONG)
+		this.setState({
+			selected: geo.properties.NAME,
+			// highlighted: geo.properties.NAME
+		})
+	}
 	render() {
 		return (
 			<div style={wrapperStyles}>
@@ -61,8 +72,9 @@ class Map extends Component<MapProp> {
 										cacheId={geography.properties.ISO_A3 + i}
 										geography={geography}
 										projection={projection}
-										onMouseMove={this.handleMove}
-										onMouseLeave={this.handleLeave}
+										// onMouseMove={this.handleMove}
+										// onMouseLeave={this.handleLeave}
+										onClick={this.handleOnClick}
 										style={{
 											default: {
 												fill:

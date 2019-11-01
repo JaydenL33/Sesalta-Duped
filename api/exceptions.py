@@ -3,16 +3,18 @@ class FormatNotFoundError(Exception):
         super()
 
 
-class CountryNotFoundError(Exception):
-    def __init__(self, country=None):
+class AnswerNotFoundError(Exception):
+    def __init__(self, answer=None, options=[]):
         super()
-        print(f"Could not find {'(' + country + ')' if country else ''} in country list")
+        print(
+            f"Could not find {'(' + answer + ')' if answer else ''} in options {options}")
 
 
 class ParameterNotFoundError(Exception):
     def __init__(self, param=None, args=None):
         super()
-        print(f"Could not find parameter {'(' + param + ')' if param else ''} in parameters {args}")
+        print(
+            f"Could not find parameter {'(' + param + ')' if param else ''} in parameters {args}")
 
 
 class GameNotFoundError(Exception):

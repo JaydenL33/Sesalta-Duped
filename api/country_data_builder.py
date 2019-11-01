@@ -1,4 +1,3 @@
-from country import Country
 from country_generator import CountryGenerator
 import json
 
@@ -5056,10 +5055,8 @@ for country_capital in country_capitals:
     country = country_capital["country"]
     capital = country_capital["city"]
 
-    try:
+    if country in map_capitals:
         map_capitals[country] = capital
-    except KeyError:
-        print(f"{country} not on map")
 
 countries = []
 
