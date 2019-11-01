@@ -1,5 +1,5 @@
 import React from 'react';
-import SelectCountryFromMap from '../components/quiz_questions/SelectCountryFromMap'
+import SelectCapitalFromMap from '../components/quiz_questions/SelectCapitalFromMap'
 
 
 interface P {
@@ -103,7 +103,7 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <SelectCountryFromMap 
+          <SelectCapitalFromMap 
             gameID={this.state.gameID}
             countryExpected={this.state.optionsList[Math.floor(Math.random() * this.state.optionsList.length)]}
             optionsList={this.state.optionsList}
