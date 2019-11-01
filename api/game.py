@@ -27,7 +27,14 @@ class Game:
 
     def _new_question(self, countries_used):
         country_names = [country["name"] for country in countries_used]
-        new_question = Question(country_names, len(self._questions))
+
+        if len(country_names) > 1:
+            new_question = Question(country_names, len(
+                self._questions), force_answers=True)
+        else:
+            new_question = Question(country_names, len(
+                self._questions), force_answers=False)
+
         self._questions.append(new_question)
 
     def check_answer(self, expected, observed):
