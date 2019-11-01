@@ -42,7 +42,7 @@ class Map extends Component<MapProp> {
 			this.props.callback(geo.properties.NAME_LONG)
 		this.setState({
 			selected: geo.properties.NAME,
-			highlighted: geo.properties.NAME
+			// highlighted: geo.properties.NAME
 		})
 	}
 	render() {
