@@ -43,6 +43,7 @@ class CountrySystem:
         game = self._get_game(id)
         return game.check_answer(expected, observed)
 
+    # Returns a list of the results for a game
     def get_results(self, id):
         game = self._get_game(id)
         return game.get_results()

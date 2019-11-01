@@ -94,12 +94,10 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
-    // if (this.props.gameID && this.state.optionsList.length !== 0) {
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
         <CardContent>
-          {/* Debugging purposes {this.state.countryExpected} {this.state.countryObserved} */}
             <div>
               <Map country={this.props.countryExpected}/>
             </div>
@@ -122,9 +120,6 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
         </Card>
       </Container>
     );
-    // } else {
-    //   return null
-    // }
 	}
 }
 
