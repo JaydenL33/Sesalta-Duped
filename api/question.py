@@ -38,8 +38,8 @@ class Question:
         if expected not in self._options:
             raise CountryNotFoundError(expected, self._options)
 
-        if observed not in self._options:
-            raise CountryNotFoundError(observed, self._options)
+        # if observed not in self._options:
+        #     raise CountryNotFoundError(observed, self._options)
 
         # If expected does not match the answer previously observed as expected,
         # some error or cheating has occurred.
@@ -73,8 +73,8 @@ class Question:
             return
         if self._max_answers_reached():
             return
-        if observed_answer in self._options:
-            self._observed_answers.add(observed_answer)
+        # if observed_answer in self._options:
+        self._observed_answers.add(observed_answer)
 
     def _answered_correctly(self):
         if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
