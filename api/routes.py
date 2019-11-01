@@ -23,7 +23,7 @@ Example usage:
 
     /api/country/check/?expected=australia&observed=canada&id=1234
     ^ Checks if the observed answer (Canada) matches the expected (Australia)
-    ^ and returns True or False. Game score will also be updated as needed.
+    ^ and returns "1" or "0". Game score will also be updated as needed.
 
 """
 
@@ -64,7 +64,7 @@ def new_game():
 # id: the game ID. Raises ParameterNotFoundError if not given
 # amount: the number of countries requested. Default = 1
 @app.route("/api/country/random/")
-def random_country_formatted():
+def random_countries():
     args = request.args
 
     id = get_arg(args, "id", required=True)
@@ -79,8 +79,8 @@ def random_country_formatted():
 # Handles score updates for the question
 # Params:
 # id: the game ID
-# expected: the name of the correct answer (e.g. "Australia")
-# observed: the name of the given answer (e.g. "Canada")
+# expected: the NAME_LONG of the correct answer (e.g. "Australia")
+# observed: the NAME_LONG of the given answer (e.g. "Canada")
 @app.route("/api/country/check/")
 def check_country():
     args = request.args
