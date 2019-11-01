@@ -15,7 +15,8 @@ class Game:
     def choose_random_countries(self, amount):
         num_remaining = len(self._country_generator.remaining_countries)
         if amount > num_remaining:
-            raise ValueError(f"Cannot choose {amount} countries with {num_remaining} remaining")
+            raise ValueError(
+                f"Cannot choose {amount} countries with {num_remaining} remaining")
 
         random_countries = []
         while len(random_countries) < amount:
@@ -25,7 +26,7 @@ class Game:
         return random_countries
 
     def _new_question(self, countries_used):
-        new_question = Question(countries_used)
+        new_question = Question(countries_used, len(self._questions))
         self._questions.append(new_question)
 
     def check_answer(self, expected, observed):

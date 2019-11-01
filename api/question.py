@@ -6,8 +6,9 @@ INCORRECT = 0
 
 class Question:
 
-    def __init__(self, options):
+    def __init__(self, options, question_num):
         self._options = options
+        self._question_num = question_num
         self._correct_answer = None
         self._answered_correctly = None
         # self._time_asked = datetime.now()
