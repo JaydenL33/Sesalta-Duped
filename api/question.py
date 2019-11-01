@@ -4,7 +4,7 @@ import math
 
 CORRECT = 1
 INCORRECT = 0
-
+MAX_ANSWERS = 2
 MAX_CORRECT_ANSWER_POINTS = 100
 INCORRECT_ANSWER_POINTS = 0
 
@@ -56,8 +56,8 @@ class Question:
 
     def points_scored(self):
         if self._answered_correctly():
-            points = math.ceil(MAX_CORRECT_ANSWER_POINTS /
-                               len(self._observed_answers))
+            points = min(MAX_CORRECT_ANSWER_POINTS,
+                         math.ceil(MAX_CORRECT_ANSWER_POINTS / len(self._observed_answers)))
         else:
             points = INCORRECT_ANSWER_POINTS
         return points
@@ -71,11 +71,19 @@ class Question:
     def _add_observed_answer(self, observed_answer):
         if self._answered_correctly():
             return
+        if self._max_answers_reached():
+            return
         if observed_answer in self._options:
             self._observed_answers.add(observed_answer)
 
     def _answered_correctly(self):
         if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
+            return True
+        else:
+            return False
+
+    def _max_answers_reached(self):
+        if len(self._observed_answers) >= MAX_ANSWERS:
             return True
         else:
             return False
