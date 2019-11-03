@@ -40,7 +40,7 @@ def system_fixture():
     # to allow pythonpath to update
     from country_system import CountrySystem
     from exceptions import (FormatNotFoundError,
-                            CountryNotFoundError,
+                            AnswerNotFoundError,
                             ParameterNotFoundError,
                             GameNotFoundError)
 
@@ -85,7 +85,6 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        print(results)
         assert results["points"] == 100
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
@@ -100,7 +99,6 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        print(results)
         assert results["points"] == 100
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
@@ -113,14 +111,14 @@ class TestCheckAnswer:
         answer = system_fixture.random_countries(id, 1)[0]
         answer_name = answer["name"]
         wrong_answer = "Zimbabwe"
-        with pytest.raises(Exception):
-            system_fixture.check_answer(id, answer_name, wrong_answer) == 0
+        assert system_fixture.check_answer(id, answer_name, wrong_answer) == 0
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
-        assert results["observed_answers"] == [answer_name]
+        assert results["observed_answers"].sort() == [wrong_answer,
+                                                      answer_name].sort()
 
     def test_incorrect_then_correct_answers(self, system_fixture):
         game = system_fixture.new_game(None, None)

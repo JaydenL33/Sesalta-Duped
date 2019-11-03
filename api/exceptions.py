@@ -3,11 +3,11 @@ class FormatNotFoundError(Exception):
         super()
 
 
-class CountryNotFoundError(Exception):
-    def __init__(self, country=None, countries=[]):
+class AnswerNotFoundError(Exception):
+    def __init__(self, answer=None, options=[]):
         super()
         print(
-            f"Could not find {'(' + country + ')' if country else ''} in countries {countries}")
+            f"Could not find {'(' + answer + ')' if answer else ''} in options {options}")
 
 
 class ParameterNotFoundError(Exception):
