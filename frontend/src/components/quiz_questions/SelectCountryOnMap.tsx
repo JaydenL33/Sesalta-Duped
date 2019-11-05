@@ -23,13 +23,17 @@ const styles = {
   },
   pos: {
     marginBottom: 12
+  },
+  hidden: {
+    display: "none"
   }
 };
 
 interface IState {
   isCorrect?: boolean;
   countryObserved: string;
-  isTried: boolean;
+  // isTried: boolean;
+  showButton: boolean;
 }
 
 interface IProps {
@@ -45,39 +49,56 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
     this.state = {
       isCorrect: undefined,
       countryObserved: "",
-      isTried: false
+      // isTried: false,
+      showButton: false
     };
   }
 
   async answerVerifier() {
     const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${this.state.countryObserved}&id=${this.props.gameID}`;
-    const res: Promise<string> = await fetch(url, {
+    const res = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
       }
-    })
-      .then((response: any) => response.json())
-      .then((response: any) => {
-        console.log(response);
-        this.setState({ isCorrect: response });
-        return response;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-    console.log(res);
-    console.log(this.props.countryExpected, this.state.countryObserved);
+    });
+    const response = await res.json();
+    this.setState({ isCorrect: response });
+    return response;
+  }
+
+  async attemptChecker(correctBoolean: number) {
+    const gameResultsResponse = await fetch(
+      `http://127.0.0.1:5000/api/country/results/?id=${this.props.gameID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    let gameResults = await gameResultsResponse.json();
+
+    console.log("these are the game results", gameResults);
+    const currentQuestion = gameResults.length;
+    if (
+      gameResults[currentQuestion - 1].observed_answers.length > 1 ||
+      correctBoolean === 1
+    ) {
+      console.log("setting show button");
+      this.setState({ showButton: true });
+    }
   }
 
   handleNextQuestion = () => {
-    this.setState({ isTried: false, isCorrect: undefined });
+    this.setState({ showButton: false, isCorrect: undefined });
     this.props.callback(); // trigger getting new quiz and render
   };
 
   handleMapClickCallback = (countryClicked: string) => {
-    this.setState({ countryObserved: countryClicked, isTried: true }, () => {
-      this.answerVerifier();
+    this.setState({ countryObserved: countryClicked }, async () => {
+      const correctBoolean = await this.answerVerifier();
+      this.attemptChecker(correctBoolean);
     });
   };
 
@@ -99,17 +120,18 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
               (this.state.isCorrect ? "Correct" : "Wrong")}
           </Typography>
           <CardActions style={{ justifyContent: "center" }}>
-            {this.state.isTried === true && (
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="primary"
-                size="medium"
-                onClick={this.handleNextQuestion}
-              >
-                Next Question
-              </Button>
-            )}
+            <Button
+              // className={classes.button}
+              className={
+                this.state.showButton ? classes.button : classes.hidden
+              }
+              variant="contained"
+              color="primary"
+              size="medium"
+              onClick={this.handleNextQuestion}
+            >
+              Next Question
+            </Button>
           </CardActions>
         </Card>
       </Container>
