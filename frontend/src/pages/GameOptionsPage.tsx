@@ -76,7 +76,7 @@ class OptionsPage extends React.Component <Props, States> {
       "/game/play",
       "/game/play/map",
       "/game/play/capital",
-      "/game/play/map",
+      "/game/play/flag",
     ]
     return (
       <Container style={{justifyContent: 'center'}} className={classes.root} >
