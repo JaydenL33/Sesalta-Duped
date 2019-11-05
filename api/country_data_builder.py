@@ -7,7 +7,7 @@ topo_data = [
             [0, 1, 2, 3, 4, 5]
         ],
         "type": "Polygon",
-                "properties": {
+        "properties": {
             "NAME": "Afghanistan",
             "NAME_LONG": "Afghanistan",
             "ABBREV": "Afg.",
@@ -5047,9 +5047,17 @@ country_capitals = [
 
 map_capitals = {}
 
+filtered_topo_data = {}
+
 for stats in topo_data:
-    country = (stats["properties"])["NAME_LONG"]
+    properties = stats["properties"]
+    country = properties["NAME_LONG"]
     map_capitals[country] = None
+    filtered_topo_data[country] = {
+        "name": country,
+        "iso_a2": properties["ISO_A2"]
+        # "continent": properties["CONTINENT"]
+    }
 
 for country_capital in country_capitals:
     country = country_capital["country"]
@@ -5057,17 +5065,19 @@ for country_capital in country_capitals:
 
     if country in map_capitals:
         map_capitals[country] = capital
+        filtered_topo_data[country]["capital"] = capital
 
 countries = []
 
-for country, capital in map_capitals.items():
+for country, data in filtered_topo_data.items():
     if capital == None:
         print(f"{country} has no capital")
 
     countries.append(
         {
-            "name": country,
-            "capital": capital
+            "name": data["name"],
+            "capital": data["capital"],
+            "iso_a2": data["iso_a2"],
         }
     )
 
