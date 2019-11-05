@@ -1,8 +1,3 @@
-class FormatNotFoundError(Exception):
-    def __init__(self):
-        super()
-
-
 class AnswerNotFoundError(Exception):
     def __init__(self, answer=None, options=[]):
         super()
@@ -10,11 +5,9 @@ class AnswerNotFoundError(Exception):
             f"Could not find {'(' + answer + ')' if answer else ''} in options {options}")
 
 
-class ParameterNotFoundError(Exception):
-    def __init__(self, param=None, args=None):
+class FormatNotFoundError(Exception):
+    def __init__(self):
         super()
-        print(
-            f"Could not find parameter {'(' + param + ')' if param else ''} in parameters {args}")
 
 
 class GameNotFoundError(Exception):
@@ -22,3 +15,15 @@ class GameNotFoundError(Exception):
         super()
         print(
             f"Could not find game {game if game else ''} in games {games.keys() if games else ''}")
+
+
+class MaxQuestionsReached(Exception):
+    def __init__(self):
+        super()
+
+
+class ParameterNotFoundError(Exception):
+    def __init__(self, param=None, args=None):
+        super()
+        print(
+            f"Could not find parameter {'(' + param + ')' if param else ''} in parameters {args}")
