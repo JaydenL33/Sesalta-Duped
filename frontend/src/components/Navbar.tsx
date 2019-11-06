@@ -4,9 +4,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import LanguageIcon from '@material-ui/icons/Language';
 import { Link as RouterLink } from 'react-router-dom'
 import Link from '@material-ui/core/Link';
 
@@ -32,8 +29,14 @@ interface S {
 
 class NavBar extends React.Component<P,S> {
   constructor(props: P) {
-    super(props);   
-    this.state = {isEnglish: true};
+    super(props);
+    if(window.location.pathname.substr(1, 2) === "en") {
+      this.state = {isEnglish: true};
+    } else if(window.location.pathname.substr(1, 2) === "jp") {
+      this.state = {isEnglish: false};
+    } else {
+      this.state = {isEnglish: true};
+    }
   }
 
   render() {
@@ -41,13 +44,20 @@ class NavBar extends React.Component<P,S> {
     const isEnglish = this.state.isEnglish;
     let LangButton;
     let HomeLink;
+    let LoginButton;
 
     if(isEnglish) {
-      LangButton = <button onClick={() => this.setState({ isEnglish: false })}>ENG</button>;
+      LangButton = <Button color="inherit" onClick={() => this.setState({ isEnglish: false })}>
+        <Link color="inherit" component={RouterLink} to="/jp/game">ENG</Link>
+      </Button>;
       HomeLink = <Link color="inherit" component={RouterLink} to="/en/game">Sesalta</Link>;
+      LoginButton = <Button color="inherit">Login</Button>;
     } else {
-      LangButton = <button onClick={() => this.setState({ isEnglish: true })}>日本語</button>;
+      LangButton = <Button color="inherit" onClick={() => this.setState({ isEnglish: true })}>
+        <Link color="inherit" component={RouterLink} to="/en/game">日本語</Link>
+      </Button>;
       HomeLink = <Link color="inherit" component={RouterLink} to="/jp/game">セサルタ</Link>;
+      LoginButton = <Button color="inherit">ログイン</Button>;
     }
 
     return (
@@ -58,7 +68,7 @@ class NavBar extends React.Component<P,S> {
             <Typography variant="h6" className={classes.title} >
               {HomeLink}
             </Typography>
-            <Button color="inherit">Login</Button>
+            {LoginButton}
           </Toolbar>
         </AppBar>
       </div>

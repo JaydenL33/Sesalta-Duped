@@ -54,13 +54,13 @@ class OptionsPage extends React.Component <Props, States> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      checked: [true, false, false, false],
+      checked: [true, false, false, false, false, false],
       selected: 0,
     }
   }
 
   handleToggle = (value: number) => () => {
-    let newChecked = [false, false, false, false];
+    let newChecked = [false, false, false, false, false, false];
     newChecked[value] = this.state.checked[value] === false;
     console.log(newChecked);
     console.log(this.state.selected);
@@ -77,6 +77,8 @@ class OptionsPage extends React.Component <Props, States> {
       "/en/game/play/map",
       "/en/game/play/capital",
       "/en/game/play/map",
+      "/en/game/play",
+      "/en/game/play",
     ]
     return (
       <Container style={{justifyContent: 'center'}} className={classes.root} >
@@ -87,7 +89,7 @@ class OptionsPage extends React.Component <Props, States> {
             </Typography>
             <List className={classes.list}>
               <ListItem key={0} button>
-                <ListItemText primary={'Guess The Country Name'} />
+                <ListItemText primary={'Identify the Country Name'} />
                 <ListItemSecondaryAction>
                   <Checkbox
                     edge="end"
@@ -97,7 +99,7 @@ class OptionsPage extends React.Component <Props, States> {
                 </ListItemSecondaryAction>
               </ListItem>
               <ListItem key={1} button>
-                <ListItemText primary={'Find The Country On The Map'} />
+                <ListItemText primary={'Find the Country on the Map'} />
                 <ListItemSecondaryAction>
                   <Checkbox
                     edge="end"
@@ -107,7 +109,7 @@ class OptionsPage extends React.Component <Props, States> {
                 </ListItemSecondaryAction>
               </ListItem>
               <ListItem key={2} button>
-                <ListItemText primary={'Guess The Capital City'} />
+                <ListItemText primary={'Identify the Capital City'} />
                 <ListItemSecondaryAction>
                   <Checkbox
                     edge="end"
@@ -117,12 +119,32 @@ class OptionsPage extends React.Component <Props, States> {
                 </ListItemSecondaryAction>
               </ListItem>
               <ListItem key={3} button>
-                <ListItemText primary={'Guess The National Flag'} />
+                <ListItemText primary={'Find the Country from its Capital City'} />
                 <ListItemSecondaryAction>
                   <Checkbox
                     edge="end"
                     onChange={this.handleToggle(3)}
                     checked={this.state.checked[3]}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem key={4} button>
+                <ListItemText primary={'Identify the Country Flag'} />
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    edge="end"
+                    onChange={this.handleToggle(4)}
+                    checked={this.state.checked[4]}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem key={5} button>
+                <ListItemText primary={'Find the Country from its Flag'} />
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    edge="end"
+                    onChange={this.handleToggle(5)}
+                    checked={this.state.checked[5]}
                   />
                 </ListItemSecondaryAction>
               </ListItem>

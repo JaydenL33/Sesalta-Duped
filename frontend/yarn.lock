@@ -1880,7 +1880,7 @@ array-flatten@^2.1.0:
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-2.1.2.tgz#24ef80a28c1a893617e2149b0c6d0d788293b099"
   integrity sha512-hNfzcOV8W4NdualtqBFPyVO+54DSJuZGY9qT4pRroB6S9e3iiido2ISIC5h9R2sPJ8H3FHCIiEnsv1lPXO3KtQ==
 
-array-includes@^3.0.3:
+array-includes@^3.0.2, array-includes@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/array-includes/-/array-includes-3.0.3.tgz#184b48f62d92d7452bb31b323165c7f8bd02266d"
   integrity sha1-GEtI9i2S10UrsxsyMWXH+L0CJm0=
@@ -4503,6 +4503,13 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+furigana-react@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/furigana-react/-/furigana-react-1.0.0.tgz#def07136bfe023438af5a258e614f8cdb91d93b4"
+  integrity sha512-1OY93TmbCxMC31HtVqcHfzBXJ6h6KOBQ2vdQrS8T6JqfrUQ+wEHovVQS3SqyLR2Vs5hdVRn9LVgEDbnANyD6vg==
+  dependencies:
+    nihongo "^1.0.1"
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -5471,6 +5478,11 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
+iskanji@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/iskanji/-/iskanji-1.0.3.tgz#914386e0ba49336c14a585234ef25bd099b4367d"
+  integrity sha1-kUOG4LpJM2wUpYUjTvJb0Jm0Nn0=
+
 isobject@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-2.1.0.tgz#f065561096a3f1da2ef46272f815c840d87e0c89"
@@ -5913,6 +5925,11 @@ jest@24.9.0:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
 
+joyo-kanji@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/joyo-kanji/-/joyo-kanji-0.2.1.tgz#5e2e8ea2b903ba9333f1680c66902fc9682ea592"
+  integrity sha1-Xi6OorkDupMz8WgMZpAvyWgupZI=
+
 js-levenshtein@^1.1.3:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/js-levenshtein/-/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"
@@ -6205,6 +6222,11 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
+
+kyoiku-kanji@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/kyoiku-kanji/-/kyoiku-kanji-0.1.0.tgz#25e936baf8a41a78b770119c0838958e416602ff"
+  integrity sha1-Jek2uvikGni3cBGcCDiVjkFmAv8=
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
@@ -6767,6 +6789,17 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+
+nihongo@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nihongo/-/nihongo-1.0.1.tgz#8eec8540c1bfee23a61f72b0bbfa8b9b8f4eb4c5"
+  integrity sha1-juyFQMG/7iOmH3Kwu/qLm49OtMU=
+  dependencies:
+    array-includes "^3.0.2"
+    iskanji "^1.0.2"
+    joyo-kanji "^0.2.1"
+    kyoiku-kanji "^0.1.0"
+    string-some "^1.0.0"
 
 no-case@^2.2.0:
   version "2.3.2"
@@ -9515,6 +9548,11 @@ string-length@^3.1.0:
   dependencies:
     astral-regex "^1.0.0"
     strip-ansi "^5.2.0"
+
+string-some@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/string-some/-/string-some-1.0.1.tgz#6dc140d0161c8de014aa2c8649eee286fc3940dd"
+  integrity sha1-bcFA0BYcjeAUqiyGSe7ihvw5QN0=
 
 string-width@^1.0.1:
   version "1.0.2"
