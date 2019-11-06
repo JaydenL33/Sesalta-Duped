@@ -1,5 +1,5 @@
 import React from 'react';
-import SelectCapitalFromMap from '../components/quiz_questions/SelectCapitalFromMap'
+import SelectCapitalFromMap from '../components/quiz_questions/SelectCapitalFromCountry'
 
 
 interface P {
