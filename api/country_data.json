@@ -57,7 +57,7 @@
 	"capital": "Belmopan"
 }, {
 	"name": "Bolivia",
-	"capital": "Sucre/La Paz"
+	"capital": "Sucre"
 }, {
 	"name": "Brazil",
 	"capital": "Brasilia"
@@ -81,10 +81,10 @@
 	"capital": "Bern"
 }, {
 	"name": "Chile",
-	"capital": "Santiago de Chile"
+	"capital": "Santiago"
 }, {
 	"name": "China",
-	"capital": "Peking"
+	"capital": "Beijing"
 }, {
 	"name": "C\u00f4te d'Ivoire",
 	"capital": "Yamoussoukro"
@@ -99,13 +99,13 @@
 	"capital": "Brazzaville"
 }, {
 	"name": "Colombia",
-	"capital": "Santaf"
+	"capital": "Bogota"
 }, {
 	"name": "Costa Rica",
-	"capital": "San Jos"
+	"capital": "San Jose"
 }, {
 	"name": "Cuba",
-	"capital": "La Habana"
+	"capital": "Havana"
 }, {
 	"name": "Northern Cyprus",
 	"capital": "North Nicosia"
@@ -114,19 +114,19 @@
 	"capital": "Nicosia"
 }, {
 	"name": "Czech Republic",
-	"capital": "Praha"
+	"capital": "Prague"
 }, {
 	"name": "Germany",
 	"capital": "Berlin"
 }, {
 	"name": "Djibouti",
-	"capital": "Djibouti"
+	"capital": "Djibouti City"
 }, {
 	"name": "Denmark",
 	"capital": "Copenhagen"
 }, {
 	"name": "Dominican Republic",
-	"capital": "Santo Domingo de Guzm"
+	"capital": "Santo Domingo"
 }, {
 	"name": "Algeria",
 	"capital": "Algiers"
@@ -147,7 +147,7 @@
 	"capital": "Tallinn"
 }, {
 	"name": "Ethiopia",
-	"capital": "Addis Abeba"
+	"capital": "Addis Ababa"
 }, {
 	"name": "Finland",
 	"capital": "Helsinki"
@@ -186,13 +186,13 @@
 	"capital": "Malabo"
 }, {
 	"name": "Greece",
-	"capital": "Athenai"
+	"capital": "Athens"
 }, {
 	"name": "Greenland",
 	"capital": "Nuuk"
 }, {
 	"name": "Guatemala",
-	"capital": "Ciudad de Guatemala"
+	"capital": "Guatemala City"
 }, {
 	"name": "Guyana",
 	"capital": "Georgetown"
@@ -225,13 +225,13 @@
 	"capital": "Baghdad"
 }, {
 	"name": "Iceland",
-	"capital": "Reykjav"
+	"capital": "Reykjav\u00edk"
 }, {
 	"name": "Israel",
 	"capital": "Jerusalem"
 }, {
 	"name": "Italy",
-	"capital": "Roma"
+	"capital": "Rome"
 }, {
 	"name": "Jamaica",
 	"capital": "Kingston"
@@ -243,7 +243,7 @@
 	"capital": "Tokyo"
 }, {
 	"name": "Kazakhstan",
-	"capital": "Astana"
+	"capital": "Nur-Sultan"
 }, {
 	"name": "Kenya",
 	"capital": "Nairobi"
@@ -261,7 +261,7 @@
 	"capital": "Prishtina"
 }, {
 	"name": "Kuwait",
-	"capital": "Kuwait"
+	"capital": "Kuwait City"
 }, {
 	"name": "Lao PDR",
 	"capital": "Vientiane"
@@ -285,7 +285,7 @@
 	"capital": "Vilnius"
 }, {
 	"name": "Luxembourg",
-	"capital": "Luxembourg [Luxemburg/L"
+	"capital": "Luxembourg City"
 }, {
 	"name": "Latvia",
 	"capital": "Riga"
@@ -300,7 +300,7 @@
 	"capital": "Antananarivo"
 }, {
 	"name": "Mexico",
-	"capital": "Ciudad de M"
+	"capital": "Mexico City"
 }, {
 	"name": "Macedonia",
 	"capital": "Skopje"
@@ -309,13 +309,13 @@
 	"capital": "Bamako"
 }, {
 	"name": "Myanmar",
-	"capital": "Rangoon (Yangon)"
+	"capital": "Naypyidaw"
 }, {
 	"name": "Montenegro",
 	"capital": "Podgorica"
 }, {
 	"name": "Mongolia",
-	"capital": "Ulan Bator"
+	"capital": "Ulaanbaatar"
 }, {
 	"name": "Mozambique",
 	"capital": "Maputo"
@@ -333,7 +333,7 @@
 	"capital": "Windhoek"
 }, {
 	"name": "New Caledonia",
-	"capital": "Noum"
+	"capital": "Noumea"
 }, {
 	"name": "Niger",
 	"capital": "Niamey"
@@ -357,13 +357,13 @@
 	"capital": "Wellington"
 }, {
 	"name": "Oman",
-	"capital": "Masqat"
+	"capital": "Muscat"
 }, {
 	"name": "Pakistan",
 	"capital": "Islamabad"
 }, {
 	"name": "Panama",
-	"capital": "Ciudad de Panam"
+	"capital": "Panama City"
 }, {
 	"name": "Peru",
 	"capital": "Lima"
@@ -375,7 +375,7 @@
 	"capital": "Port Moresby"
 }, {
 	"name": "Poland",
-	"capital": "Warszawa"
+	"capital": "Warsaw"
 }, {
 	"name": "Puerto Rico",
 	"capital": "San Juan"
@@ -384,10 +384,10 @@
 	"capital": "Pyongyang"
 }, {
 	"name": "Portugal",
-	"capital": "Lisboa"
+	"capital": "Lisbon"
 }, {
 	"name": "Paraguay",
-	"capital": "Asunci"
+	"capital": "Asunci\u00f3n"
 }, {
 	"name": "Palestine",
 	"capital": "Gaza"
@@ -396,7 +396,7 @@
 	"capital": "Doha"
 }, {
 	"name": "Romania",
-	"capital": "Bucuresti"
+	"capital": "Bucharest"
 }, {
 	"name": "Russian Federation",
 	"capital": "Moscow"
@@ -405,7 +405,7 @@
 	"capital": "Kigali"
 }, {
 	"name": "Western Sahara",
-	"capital": "El-Aai"
+	"capital": "Laayoune"
 }, {
 	"name": "Saudi Arabia",
 	"capital": "Riyadh"
@@ -450,16 +450,16 @@
 	"capital": "Stockholm"
 }, {
 	"name": "Swaziland",
-	"capital": "Mbabane"
+	"capital": "Mbabane, Lobamba"
 }, {
 	"name": "Syria",
 	"capital": "Damascus"
 }, {
 	"name": "Chad",
-	"capital": "N'Djam"
+	"capital": "N'Djamena"
 }, {
 	"name": "Togo",
-	"capital": "Lom"
+	"capital": "Lom\u00e9"
 }, {
 	"name": "Thailand",
 	"capital": "Bangkok"
@@ -498,10 +498,10 @@
 	"capital": "Montevideo"
 }, {
 	"name": "United States",
-	"capital": "Washington"
+	"capital": "Washington D.C."
 }, {
 	"name": "Uzbekistan",
-	"capital": "Toskent"
+	"capital": "Tashkent"
 }, {
 	"name": "Venezuela",
 	"capital": "Caracas"
@@ -516,7 +516,7 @@
 	"capital": "Sanaa"
 }, {
 	"name": "South Africa",
-	"capital": "Pretoria"
+	"capital": "Cape Town, Bloemfontein, Pretoria"
 }, {
 	"name": "Zambia",
 	"capital": "Lusaka"
