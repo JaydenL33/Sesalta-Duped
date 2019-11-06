@@ -1,12 +1,12 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import GamePlayPage from './pages/GamePlayPage';
-import GamePlayPageMap from './pages/GamePlayPageMap';
-import GamePlayPageFlag from './pages/GamePlayPageFlag';
-import GameModePage from './pages/GameModePage';
-import GameOptionsPage from './pages/GameOptionsPage';
-import GamePlayPageCapital from './pages/GamePlayPageCapital';
-import AppliedRoute from './components/AppliedRoute';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import GamePlayPage from "./pages/GamePlayPage";
+import GamePlayPageMap from "./pages/GamePlayPageMap";
+import GamePlayPageFlag from "./pages/GamePlayPageFlag";
+import GameModePage from "./pages/GameModePage";
+import GameOptionsPage from "./pages/GameOptionsPage";
+import GamePlayPageCapital from "./pages/GamePlayPageCapital";
+import AppliedRoute from "./components/AppliedRoute";
 // import AuthenticatedRoute from "./components/AuthenticatedRoute";
 // import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
