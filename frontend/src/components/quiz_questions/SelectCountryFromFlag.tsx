@@ -1,30 +1,33 @@
-import React from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import AnswerComponent from './AnswerComponent';
-import Flag from '../Flag';
+import React from "react";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+import AnswerComponent from "./AnswerComponent";
+import Flag from "../Flag";
 
 const styles = {
   card: {
     minWidth: 275,
-    marginTop: 50,
+    marginTop: 50
   },
   title: {
     fontSize: 24,
     fontWeight: 500,
-    fontFamily: 'Helvetica Neue',
+    fontFamily: "Helvetica Neue"
   },
   pos: {
-    marginBottom: 12,
+    marginBottom: 12
   },
   button: {
-    marginBottom: 5,
+    marginBottom: 5
   },
+  hidden: {
+    display: "none"
+  }
 };
 
 interface Country {
@@ -34,9 +37,9 @@ interface Country {
 
 interface IState {
   isCorrect?: boolean;
-  isTried: boolean;
   countryObserved: string;
   bgColor: string;
+  showButton: boolean;
 }
 
 interface IProps {
@@ -45,6 +48,8 @@ interface IProps {
   optionsList: Country[];
   classes: any;
   callback: any;
+  selectedIndex?: number | undefined;
+  indexCallback: any;
 }
 
 class SelectCountryFromFlag extends React.Component<IProps, IState> {
@@ -52,51 +57,79 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       isCorrect: undefined,
-      isTried: false,
-      countryObserved: '',
-      bgColor: 'primary',
+      countryObserved: "",
+      bgColor: "primary",
+      showButton: false
     };
   }
 
-  /*
-    check with backend
-  */
-  async answerVerifier() {
-    if (this.props.countryExpected) {
-      const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected.name}&observed=${this.state.countryObserved}&id=${this.props.gameID}`;
-      const res: Promise<string> = await fetch(url, {
-        method: 'GET',
+  answerComponentCallback = async (
+    countryObserved: string,
+    selectedIndex: number | undefined
+  ) => {
+    this.props.indexCallback(selectedIndex);
+    console.log("observed: ", countryObserved);
+    this.setState({ countryObserved: countryObserved });
+    const correctBoolean = await this.answerVerifier(countryObserved);
+    this.attemptChecker(correctBoolean);
+  };
+
+  async answerVerifier(countryObserved: string) {
+    console.log(
+      "adjusting",
+      this.props.countryExpected,
+      countryObserved,
+      this.props.gameID
+    );
+    const countryExpectedName = this.props.countryExpected
+      ? this.props.countryExpected.name
+      : "";
+    const url = `http://127.0.0.1:5000/api/country/check/?expected=${countryExpectedName}&observed=${countryObserved}&id=${this.props.gameID}`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    let response = await res.json();
+    console.log("this is the response", response);
+    this.setState({ isCorrect: response });
+    return response;
+  }
+
+  async attemptChecker(correctBoolean: number) {
+    const gameResultsResponse = await fetch(
+      `http://127.0.0.1:5000/api/country/results/?id=${this.props.gameID}`,
+      {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response: any) => response.json())
-        .then((response: any) => {
-          console.log(response);
-          this.setState({ isCorrect: response });
-          return response;
-        })
-        .catch(e => {
-          console.log(e);
-        });
-      console.log(res);
-      console.log(this.props.countryExpected.name, this.state.countryObserved);
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    let gameResults = await gameResultsResponse.json();
+
+    console.log("these are the game results", gameResults);
+    const currentQuestion = gameResults.length;
+    if (
+      gameResults[currentQuestion - 1].observed_answers.length > 1 ||
+      correctBoolean === 1
+    ) {
+      console.log("setting show button");
+      this.setState({ showButton: true });
     }
   }
 
-  answerComponentCallback = (countryObserved: string) => {
-    console.log('observed: ', countryObserved);
-    this.setState({ countryObserved: countryObserved });
-  };
-
   handleButtonClick = (e: React.SyntheticEvent) => {
-    if (this.state.isTried) {
-      this.setState({ isTried: false, isCorrect: undefined });
-      this.props.callback(); // trigger getting new quiz and render
-    } else {
-      this.setState({ isTried: true });
-      this.answerVerifier();
-    }
+    this.setState({ showButton: false, isCorrect: undefined });
+    this.props.callback(); // trigger getting new quiz and render
+    // if (this.state.isTried) {
+    //   this.setState({ isTried: false, isCorrect: undefined });
+    //   this.props.callback(); // trigger getting new quiz and render
+    // } else {
+    //   this.setState({ isTried: true });
+    //   this.answerVerifier();
+    // }
   };
 
   render() {
@@ -113,23 +146,26 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
             </Typography>
           </CardContent>
           <AnswerComponent
-            disabled={this.state.isTried}
+            selectedIndex={this.props.selectedIndex}
+            disabled={this.state.showButton}
             optionsList={this.props.optionsList.map(x => x.name)}
             callback={this.answerComponentCallback}
           />
           <Typography>
             {this.state.isCorrect !== undefined &&
-              (this.state.isCorrect ? 'Correct' : 'Wrong')}
+              (this.state.isCorrect ? "Correct" : "Wrong")}
           </Typography>
-          <CardActions style={{ justifyContent: 'center' }}>
+          <CardActions style={{ justifyContent: "center" }}>
             <Button
-              className={classes.button}
+              className={
+                this.state.showButton ? classes.button : classes.hidden
+              }
               variant="contained"
-              color={this.state.isTried ? 'primary' : 'secondary'}
+              color="secondary"
               size="medium"
               onClick={this.handleButtonClick}
             >
-              {this.state.isTried ? 'next question' : 'Check'}
+              Next Question
             </Button>
           </CardActions>
         </Card>

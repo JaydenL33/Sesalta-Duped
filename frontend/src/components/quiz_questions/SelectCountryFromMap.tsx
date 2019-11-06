@@ -46,7 +46,6 @@ interface IProps {
   callback: any;
   indexCallback: any;
   selectedIndex?: number | undefined;
-  // attemptCount: number
 }
 
 class SelectCountryFromMap extends React.Component<IProps, IState> {
@@ -54,7 +53,6 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       isCorrect: undefined,
-      // isTried: false,
       countryObserved: "",
       bgColor: "primary",
       showButton: false
