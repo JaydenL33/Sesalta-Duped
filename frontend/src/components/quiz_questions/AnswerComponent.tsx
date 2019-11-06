@@ -14,12 +14,13 @@ interface IProps {
 }
 
 export default class SimpleList extends React.Component<IProps, IState> {
-  // constructor(props: any) {
-  //   super(props);
-  //   // this.state = {
-  //   // 	selectedIndex: undefined,
-  //   // };
-  // }
+  // eslint-disable-next-line
+  constructor(props: IProps) {
+    super(props);
+    // this.state = {
+    // 	selectedIndex: undefined,
+    // };
+  }
 
   render() {
     return (

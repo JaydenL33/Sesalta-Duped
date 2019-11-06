@@ -7,7 +7,6 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
-import Map from "../Map";
 
 const styles = {
   card: {
@@ -32,41 +31,56 @@ const styles = {
 
 interface IState {
   isCorrect?: boolean;
-  // isTried: boolean
-  countryObserved: string;
+  answerObserved: string;
+  answerExpected: string;
   bgColor: string;
   showButton: boolean;
 }
 
+interface Option {
+  name: string;
+  capital: string;
+}
+
 interface IProps {
   gameID?: string;
-  countryExpected: string;
-  optionsList: string[];
+  questionCountry: string;
+  questionCapital: string;
+  optionsList: Option[];
+  countryList: string[];
+  capitalList: string[];
   classes: any;
   callback: any;
   indexCallback: any;
   selectedIndex?: number | undefined;
-  // attemptCount: number
+  mode: number;
 }
 
-class SelectCountryFromMap extends React.Component<IProps, IState> {
-  constructor(props: any) {
+class SelectCapitalOrCountry extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       isCorrect: undefined,
-      // isTried: false,
-      countryObserved: "",
+      answerObserved: "",
+      answerExpected: "",
       bgColor: "primary",
       showButton: false
     };
   }
 
+  getQuestion() {
+    if (this.props.mode === 0) {
+      return `What is the capital city of ${this.props.questionCountry}?`;
+    } else {
+      return `Which country's capital city is ${this.props.questionCapital}?`;
+    }
+  }
+
   /*
     check with backend
   */
-  async answerVerifier(countryObserved: string) {
-    console.log(this.props.countryExpected, countryObserved, this.props.gameID);
-    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${countryObserved}&id=${this.props.gameID}`;
+  async answerVerifier(answerObserved: string) {
+    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.questionCountry}&observed=${answerObserved}&id=${this.props.gameID}`;
     const res = await fetch(url, {
       method: "GET",
       headers: {
@@ -102,14 +116,24 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     }
   }
 
-  answerComponentCallback = async (
-    countryObserved: string,
-    selectedIndex: number | undefined
-  ) => {
-    console.log("observed: ", countryObserved);
+  convertCapitalToCountry(capital: string) {
+    let res = "";
+    this.props.optionsList.forEach(item => {
+      if (item.capital === capital) {
+        res = item.name;
+      }
+    })
+    return res;
+  }
+
+  answerComponentCallback = async (answerObserved: string, selectedIndex: number | undefined) => {
+    console.log("answered observed: ", answerObserved);
     this.props.indexCallback(selectedIndex);
-    this.setState({ countryObserved: countryObserved });
-    const correctBoolean = await this.answerVerifier(countryObserved);
+    let ans = answerObserved;
+    if (this.props.capitalList.includes(answerObserved)) {
+      ans = this.convertCapitalToCountry(answerObserved);
+    }
+    const correctBoolean = await this.answerVerifier(ans);
     this.attemptChecker(correctBoolean);
   };
 
@@ -117,24 +141,21 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     this.setState({ showButton: false, isCorrect: undefined });
     this.props.callback(); // trigger getting new quiz and render
   };
-  
+
   render() {
     const { classes } = this.props;
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
           <CardContent>
-            <div>
-              <Map country={this.props.countryExpected} />
-            </div>
             <Typography className={classes.title} gutterBottom>
-              What is the name of the highlighted country?
+              {this.getQuestion()}
             </Typography>
           </CardContent>
           <AnswerComponent
+            optionsList={this.props.mode === 0 ? this.props.capitalList : this.props.countryList}
             selectedIndex={this.props.selectedIndex}
             disabled={this.state.showButton}
-            optionsList={this.props.optionsList}
             callback={this.answerComponentCallback}
           />
           <Typography>
@@ -151,7 +172,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
               size="medium"
               onClick={this.handleButtonClick}
             >
-              Next Question
+              next question
             </Button>
           </CardActions>
         </Card>
@@ -160,4 +181,4 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
   }
 }
 
-export default withStyles(styles)(SelectCountryFromMap);
+export default withStyles(styles)(SelectCapitalOrCountry);
