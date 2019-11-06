@@ -6,6 +6,7 @@ import GamePlayPageFlag from "./pages/GamePlayPageFlag";
 import GameModePage from "./pages/GameModePage";
 import GameOptionsPage from "./pages/GameOptionsPage";
 import GamePlayPageCapital from "./pages/GamePlayPageCapital";
+import GameResultsPage from "./pages/GameResultsPage";
 import AppliedRoute from "./components/AppliedRoute";
 // import AuthenticatedRoute from "./components/AuthenticatedRoute";
 // import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
@@ -52,6 +53,12 @@ const Routes: React.FC<RouteProps> = ({ appProps }) => (
       path="/game"
       exact
       component={GameModePage}
+      props={appProps}
+    />
+    <AppliedRoute
+      path="/game/results"
+      exact
+      component={GameResultsPage}
       props={appProps}
     />
     {/*  catch all unmatched routes */}
