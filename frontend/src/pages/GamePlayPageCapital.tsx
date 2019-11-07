@@ -8,6 +8,7 @@ interface P {
 interface option {
   name: string;
   capital: string;
+  iso_a2: string;
 }
 
 interface S {
@@ -34,7 +35,8 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
       mode: 0,
       question: {
         name: "",
-        capital: ""
+        capital: "",
+        iso_a2: "",
       },
       selectedIndex: undefined,
       randomIndexForOptions: 0

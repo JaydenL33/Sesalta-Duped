@@ -43,6 +43,7 @@ interface IState {
 interface Option {
   name: string;
   capital: string;
+  iso_a2: string;
 }
 
 interface QuestionData {
@@ -118,32 +119,34 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
     );
     let gameResults = await gameResultsResponse.json();
     let gr: Array<QuestionData> = JSON.parse(JSON.stringify(gameResults));
-    gr.forEach(item => {
-      item.observed_answers.forEach( (ans, index) => {
-        if (this.props.mode === 0 && this.props.countryList.includes(item.observed_answers[index])) {
-          item.observed_answers[index] = this.convertCountryToCapital(ans);
-        }
-      });
-      if (this.props.mode === 1 && this.props.capitalList.includes(item.expected_answer)) {
-        item.expected_answer = this.convertCapitalToCountry(item.expected_answer);
+    const currentQuestion = gr.length;
+    let newGR: QuestionData = gr[currentQuestion-1];
+    for (let j = 0; j < newGR.observed_answers.length; j++) {
+      if (this.props.mode === 0 && this.props.countryList.includes(newGR.observed_answers[j])) {
+        newGR.observed_answers[j] = this.convertCountryToCapital(newGR.observed_answers[j]);
       }
-
-    });
-    console.log("these are the game results", gr);
-    this.setState({ gameResults: gr });
-    const currentQuestion = gameResults.length;
+    }
+    if (this.props.mode === 1 && this.props.capitalList.includes(newGR.expected_answer)) {
+      newGR.expected_answer = this.convertCapitalToCountry(newGR.expected_answer);
+    }
+    if (this.props.mode === 0 && this.props.countryList.includes(newGR.expected_answer)) {
+      newGR.expected_answer = this.convertCountryToCapital(newGR.expected_answer);
+    }
+    let oldGR = [...this.state.gameResults];
+    oldGR[currentQuestion - 1] = newGR;
+    this.setState({ gameResults: oldGR });
+    console.log("these are the game results", this.state.gameResults);
     if (
       gameResults[currentQuestion - 1].observed_answers.length > 1 ||
       correctBoolean === 1
     ) {
-      console.log("setting show button");
       if (currentQuestion === 3) this.setState({ showFinishButton: true });
       else this.setState({ showButton: true });
     }
   }
 
-  convertCountryToCapital(country: string) {
-    let res = "";
+  convertCountryToCapital(country: string): string {
+    let res = "not found";
     this.props.optionsList.forEach(item => {
       if (item.name === country) {
         res = item.capital;
@@ -152,7 +155,7 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
     return res;
   }
 
-  convertCapitalToCountry(capital: string) {
+  convertCapitalToCountry(capital: string): string {
     let res = "";
     this.props.optionsList.forEach(item => {
       if (item.capital === capital) {
