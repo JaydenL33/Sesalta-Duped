@@ -888,27 +888,6 @@ topo_data = [
         }
     }, {
         "arcs": [
-            [215, 216]
-        ],
-        "type": "Polygon",
-                "properties": {
-            "NAME": "N. Cyprus",
-            "NAME_LONG": "Northern Cyprus",
-            "ABBREV": "N. Cy.",
-            "FORMAL_EN": "Turkish Republic of Northern Cyprus",
-            "POP_EST": 265100,
-            "POP_RANK": 10,
-            "GDP_MD_EST": 3600,
-            "POP_YEAR": 2013,
-            "GDP_YEAR": 2013,
-            "ISO_A2": "-99",
-            "ISO_A3": "-99",
-            "CONTINENT": "Asia",
-            "REGION_UN": "Asia",
-            "SUBREGION": "Western Asia"
-        }
-    }, {
-        "arcs": [
             [-217, 217]
         ],
         "type": "Polygon",
@@ -3333,27 +3312,6 @@ topo_data = [
         }
     }, {
         "arcs": [
-            [-230, 550, 551, -262]
-        ],
-        "type": "Polygon",
-                "properties": {
-            "NAME": "Somaliland",
-            "NAME_LONG": "Somaliland",
-            "ABBREV": "Solnd.",
-            "FORMAL_EN": "Republic of Somaliland",
-            "POP_EST": 3500000,
-            "POP_RANK": 12,
-            "GDP_MD_EST": 12250,
-            "POP_YEAR": 2013,
-            "GDP_YEAR": 2013,
-            "ISO_A2": "-99",
-            "ISO_A3": "-99",
-            "CONTINENT": "Africa",
-            "REGION_UN": "Africa",
-            "SUBREGION": "Eastern Africa"
-        }
-    }, {
-        "arcs": [
             [-263, -552, 552, -388]
         ],
         "type": "Polygon",
@@ -4045,6 +4003,7 @@ topo_data = [
         }
     }
 ]
+
 
 country_capitals = [
     {
