@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
+import { Link } from "react-router-dom";
 
 const styles = {
   card: {
@@ -35,11 +36,21 @@ interface IState {
   answerExpected: string;
   bgColor: string;
   showButton: boolean;
+  showFinishButton: boolean;
+  gameResults: QuestionData[];
 }
 
 interface Option {
   name: string;
   capital: string;
+}
+
+interface QuestionData {
+  expected_answer: string;
+  observed_answers: string[];
+  points: number;
+  potentional: number;
+  question_num: number;
 }
 
 interface IProps {
@@ -64,7 +75,9 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       answerObserved: "",
       answerExpected: "",
       bgColor: "primary",
-      showButton: false
+      showButton: false,
+      showFinishButton: false,
+      gameResults: []
     };
   }
 
@@ -104,7 +117,7 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       }
     );
     let gameResults = await gameResultsResponse.json();
-
+    this.setState({ gameResults: JSON.parse(JSON.stringify(gameResults)) });
     console.log("these are the game results", gameResults);
     const currentQuestion = gameResults.length;
     if (
@@ -112,7 +125,8 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      this.setState({ showButton: true });
+      if (currentQuestion === 3) this.setState({ showFinishButton: true });
+      else this.setState({ showButton: true });
     }
   }
 
@@ -174,6 +188,20 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
             >
               next question
             </Button>
+            <Link
+              to={{ pathname: "/game/results", state: this.state.gameResults }}
+            >
+              <Button
+                className={
+                  this.state.showFinishButton ? classes.button : classes.hidden
+                }
+                variant="contained"
+                color="primary"
+                size="medium"
+              >
+                Finish!
+              </Button>
+            </Link>
           </CardActions>
         </Card>
       </Container>
