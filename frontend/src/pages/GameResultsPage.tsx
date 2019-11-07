@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import mainLogo from "../assets/sesaltaLogo.png";
 import Typography from "@material-ui/core/Typography";
-import { any } from "prop-types";
 
 const styles = {
   root: {},

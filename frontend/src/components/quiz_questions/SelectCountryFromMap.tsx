@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
 import Map from "../Map";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 // import { browserHistory } from "react-router";
 

@@ -49,6 +49,7 @@ class Flag extends Component<FlagProp> {
         {this.props.country ? (
           <div style={wrapperStyles} onClick={this.handleOnClick}>
             <img
+              alt=""
               style={{ border: '1px solid black' }}
               src={`https://lipis.github.io/flag-icon-css/flags/4x3/${this.props.country.iso_a2.toLowerCase()}.svg`}
             />
