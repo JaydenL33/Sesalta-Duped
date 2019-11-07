@@ -4046,6 +4046,7 @@ topo_data = [
     }
 ]
 
+
 country_capitals = [
     {
         "country": "Afghanistan",
