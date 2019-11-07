@@ -7,10 +7,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
-import Map from "../Map";
-import { useHistory } from "react-router-dom";
+import Flag from "../Flag";
 import { Link } from "react-router-dom";
-// import { browserHistory } from "react-router";
 
 const styles = {
   card: {
@@ -26,31 +24,25 @@ const styles = {
     marginBottom: 12
   },
   button: {
-    margin: 5
+    marginBottom: 5
   },
   hidden: {
     display: "none"
   }
 };
 
+interface Country {
+  name: string;
+  iso_a2: string;
+}
+
 interface IState {
   isCorrect?: boolean;
-  // isTried: boolean
   countryObserved: string;
   bgColor: string;
   showButton: boolean;
   showFinishButton: boolean;
   gameResults: QuestionData[];
-}
-
-interface IProps {
-  gameID?: string;
-  countryExpected: string;
-  optionsList: string[];
-  classes: any;
-  callback: any;
-  indexCallback: any;
-  selectedIndex?: number | undefined;
 }
 interface QuestionData {
   expected_answer: string;
@@ -60,7 +52,17 @@ interface QuestionData {
   question_num: number;
 }
 
-class SelectCountryFromMap extends React.Component<IProps, IState> {
+interface IProps {
+  gameID?: string;
+  countryExpected?: Country;
+  optionsList: Country[];
+  classes: any;
+  callback: any;
+  selectedIndex?: number | undefined;
+  indexCallback: any;
+}
+
+class SelectCountryFromFlag extends React.Component<IProps, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -73,12 +75,28 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     };
   }
 
-  /*
-    check with backend
-  */
+  answerComponentCallback = async (
+    countryObserved: string,
+    selectedIndex: number | undefined
+  ) => {
+    this.props.indexCallback(selectedIndex);
+    console.log("observed: ", countryObserved);
+    this.setState({ countryObserved: countryObserved });
+    const correctBoolean = await this.answerVerifier(countryObserved);
+    this.attemptChecker(correctBoolean);
+  };
+
   async answerVerifier(countryObserved: string) {
-    console.log(this.props.countryExpected, countryObserved, this.props.gameID);
-    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${countryObserved}&id=${this.props.gameID}`;
+    console.log(
+      "adjusting",
+      this.props.countryExpected,
+      countryObserved,
+      this.props.gameID
+    );
+    const countryExpectedName = this.props.countryExpected
+      ? this.props.countryExpected.name
+      : "";
+    const url = `http://127.0.0.1:5000/api/country/check/?expected=${countryExpectedName}&observed=${countryObserved}&id=${this.props.gameID}`;
     const res = await fetch(url, {
       method: "GET",
       headers: {
@@ -115,22 +133,11 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     }
   }
 
-  answerComponentCallback = async (
-    countryObserved: string,
-    selectedIndex: number | undefined
-  ) => {
-    console.log("observed: ", countryObserved);
-    this.props.indexCallback(selectedIndex);
-    this.setState({ countryObserved: countryObserved });
-    const correctBoolean = await this.answerVerifier(countryObserved);
-    this.attemptChecker(correctBoolean);
-  };
-
   handleButtonClick = (e: React.SyntheticEvent) => {
     this.setState({ showButton: false, isCorrect: undefined });
     this.props.callback(); // trigger getting new quiz and render
   };
-  
+
   render() {
     const { classes } = this.props;
     return (
@@ -138,16 +145,16 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
         <Card className={classes.card}>
           <CardContent>
             <div>
-              <Map country={this.props.countryExpected} />
+              <Flag country={this.props.countryExpected} />
             </div>
             <Typography className={classes.title} gutterBottom>
-              What is the name of the highlighted country?
+              Which country does this flag belong to?
             </Typography>
           </CardContent>
           <AnswerComponent
             selectedIndex={this.props.selectedIndex}
             disabled={this.state.showButton}
-            optionsList={this.props.optionsList}
+            optionsList={this.props.optionsList.map(x => x.name)}
             callback={this.answerComponentCallback}
           />
           <Typography>
@@ -187,4 +194,4 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
   }
 }
 
-export default withStyles(styles)(SelectCountryFromMap);
+export default withStyles(styles)(SelectCountryFromFlag);

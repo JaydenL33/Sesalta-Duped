@@ -2,9 +2,11 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import GamePlayPage from "./pages/GamePlayPage";
 import GamePlayPageMap from "./pages/GamePlayPageMap";
+import GamePlayPageFlag from "./pages/GamePlayPageFlag";
 import GameModePage from "./pages/GameModePage";
 import GameOptionsPage from "./pages/GameOptionsPage";
 import GamePlayPageCapital from "./pages/GamePlayPageCapital";
+import GameResultsPage from "./pages/GameResultsPage";
 import AppliedRoute from "./components/AppliedRoute";
 
 
@@ -33,6 +35,12 @@ const Routes: React.FC<RouteProps> = ({ appProps }) => (
       props={appProps}
     />
     <AppliedRoute
+      path="/game/play/flag"
+      exact
+      component={GamePlayPageFlag}
+      props={appProps}
+    />
+    <AppliedRoute
       path="/game/options"
       exact
       component={GameOptionsPage}
@@ -42,6 +50,12 @@ const Routes: React.FC<RouteProps> = ({ appProps }) => (
       path="/game"
       exact
       component={GameModePage}
+      props={appProps}
+    />
+    <AppliedRoute
+      path="/game/results"
+      exact
+      component={GameResultsPage}
       props={appProps}
     />
     {/*  catch all unmatched routes */}
