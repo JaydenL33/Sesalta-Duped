@@ -24,13 +24,22 @@ const Routes : React.FC<RouteProps> =
         <Redirect to="/en"/>
       )} props={appProps}/>
       <AppliedRoute path="/en" exact component={GameModePage} props={appProps} />
-      <AppliedRoute path="/en/game/play" exact component={GamePlayPage} props={appProps} />
-      <AppliedRoute path="/en/game/play/map" exact component={GamePlayPageMap} props={appProps} />
-      <AppliedRoute path="/en/game/play/capital" exact component={GamePlayPageCapital} props={appProps} />
+      <AppliedRoute path="/en/game/play/country-map" exact component={GamePlayPage} props={appProps} />
+      <AppliedRoute path="/en/game/play/map-country" exact component={GamePlayPageMap} props={appProps} />
+      <AppliedRoute path="/en/game/play/capital-country" exact component={GamePlayPageCapital} props={appProps} />
+      <AppliedRoute path="/en/game/play/country-capital" exact component={GamePlayPageCapital} props={appProps} />
+      <AppliedRoute path="/en/game/play/flag-country" exact component={GamePlayPageCapital} props={appProps} />
+      <AppliedRoute path="/en/game/play/country-flag" exact component={GamePlayPageCapital} props={appProps} />
       <AppliedRoute path="/en/game/options" exact component={GameOptionsPage} props={appProps} />
       <AppliedRoute path="/en/game" exact component={GameModePage} props={appProps} />
       <AppliedRoute path="/jp/game" exact component={GameModePageJp} props={appProps} />
       <AppliedRoute path="/jp/game/options" exact component={GameOptionsPageJp} props={appProps} />
+      <AppliedRoute path="/jp/game/play/country-map" exact component={GamePlayPage} props={appProps} />
+      <AppliedRoute path="/jp/game/play/map-country" exact component={GamePlayPageMap} props={appProps} />
+      <AppliedRoute path="/jp/game/play/capital-country" exact component={GamePlayPageCapital} props={appProps} />
+      <AppliedRoute path="/jp/game/play/country-capital" exact component={GamePlayPageCapital} props={appProps} />
+      <AppliedRoute path="/jp/game/play/flag-country" exact component={GamePlayPageCapital} props={appProps} />
+      <AppliedRoute path="/jp/game/play/country-flag" exact component={GamePlayPageCapital} props={appProps} />
       { /*  catch all unmatched routes */ }
       <Route component={NotFound} />
     </Switch>

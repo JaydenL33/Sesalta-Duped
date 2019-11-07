@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Map from '../Map';
+import { Furigana } from 'furigana-react';
 
 const styles = ({
   card: {
@@ -85,6 +86,25 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
 
 	render() {
     const { classes } = this.props;
+    let QuestionText, ResponseText, ButtonText;
+    
+    if(window.location.pathname.substr(1,2) === "jp") {
+      QuestionText = <Typography color="textSecondary" gutterBottom>
+                       {this.props.countryExpected}
+                       <Furigana furigana="み" opacity={1.0}> を見つける</Furigana>
+                     </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ? "正解" : "不正解")}
+        </Typography>;
+      ButtonText = "次の質問";
+    } else {
+      QuestionText = <Typography color="textSecondary" gutterBottom>
+                       Find {this.props.countryExpected} 
+                     </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>
+      ButtonText = "Next Question";
+    }
+    
+    
 		return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
@@ -92,11 +112,9 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
             <div>
               <Map callback={this.handleMapClickCallback}/>
             </div>
-            <Typography color="textSecondary" gutterBottom>
-                Find {this.props.countryExpected} 
-            </Typography>
+            {QuestionText}
         </CardContent>
-        <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>
+        {ResponseText}
         <CardActions style={{justifyContent: 'center'}}>
             { this.state.isTried === true &&
               <Button  className={classes.button} 
@@ -105,7 +123,7 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
                 size="medium"
                 onClick={this.handleNextQuestion}
               >
-                Next Question
+                {ButtonText}
               </Button>
             }
         </CardActions>

@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import AnswerComponent from './AnswerComponent';
 import Map from '../Map';
+import { Furigana } from 'furigana-react';
 
 const styles = ({
   card: {
@@ -94,6 +95,39 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
+    let QuestionTitle, ResponseText, QuizButton;
+    
+    if(window.location.pathname.substr(1,2) === "jp") {
+      QuestionTitle = <Typography className={classes.title} gutterBottom>
+          <Furigana furigana="きょうちょうほうじこく:なまえ:なん" opacity={1.0}>
+            強調表示国の名前は何ですか？
+          </Furigana>
+        </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ? "正解" : "不正解")}
+        </Typography>;
+      QuizButton = <Button className={classes.button} 
+                     variant="contained"
+                     color={this.state.isTried? "primary": "secondary"}
+                     size="medium"
+                     onClick={this.handleButtonClick}
+                   >
+                     {this.state.isTried? "次の質問": "確かめる" }
+                   </Button>
+    } else {
+      QuestionTitle = <Typography className={classes.title} gutterBottom>
+          What is the name of the highlighted country?
+        </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>;
+      QuizButton = <Button className={classes.button} 
+                     variant="contained"
+                     color={this.state.isTried? "primary": "secondary"}
+                     size="medium"
+                     onClick={this.handleButtonClick}
+                   >
+                     {this.state.isTried? "next question": "Check" }
+                   </Button>
+    }
+    
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
@@ -101,21 +135,12 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
             <div>
               <Map country={this.props.countryExpected}/>
             </div>
-            <Typography className={classes.title} gutterBottom>
-                What is the name of the highlighted country?
-            </Typography>
+            {QuestionTitle}
         </CardContent>
         <AnswerComponent disabled={this.state.isTried} optionsList={this.props.optionsList} callback={this.answerComponentCallback}/>
-        <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>
+        {ResponseText}
         <CardActions style={{justifyContent: 'center'}}>
-            <Button className={classes.button} 
-              variant="contained"
-              color={this.state.isTried? "primary": "secondary"}
-              size="medium"
-              onClick={this.handleButtonClick}
-            >
-              {this.state.isTried? "next question": "Check" }
-            </Button>
+          {QuizButton}
         </CardActions>
         </Card>
       </Container>

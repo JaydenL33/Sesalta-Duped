@@ -73,12 +73,12 @@ class OptionsPage extends React.Component <Props, States> {
   render () {
     const { classes } = this.props;
     const URLs: string[] = [
-      "/en/game/play",
-      "/en/game/play/map",
-      "/en/game/play/capital",
-      "/en/game/play/map",
-      "/en/game/play",
-      "/en/game/play",
+      "/en/game/play/country-map",
+      "/en/game/play/map-country",
+      "/en/game/play/capital-country",
+      "/en/game/play/country-capital",
+      "/en/game/play/flag-country",
+      "/en/game/play/country-flag",
     ]
     return (
       <Container style={{justifyContent: 'center'}} className={classes.root} >
