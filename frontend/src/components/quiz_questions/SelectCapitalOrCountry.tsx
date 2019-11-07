@@ -117,8 +117,16 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       }
     );
     let gameResults = await gameResultsResponse.json();
-    this.setState({ gameResults: JSON.parse(JSON.stringify(gameResults)) });
-    console.log("these are the game results", gameResults);
+    let gr: Array<QuestionData> = JSON.parse(JSON.stringify(gameResults));
+    gr.forEach(item => {
+      item.observed_answers.forEach( (ans, index) => {
+        if (this.props.countryList.includes(item.observed_answers[index])) {
+          item.observed_answers[index] = this.convertCountryToCapital(ans);
+        }
+      });
+    });
+    console.log("these are the game results", gr);
+    this.setState({ gameResults: gr });
     const currentQuestion = gameResults.length;
     if (
       gameResults[currentQuestion - 1].observed_answers.length > 1 ||
@@ -128,6 +136,16 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       if (currentQuestion === 3) this.setState({ showFinishButton: true });
       else this.setState({ showButton: true });
     }
+  }
+
+  convertCountryToCapital(country: string) {
+    let res = "";
+    this.props.optionsList.forEach(item => {
+      if (item.name === country) {
+        res = item.capital;
+      }
+    })
+    return res;
   }
 
   convertCapitalToCountry(capital: string) {
