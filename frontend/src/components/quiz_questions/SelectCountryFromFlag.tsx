@@ -6,63 +6,93 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Map from "../Map";
+import AnswerComponent from "./AnswerComponent";
+import Flag from "../Flag";
 
 const styles = {
   card: {
     minWidth: 275,
-    marginTop: 30
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
+    marginTop: 50
   },
   title: {
-    fontSize: 24
+    fontSize: 24,
+    fontWeight: 500,
+    fontFamily: "Helvetica Neue"
   },
   pos: {
     marginBottom: 12
+  },
+  button: {
+    marginBottom: 5
   },
   hidden: {
     display: "none"
   }
 };
 
+interface Country {
+  name: string;
+  iso_a2: string;
+}
+
 interface IState {
   isCorrect?: boolean;
   countryObserved: string;
-  // isTried: boolean;
+  bgColor: string;
   showButton: boolean;
 }
 
 interface IProps {
   gameID?: string;
-  countryExpected: string;
+  countryExpected?: Country;
+  optionsList: Country[];
   classes: any;
   callback: any;
+  selectedIndex?: number | undefined;
+  indexCallback: any;
 }
 
-class SelectCountryOnMap extends React.Component<IProps, IState> {
+class SelectCountryFromFlag extends React.Component<IProps, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
       isCorrect: undefined,
       countryObserved: "",
-      // isTried: false,
+      bgColor: "primary",
       showButton: false
     };
   }
 
-  async answerVerifier() {
-    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${this.state.countryObserved}&id=${this.props.gameID}`;
+  answerComponentCallback = async (
+    countryObserved: string,
+    selectedIndex: number | undefined
+  ) => {
+    this.props.indexCallback(selectedIndex);
+    console.log("observed: ", countryObserved);
+    this.setState({ countryObserved: countryObserved });
+    const correctBoolean = await this.answerVerifier(countryObserved);
+    this.attemptChecker(correctBoolean);
+  };
+
+  async answerVerifier(countryObserved: string) {
+    console.log(
+      "adjusting",
+      this.props.countryExpected,
+      countryObserved,
+      this.props.gameID
+    );
+    const countryExpectedName = this.props.countryExpected
+      ? this.props.countryExpected.name
+      : "";
+    const url = `http://127.0.0.1:5000/api/country/check/?expected=${countryExpectedName}&observed=${countryObserved}&id=${this.props.gameID}`;
     const res = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
       }
     });
-    const response = await res.json();
+    let response = await res.json();
+    console.log("this is the response", response);
     this.setState({ isCorrect: response });
     return response;
   }
@@ -90,16 +120,16 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
     }
   }
 
-  handleNextQuestion = () => {
+  handleButtonClick = (e: React.SyntheticEvent) => {
     this.setState({ showButton: false, isCorrect: undefined });
     this.props.callback(); // trigger getting new quiz and render
-  };
-
-  handleMapClickCallback = (countryClicked: string) => {
-    this.setState({ countryObserved: countryClicked }, async () => {
-      const correctBoolean = await this.answerVerifier();
-      this.attemptChecker(correctBoolean);
-    });
+    // if (this.state.isTried) {
+    //   this.setState({ isTried: false, isCorrect: undefined });
+    //   this.props.callback(); // trigger getting new quiz and render
+    // } else {
+    //   this.setState({ isTried: true });
+    //   this.answerVerifier();
+    // }
   };
 
   render() {
@@ -109,26 +139,31 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
         <Card className={classes.card}>
           <CardContent>
             <div>
-              <Map callback={this.handleMapClickCallback} />
+              <Flag country={this.props.countryExpected} />
             </div>
-            <Typography color="textSecondary" gutterBottom>
-              Find {this.props.countryExpected}
+            <Typography className={classes.title} gutterBottom>
+              Which country does this flag belong to?
             </Typography>
           </CardContent>
+          <AnswerComponent
+            selectedIndex={this.props.selectedIndex}
+            disabled={this.state.showButton}
+            optionsList={this.props.optionsList.map(x => x.name)}
+            callback={this.answerComponentCallback}
+          />
           <Typography>
             {this.state.isCorrect !== undefined &&
               (this.state.isCorrect ? "Correct" : "Wrong")}
           </Typography>
           <CardActions style={{ justifyContent: "center" }}>
             <Button
-              // className={classes.button}
               className={
                 this.state.showButton ? classes.button : classes.hidden
               }
               variant="contained"
-              color="primary"
+              color="secondary"
               size="medium"
-              onClick={this.handleNextQuestion}
+              onClick={this.handleButtonClick}
             >
               Next Question
             </Button>
@@ -139,4 +174,4 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
   }
 }
 
-export default withStyles(styles)(SelectCountryOnMap);
+export default withStyles(styles)(SelectCountryFromFlag);

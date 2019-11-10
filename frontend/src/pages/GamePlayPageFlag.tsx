@@ -1,42 +1,42 @@
-// import QuizElement from '../components/quiz_questions/QuizElement';
 import React from "react";
-import SelectCountryFromMap from "../components/quiz_questions/SelectCountryFromMap";
-// import AnswerComponent from "../components/quiz_questions/AnswerComponent";
+import SelectCountryFromFlag from "../components/quiz_questions/SelectCountryFromFlag";
+
+interface Country {
+  name: string;
+  iso_a2: string;
+}
 
 interface P {}
 
 interface S {
   gameID: string;
-  optionsList: string[];
+  optionsList: Country[];
+  countryExpected?: Country;
   needNext: boolean;
   selectedIndex: number | undefined;
-  randomIndexForOptions: number;
-  // attemptCount: number,
 }
 
-export default class GamePlayPage extends React.Component<P, S> {
+export default class GamePlayPageFlag extends React.Component<P, S> {
   constructor(props: P) {
     super(props);
     this.state = {
       gameID: "",
       optionsList: [],
+      countryExpected: undefined,
       needNext: false, // need to get next question or not
-      selectedIndex: undefined,
-      randomIndexForOptions: 0
-      // attemptCount: 0,
+      selectedIndex: undefined
     };
   }
 
   getCountries(optionlist: any) {
     let res: any[] = [];
-    optionlist.forEach((item: { name: any }) => {
-      res.push(item.name);
+    optionlist.forEach((item: { name: string; iso_a2: string }) => {
+      res.push({
+        name: item.name,
+        iso_a2: item.iso_a2
+      });
     });
     return res;
-  }
-
-  getRandomIndex(countryList: string[]) {
-    return Math.floor(Math.random() * countryList.length);
   }
 
   async componentDidMount() {
@@ -46,11 +46,11 @@ export default class GamePlayPage extends React.Component<P, S> {
       this.setState({ gameID: id });
 
       const ops: [] = await this.getRandomCountryOptions();
-      const countrylist: string[] = this.getCountries(ops);
+      const countrylist: Country[] = this.getCountries(ops);
       console.log(countrylist);
       this.setState({
         optionsList: countrylist,
-        randomIndexForOptions: this.getRandomIndex(countrylist)
+        countryExpected: countrylist[this.getRandomIndex(countrylist)]
       });
     } catch (e) {
       console.log(e);
@@ -60,17 +60,22 @@ export default class GamePlayPage extends React.Component<P, S> {
   /*
     get game id for this game
   */
-  async getGameID(): Promise<string> {
-    const response = await (await fetch(
-      "http://127.0.0.1:5000/api/country/new_game/",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
+  getGameID(): Promise<string> {
+    const url = "http://127.0.0.1:5000/api/country/new_game/";
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
       }
-    )).json();
-    return response;
+    })
+      .then((response: any) => response.json())
+      .then((response: any) => {
+        console.log(response);
+        return response;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   /*
@@ -96,36 +101,37 @@ export default class GamePlayPage extends React.Component<P, S> {
 
   nextQuestionPlsCallback = async () => {
     // this.setState({ needNext: next })
-    console.log("shit");
     try {
       const ops: [] = await this.getRandomCountryOptions();
-      const countrylist: string[] = this.getCountries(ops);
+      const countrylist: Country[] = this.getCountries(ops);
       console.log(countrylist);
       this.setState({
         optionsList: countrylist,
-        randomIndexForOptions: this.getRandomIndex(countrylist),
+        countryExpected: countrylist[this.getRandomIndex(countrylist)],
         selectedIndex: undefined
       });
     } catch (e) {
       console.log(e);
     }
   };
+
   indexCallback = (selectedIndex: number | undefined) => {
     console.log("oh");
     this.setState({ selectedIndex: selectedIndex });
   };
 
+  getRandomIndex(countryList: Country[]) {
+    return Math.floor(Math.random() * countryList.length);
+  }
+
   render() {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <SelectCountryFromMap
+          <SelectCountryFromFlag
             selectedIndex={this.state.selectedIndex}
-            // attemptCount={this.state.attemptCount}
             gameID={this.state.gameID}
-            countryExpected={
-              this.state.optionsList[this.state.randomIndexForOptions]
-            }
+            countryExpected={this.state.countryExpected}
             optionsList={this.state.optionsList}
             callback={this.nextQuestionPlsCallback}
             indexCallback={this.indexCallback}
