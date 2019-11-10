@@ -96,7 +96,6 @@ export default class GamePlayPage extends React.Component<P, S> {
 
   nextQuestionPlsCallback = async () => {
     // this.setState({ needNext: next })
-    console.log("shit");
     try {
       const ops: [] = await this.getRandomCountryOptions();
       const countrylist: string[] = this.getCountries(ops);

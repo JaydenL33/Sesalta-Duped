@@ -7,10 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
-import Map from "../Map";
-// import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-// import { browserHistory } from "react-router";
 
 const styles = {
   card: {
@@ -35,23 +32,20 @@ const styles = {
 
 interface IState {
   isCorrect?: boolean;
-  // isTried: boolean
-  countryObserved: string;
+  answerObserved: string;
+  answerExpected: string;
   bgColor: string;
   showButton: boolean;
   showFinishButton: boolean;
   gameResults: QuestionData[];
 }
 
-interface IProps {
-  gameID?: string;
-  countryExpected: string;
-  optionsList: string[];
-  classes: any;
-  callback: any;
-  indexCallback: any;
-  selectedIndex?: number | undefined;
+interface Option {
+  name: string;
+  capital: string;
+  iso_a2: string;
 }
+
 interface QuestionData {
   expected_answer: string;
   observed_answers: string[];
@@ -60,12 +54,27 @@ interface QuestionData {
   question_num: number;
 }
 
-class SelectCountryFromMap extends React.Component<IProps, IState> {
-  constructor(props: any) {
+interface IProps {
+  gameID?: string;
+  questionCountry: string;
+  questionCapital: string;
+  optionsList: Option[];
+  countryList: string[];
+  capitalList: string[];
+  classes: any;
+  callback: any;
+  indexCallback: any;
+  selectedIndex?: number | undefined;
+  mode: number;
+}
+
+class SelectCapitalOrCountry extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       isCorrect: undefined,
-      countryObserved: "",
+      answerObserved: "",
+      answerExpected: "",
       bgColor: "primary",
       showButton: false,
       showFinishButton: false,
@@ -73,12 +82,19 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     };
   }
 
+  getQuestion() {
+    if (this.props.mode === 0) {
+      return `What is the capital city of ${this.props.questionCountry}?`;
+    } else {
+      return `Which country's capital city is ${this.props.questionCapital}?`;
+    }
+  }
+
   /*
     check with backend
   */
-  async answerVerifier(countryObserved: string) {
-    console.log(this.props.countryExpected, countryObserved, this.props.gameID);
-    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${countryObserved}&id=${this.props.gameID}`;
+  async answerVerifier(answerObserved: string) {
+    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.questionCountry}&observed=${answerObserved}&id=${this.props.gameID}`;
     const res = await fetch(url, {
       method: "GET",
       headers: {
@@ -102,27 +118,61 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       }
     );
     let gameResults = await gameResultsResponse.json();
-    this.setState({ gameResults: JSON.parse(JSON.stringify(gameResults)) });
-    console.log("these are the game results", gameResults);
-    const currentQuestion = gameResults.length;
+    let gr: Array<QuestionData> = JSON.parse(JSON.stringify(gameResults));
+    const currentQuestion = gr.length;
+    let newGR: QuestionData = gr[currentQuestion-1];
+    for (let j = 0; j < newGR.observed_answers.length; j++) {
+      if (this.props.mode === 0 && this.props.countryList.includes(newGR.observed_answers[j])) {
+        newGR.observed_answers[j] = this.convertCountryToCapital(newGR.observed_answers[j]);
+      }
+    }
+    if (this.props.mode === 1 && this.props.capitalList.includes(newGR.expected_answer)) {
+      newGR.expected_answer = this.convertCapitalToCountry(newGR.expected_answer);
+    }
+    if (this.props.mode === 0 && this.props.countryList.includes(newGR.expected_answer)) {
+      newGR.expected_answer = this.convertCountryToCapital(newGR.expected_answer);
+    }
+    let oldGR = [...this.state.gameResults];
+    oldGR[currentQuestion - 1] = newGR;
+    this.setState({ gameResults: oldGR });
+    console.log("these are the game results", this.state.gameResults);
     if (
       gameResults[currentQuestion - 1].observed_answers.length > 1 ||
       correctBoolean === 1
     ) {
-      console.log("setting show button");
       if (currentQuestion === 3) this.setState({ showFinishButton: true });
       else this.setState({ showButton: true });
     }
   }
 
-  answerComponentCallback = async (
-    countryObserved: string,
-    selectedIndex: number | undefined
-  ) => {
-    console.log("observed: ", countryObserved);
+  convertCountryToCapital(country: string): string {
+    let res = "not found";
+    this.props.optionsList.forEach(item => {
+      if (item.name === country) {
+        res = item.capital;
+      }
+    })
+    return res;
+  }
+
+  convertCapitalToCountry(capital: string): string {
+    let res = "";
+    this.props.optionsList.forEach(item => {
+      if (item.capital === capital) {
+        res = item.name;
+      }
+    })
+    return res;
+  }
+
+  answerComponentCallback = async (answerObserved: string, selectedIndex: number | undefined) => {
+    console.log("answered observed: ", answerObserved);
     this.props.indexCallback(selectedIndex);
-    this.setState({ countryObserved: countryObserved });
-    const correctBoolean = await this.answerVerifier(countryObserved);
+    let ans = answerObserved;
+    if (this.props.capitalList.includes(answerObserved)) {
+      ans = this.convertCapitalToCountry(answerObserved);
+    }
+    const correctBoolean = await this.answerVerifier(ans);
     this.attemptChecker(correctBoolean);
   };
 
@@ -130,24 +180,21 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     this.setState({ showButton: false, isCorrect: undefined });
     this.props.callback(); // trigger getting new quiz and render
   };
-  
+
   render() {
     const { classes } = this.props;
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
           <CardContent>
-            <div>
-              <Map country={this.props.countryExpected} />
-            </div>
             <Typography className={classes.title} gutterBottom>
-              What is the name of the highlighted country?
+              {this.getQuestion()}
             </Typography>
           </CardContent>
           <AnswerComponent
+            optionsList={this.props.mode === 0 ? this.props.capitalList : this.props.countryList}
             selectedIndex={this.props.selectedIndex}
             disabled={this.state.showButton}
-            optionsList={this.props.optionsList}
             callback={this.answerComponentCallback}
           />
           <Typography>
@@ -164,7 +211,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
               size="medium"
               onClick={this.handleButtonClick}
             >
-              Next Question
+              next question
             </Button>
             <Link
               to={{ pathname: "/game/results", state: this.state.gameResults }}
@@ -187,4 +234,4 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
   }
 }
 
-export default withStyles(styles)(SelectCountryFromMap);
+export default withStyles(styles)(SelectCapitalOrCountry);

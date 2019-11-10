@@ -14,7 +14,8 @@ interface IProps {
 }
 
 export default class SimpleList extends React.Component<IProps, IState> {
-  constructor(props: any) {
+  // eslint-disable-next-line
+  constructor(props: IProps) {
     super(props);
     // this.state = {
     // 	selectedIndex: undefined,

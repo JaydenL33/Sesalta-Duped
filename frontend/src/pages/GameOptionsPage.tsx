@@ -75,9 +75,9 @@ class OptionsPage extends React.Component<Props, States> {
     const URLs: string[] = [
       "/game/play",
       "/game/play/map",
-      "/game/play/capital",
-      "/game/play/flag",
-      "/game/play/map"
+      "/game/play/capital/0", // choose capital from country
+      "/game/play/capital/1", // choose country from capital
+      "/game/play/flag"
     ];
     return (
       <Container style={{ justifyContent: "center" }} className={classes.root}>
@@ -122,12 +122,22 @@ class OptionsPage extends React.Component<Props, States> {
                 </ListItemSecondaryAction>
               </ListItem>
               <ListItem key={3} button>
-                <ListItemText primary={"Guess The National Flag"} />
+                <ListItemText primary={"Guess The Country From Capital City"} />
                 <ListItemSecondaryAction>
                   <Checkbox
                     edge="end"
                     onChange={this.handleToggle(3)}
                     checked={this.state.checked[3]}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem key={4} button>
+                <ListItemText primary={"Guess The National Flag"} />
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    edge="end"
+                    onChange={this.handleToggle(4)}
+                    checked={this.state.checked[4]}
                   />
                 </ListItemSecondaryAction>
               </ListItem>
