@@ -4,6 +4,7 @@ import json
 import random
 from setup import country_system
 from flask_cors import CORS
+from firebase import firebase
 
 app = Flask(__name__)
 CORS(app)
@@ -105,3 +106,12 @@ def get_results():
 
     id = get_arg(args, "id", required=True)
     return json.dumps(country_system.get_results(id))
+
+
+
+# currently for testing to retrieve firebase data
+@app.route("/api/firebase")
+def get_firebase():
+    fb = firebase.FirebaseApplication('https://geodudes-8f12a.firebaseio.com', None)
+    result = fb.get('/', None)
+    return result
