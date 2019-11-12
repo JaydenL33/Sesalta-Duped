@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
 import { Link } from "react-router-dom";
+import { Furigana } from "furigana-react";
 
 const styles = {
   card: {
@@ -183,38 +184,54 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
-    return (
-      <Container maxWidth="sm">
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography className={classes.title} gutterBottom>
-              {this.getQuestion()}
-            </Typography>
-          </CardContent>
-          <AnswerComponent
-            optionsList={this.props.mode === 0 ? this.props.capitalList : this.props.countryList}
-            selectedIndex={this.props.selectedIndex}
-            disabled={this.state.showButton}
-            callback={this.answerComponentCallback}
-          />
-          <Typography>
+    let QuestionText, ResponseText, ButtonText, EndButton;
+    
+    if (window.location.pathname.substr(1,2) === "jp") {
+      if (this.props.mode === 0) {
+        QuestionText = <Typography className={classes.title} gutterBottom>
+              {this.props.questionCountry}<Furigana furigana="しゅと:なん" opacity={1.0}>の首都が何だ?</Furigana>
+            </Typography>;
+        ResponseText = <Typography>
             {this.state.isCorrect !== undefined &&
               (this.state.isCorrect ? "Correct" : "Wrong")}
           </Typography>
-          <CardActions style={{ justifyContent: "center" }}>
-            <Button
-              className={
-                this.state.showButton ? classes.button : classes.hidden
-              }
-              variant="contained"
-              color="secondary"
-              size="medium"
-              onClick={this.handleButtonClick}
+      } else {
+        QuestionText = <Typography className={classes.title} gutterBottom>
+              <Furigana furigana="いず:こく:しゅと" opacity={1.0}>何れ国の首都が</Furigana>
+              {this.props.questionCapital}だ？
+            </Typography>;
+      }
+      
+      ResponseText = <Typography>
+            {this.state.isCorrect !== undefined &&
+              (this.state.isCorrect ? "正解" : "不正解")}
+          </Typography>
+      ButtonText = "次の質問";
+      EndButton = <Link
+              to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
             >
-              next question
-            </Button>
-            <Link
-              to={{ pathname: "/game/results", state: this.state.gameResults }}
+              <Button
+                className={
+                  this.state.showFinishButton ? classes.button : classes.hidden
+                }
+                variant="contained"
+                color="primary"
+                size="medium"
+              >
+                おわり!
+              </Button>
+            </Link>;
+    } else {
+      QuestionText = <Typography className={classes.title} gutterBottom>
+              {this.getQuestion()}
+            </Typography>
+      ResponseText = <Typography>
+            {this.state.isCorrect !== undefined &&
+              (this.state.isCorrect ? "Correct" : "Wrong")}
+          </Typography>;
+      ButtonText = "next question";
+      EndButton = <Link
+              to={{ pathname: "/en/game/results", state: this.state.gameResults }}
             >
               <Button
                 className={
@@ -226,7 +243,35 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
               >
                 Finish!
               </Button>
-            </Link>
+            </Link>;
+    }
+    
+    return (
+      <Container maxWidth="sm">
+        <Card className={classes.card}>
+          <CardContent>
+            {QuestionText}
+          </CardContent>
+          <AnswerComponent
+            optionsList={this.props.mode === 0 ? this.props.capitalList : this.props.countryList}
+            selectedIndex={this.props.selectedIndex}
+            disabled={this.state.showButton}
+            callback={this.answerComponentCallback}
+          />
+          {ResponseText}
+          <CardActions style={{ justifyContent: "center" }}>
+            <Button
+              className={
+                this.state.showButton ? classes.button : classes.hidden
+              }
+              variant="contained"
+              color="secondary"
+              size="medium"
+              onClick={this.handleButtonClick}
+            >
+              {ButtonText}
+            </Button>
+            {EndButton}
           </CardActions>
         </Card>
       </Container>

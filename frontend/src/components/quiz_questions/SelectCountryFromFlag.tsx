@@ -9,6 +9,7 @@ import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
 import Flag from "../Flag";
 import { Link } from "react-router-dom";
+import { Furigana } from "furigana-react";
 
 const styles = {
   card: {
@@ -140,29 +141,50 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
-    return (
-      <Container maxWidth="sm">
-        <Card className={classes.card}>
-          <CardContent>
-            <div>
-              <Flag country={this.props.countryExpected} />
-            </div>
-            <Typography className={classes.title} gutterBottom>
+    let QuestionText, ResponseText, QuizButton, EndButton;
+    
+    if(window.location.pathname.substr(1,2) === "jp") {
+      QuestionText = <Typography className={classes.title} gutterBottom>
+          <Furigana furigana="国:はた:なん" opacity={1.0}>
+            国の旗が何だ？
+          </Furigana>
+        </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ? "正解" : "不正解")}
+        </Typography>;
+      QuizButton = <Button
+              className={
+                this.state.showButton ? classes.button : classes.hidden
+              }
+              variant="contained"
+              color="secondary"
+              size="medium"
+              onClick={this.handleButtonClick}
+            >
+              次の質問
+            </Button>
+      EndButton = <Link
+              to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
+            >
+              <Button
+                className={
+                  this.state.showFinishButton ? classes.button : classes.hidden
+                }
+                variant="contained"
+                color="primary"
+                size="medium"
+              >
+                おわり！
+              </Button>
+            </Link>
+    } else {
+      QuestionText = <Typography className={classes.title} gutterBottom>
               Which country does this flag belong to?
             </Typography>
-          </CardContent>
-          <AnswerComponent
-            selectedIndex={this.props.selectedIndex}
-            disabled={this.state.showButton}
-            optionsList={this.props.optionsList.map(x => x.name)}
-            callback={this.answerComponentCallback}
-          />
-          <Typography>
+      ResponseText = <Typography>
             {this.state.isCorrect !== undefined &&
               (this.state.isCorrect ? "Correct" : "Wrong")}
           </Typography>
-          <CardActions style={{ justifyContent: "center" }}>
-            <Button
+      QuizButton = <Button
               className={
                 this.state.showButton ? classes.button : classes.hidden
               }
@@ -173,8 +195,8 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
             >
               Next Question
             </Button>
-            <Link
-              to={{ pathname: "/game/results", state: this.state.gameResults }}
+      EndButton = <Link
+              to={{ pathname: "/en/game/results", state: this.state.gameResults }}
             >
               <Button
                 className={
@@ -187,6 +209,27 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
                 Finish!
               </Button>
             </Link>
+    }
+    
+    return (
+      <Container maxWidth="sm">
+        <Card className={classes.card}>
+          <CardContent>
+            <div>
+              <Flag country={this.props.countryExpected} />
+            </div>
+            {QuestionText}
+          </CardContent>
+          <AnswerComponent
+            selectedIndex={this.props.selectedIndex}
+            disabled={this.state.showButton}
+            optionsList={this.props.optionsList.map(x => x.name)}
+            callback={this.answerComponentCallback}
+          />
+          {ResponseText}
+          <CardActions style={{ justifyContent: "center" }}>
+            {QuizButton}
+            {EndButton}
           </CardActions>
         </Card>
       </Container>

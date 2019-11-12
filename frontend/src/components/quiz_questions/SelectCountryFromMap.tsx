@@ -11,6 +11,7 @@ import Map from "../Map";
 // import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 // import { browserHistory } from "react-router";
+import { Furigana } from "furigana-react";
 
 const styles = {
   card: {
@@ -133,29 +134,47 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
   
   render() {
     const { classes } = this.props;
-    return (
-      <Container maxWidth="sm">
-        <Card className={classes.card}>
-          <CardContent>
-            <div>
-              <Map country={this.props.countryExpected} />
-            </div>
-            <Typography className={classes.title} gutterBottom>
-              What is the name of the highlighted country?
-            </Typography>
-          </CardContent>
-          <AnswerComponent
-            selectedIndex={this.props.selectedIndex}
-            disabled={this.state.showButton}
-            optionsList={this.props.optionsList}
-            callback={this.answerComponentCallback}
-          />
-          <Typography>
-            {this.state.isCorrect !== undefined &&
-              (this.state.isCorrect ? "Correct" : "Wrong")}
-          </Typography>
-          <CardActions style={{ justifyContent: "center" }}>
-            <Button
+    let QuestionTitle, ResponseText, QuizButton, EndButton;
+    
+    if(window.location.pathname.substr(1,2) === "jp") {
+      QuestionTitle = <Typography className={classes.title} gutterBottom>
+          <Furigana furigana="きょうちょうほうじこく:なまえ:なん" opacity={1.0}>
+            強調表示国の名前は何ですか？
+          </Furigana>
+        </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ? "正解" : "不正解")}
+        </Typography>;
+      QuizButton = <Button
+              className={
+                this.state.showButton ? classes.button : classes.hidden
+              }
+              variant="contained"
+              color="secondary"
+              size="medium"
+              onClick={this.handleButtonClick}
+            >
+              次の質問
+            </Button>
+      EndButton = <Link
+              to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
+            >
+              <Button
+                className={
+                  this.state.showFinishButton ? classes.button : classes.hidden
+                }
+                variant="contained"
+                color="primary"
+                size="medium"
+              >
+                おわり！
+              </Button>
+            </Link>
+    } else {
+      QuestionTitle = <Typography className={classes.title} gutterBottom>
+          What is the name of the highlighted country?
+        </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>;
+      QuizButton = <Button
               className={
                 this.state.showButton ? classes.button : classes.hidden
               }
@@ -166,8 +185,8 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
             >
               Next Question
             </Button>
-            <Link
-              to={{ pathname: "/game/results", state: this.state.gameResults }}
+      EndButton = <Link
+              to={{ pathname: "/en/game/results", state: this.state.gameResults }}
             >
               <Button
                 className={
@@ -180,6 +199,27 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
                 Finish!
               </Button>
             </Link>
+    }
+    
+    return (
+      <Container maxWidth="sm">
+        <Card className={classes.card}>
+          <CardContent>
+            <div>
+              <Map country={this.props.countryExpected} />
+            </div>
+            {QuestionTitle}
+          </CardContent>
+          <AnswerComponent
+            selectedIndex={this.props.selectedIndex}
+            disabled={this.state.showButton}
+            optionsList={this.props.optionsList}
+            callback={this.answerComponentCallback}
+          />
+          {ResponseText}
+          <CardActions style={{ justifyContent: "center" }}>
+            {QuizButton}
+            {EndButton}
           </CardActions>
         </Card>
       </Container>
