@@ -12,6 +12,6 @@ firebase_admin.initialize_app(
 firebase_session = db.reference()  # This.
 
 country_data = firebase_session.child('countryData').get()
-print(country_data)
+# print(country_data)
 
 country_system = CountrySystem(country_data)

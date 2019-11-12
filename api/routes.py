@@ -2,7 +2,7 @@ from exceptions import *
 from flask import Flask, jsonify, request
 import json
 import random
-from setup import firebase_session
+from setup import country_system, firebase_session
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -53,7 +53,6 @@ def new_game():
     given = get_arg(args, "given", required=False)
     asked_for = get_arg(args, "given", required=False)
     country_data = get_firebase_data('/countryData')
-    print(len(country_data))
 
     new_game = country_system.new_game(country_data, given, asked_for)
     return new_game.id
@@ -133,8 +132,6 @@ def update_name():
 # Helper function (should be moved to another file probably)
 
 
-def get_firebase_data(url_end):
-    url_start = 'https://geodudes-8f12a.firebaseio.com/'
-    url_end = url_end.strip("/")
-    url = url_start + url_end
-    print(url)
+def get_firebase_data(path):
+    path = path.strip("/")
+    return firebase_session.child(path).get()
