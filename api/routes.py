@@ -140,3 +140,16 @@ def get_arg(args, param_name, required=False):
 def get_firebase_data(path):
     path = path.strip("/")
     return firebase_session.child(path).get()
+
+
+@app.route("/pushfbdata")
+def push_fb_data():
+    # path = path.strip("/what")
+    result = firebase_session.child("what").push({"hi": "test"})
+    print(result)
+    return result
+
+
+
+
+
