@@ -47,6 +47,9 @@ class CountrySystem:
         game = self._get_game(id)
         return game.get_results()
 
+    def update_name(self, new_name, bad_words):
+        pass
+
     # ========================================
     #   Private functions
     # ========================================

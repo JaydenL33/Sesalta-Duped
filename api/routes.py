@@ -112,6 +112,29 @@ def get_results():
     return json.dumps(country_system.get_results(id))
 
 
+# NOTE: The functions used by this route are not complete.
+# Names can't be updated yet since users don't exist. Raycole will add this.
+#
+# Will update the user's public name IF it is valid (3 letters, not profane).
+# Returns "1" if update is successful, otherwise "0"
+# Params:
+# name: the desired public name
+# (probably needs a user id included as well)
+@app.route("api/user/name")
+def update_name():
+    args = request.args
+    name = get_arg(args, "id", required=True)
+
+    fb = firebase.FirebaseApplication(
+        'https://geodudes-8f12a.firebaseio.com', None)
+    bad_words = fb.get('/badWords', None)
+    print(type(bad_words))
+
+    # bad_words = bad_words.values()
+
+    # return country_system.update_name(name, bad_words)
+
+
 # currently for testing to retrieve firebase data
 @app.route("/api/firebase")
 def get_firebase():
