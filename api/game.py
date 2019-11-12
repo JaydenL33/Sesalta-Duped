@@ -1,18 +1,26 @@
 from country_generator import CountryGenerator
+from exceptions import *
 from question import Question
+
+MAX_QUESTIONS = 10
 
 
 class Game:
 
     def __init__(self, id, country_data, given, asked_for):
         self._id = id
-        self._country_generator = CountryGenerator(country_data)
         self._given_mode = given
         self._asked_for_mode = asked_for
         self._questions = []
-        self._isFinished = False
+        self._country_generator = CountryGenerator(country_data)
+        # self._is_finished = False
 
     def choose_random_countries(self, amount):
+        if len(self._questions) >= MAX_QUESTIONS:
+            raise MaxQuestionsReached(
+                f"{len(self._questions)} questions already asked"
+            )
+
         num_remaining = len(self._country_generator.remaining_countries)
         if amount > num_remaining:
             raise ValueError(

@@ -54,8 +54,12 @@ def new_game():
     given = get_arg(args, "given", required=False)
     asked_for = get_arg(args, "given", required=False)
 
-    new_game = country_system.new_game(given, asked_for)
+    fb = firebase.FirebaseApplication(
+        'https://geodudes-8f12a.firebaseio.com/', None)
+    country_data = fb.get('/countryData', None)
+    print(len(country_data))
 
+    new_game = country_system.new_game(country_data, given, asked_for)
     return new_game.id
 
 
@@ -108,10 +112,10 @@ def get_results():
     return json.dumps(country_system.get_results(id))
 
 
-
 # currently for testing to retrieve firebase data
 @app.route("/api/firebase")
 def get_firebase():
-    fb = firebase.FirebaseApplication('https://geodudes-8f12a.firebaseio.com', None)
+    fb = firebase.FirebaseApplication(
+        'https://geodudes-8f12a.firebaseio.com', None)
     result = fb.get('/', None)
     return result
