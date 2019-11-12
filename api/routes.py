@@ -2,9 +2,8 @@ from exceptions import *
 from flask import Flask, jsonify, request
 import json
 import random
-from setup import country_system
+from setup import firebase_session
 from flask_cors import CORS
-from firebase import firebase
 
 app = Flask(__name__)
 CORS(app)
@@ -53,10 +52,7 @@ def new_game():
 
     given = get_arg(args, "given", required=False)
     asked_for = get_arg(args, "given", required=False)
-
-    fb = firebase.FirebaseApplication(
-        'https://geodudes-8f12a.firebaseio.com/', None)
-    country_data = fb.get('/countryData', None)
+    country_data = get_firebase_data('/countryData')
     print(len(country_data))
 
     new_game = country_system.new_game(country_data, given, asked_for)
@@ -120,7 +116,7 @@ def get_results():
 # Params:
 # name: the desired public name
 # (probably needs a user id included as well)
-@app.route("api/user/name")
+@app.route("/api/user/name/")
 def update_name():
     args = request.args
     name = get_arg(args, "id", required=True)
@@ -134,11 +130,11 @@ def update_name():
 
     # return country_system.update_name(name, bad_words)
 
+# Helper function (should be moved to another file probably)
 
-# currently for testing to retrieve firebase data
-@app.route("/api/firebase")
-def get_firebase():
-    fb = firebase.FirebaseApplication(
-        'https://geodudes-8f12a.firebaseio.com', None)
-    result = fb.get('/', None)
-    return result
+
+def get_firebase_data(url_end):
+    url_start = 'https://geodudes-8f12a.firebaseio.com/'
+    url_end = url_end.strip("/")
+    url = url_start + url_end
+    print(url)
