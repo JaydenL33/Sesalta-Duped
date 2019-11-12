@@ -1,12 +1,10 @@
 from country_generator import CountryGenerator
-import json
 from country_system import CountrySystem
+from firebase import firebase
+import json
 
-country_data_file = "country_data.json"
-
-with open(country_data_file, "r", encoding="utf-8") as file:
-    json_str = str(file.read())
-
-country_data = json.loads(json_str)
+fb = firebase.FirebaseApplication(
+    'https://geodudes-8f12a.firebaseio.com/', None)
+country_data = fb.get('/countryData', None)
 
 country_system = CountrySystem(country_data)

@@ -19,10 +19,9 @@ class CountrySystem:
 
     # NOTE: id is stored as a string. This reduces the need for
     # type conversions
-    def new_game(self, given, asked_for):
+    def new_game(self, country_data, given, asked_for):
         new_id = str(self._generate_new_id())
-        country_data_copy = copy.deepcopy(self._country_data)
-        new_game = Game(new_id, country_data_copy, given, asked_for)
+        new_game = Game(new_id, country_data, given, asked_for)
 
         self._games[new_id] = new_game
         return new_game
