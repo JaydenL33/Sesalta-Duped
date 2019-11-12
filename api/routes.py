@@ -7,8 +7,10 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-
 app.config["DEBUG"] = True
+
+SUCCESS = '1'
+FAILURE = '0'
 
 """
 
@@ -28,20 +30,6 @@ Example usage:
 """
 
 
-# Helper function to extract the value of an arg from the given args.
-# Params:
-# args: all args
-# param_name: the name of the argument to be returned
-# required: determines whether an exception will be raised if the argument
-# is not found.
-def get_arg(args, param_name, required=False):
-    if param_name in args:
-        return args[param_name]
-    elif required == True:
-        raise ParameterNotFoundError(param_name, args)
-    else:
-        return None
-
 # Returns the id of a new game of Sesalta
 # Params:
 # given: the given game mode for each question (not yet needed)
@@ -52,7 +40,7 @@ def new_game():
 
     given = get_arg(args, "given", required=False)
     asked_for = get_arg(args, "given", required=False)
-    country_data = get_firebase_data('/countryData')
+    country_data = get_firebase_data('countryData')     # list of jsons
 
     new_game = country_system.new_game(country_data, given, asked_for)
     return new_game.id
@@ -74,17 +62,17 @@ def random_countries():
         amount = 1
     return json.dumps(country_system.random_countries(id, amount))
 
+
 # Takes the answer given in a game.
 # Returns: string "1" if answer was correct. Otherwise string "0"
 # Handles score updates for the question
 # Params:
 # id: the game ID
-# expected: the NAME_LONG of the correct answer (e.g. "Australia")
-# observed: the NAME_LONG of the given answer (e.g. "Canada")
+# expected: the NAME_LONG of the correct answer(e.g. "Australia")
+# observed: the NAME_LONG of the given answer(e.g. "Canada")
 @app.route("/api/country/check/")
 def check_country():
     args = request.args
-
     id = get_arg(args, "id", required=True)
     expected = get_arg(args, "expected", required=True)
     observed = get_arg(args, "observed", required=True)
@@ -102,8 +90,8 @@ def check_country():
 @app.route("/api/country/results/")
 def get_results():
     args = request.args
-
     id = get_arg(args, "id", required=True)
+
     return json.dumps(country_system.get_results(id))
 
 
@@ -115,21 +103,38 @@ def get_results():
 # Params:
 # name: the desired public name
 # (probably needs a user id included as well)
-@app.route("/api/user/name/")
+@app.route("/api/user/update/")
 def update_name():
     args = request.args
-    name = get_arg(args, "id", required=True)
+    name = get_arg(args, "name", required=True)
 
-    fb = firebase.FirebaseApplication(
-        'https://geodudes-8f12a.firebaseio.com', None)
-    bad_words = fb.get('/badWords', None)
-    print(type(bad_words))
+    bad_words = get_firebase_data('badWords')       # list of strings
 
-    # bad_words = bad_words.values()
+    # TODO: finish country_system.update_name()
+    name_was_updated = country_system.update_name(name, bad_words)
+    if name_was_updated:
+        return SUCCESS
+    else:
+        return FAILURE
+    return country_system.update_name(name, bad_words)
 
-    # return country_system.update_name(name, bad_words)
+# Helper function to extract the value of an arg from the given args.
+# Params:
+# args: all args
+# param_name: the name of the argument to be returned
+# required: determines whether an exception will be raised if the argument
+# is not found.
 
-# Helper function (should be moved to another file probably)
+
+def get_arg(args, param_name, required=False):
+    if param_name in args:
+        return args[param_name]
+    elif required == True:
+        raise ParameterNotFoundError(param_name, args)
+    else:
+        return None
+
+# Helper function (should probs be moved to another file)
 
 
 def get_firebase_data(path):

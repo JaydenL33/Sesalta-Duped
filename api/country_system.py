@@ -5,6 +5,8 @@ import random
 
 # Make ID_RANGE this much larger for release
 ID_RANGE = 1000
+NAME_LENGTH = 3
+ALLOWED_NAME_CHARS = "qwertyuiopasdfghjklzxcvbnm"
 
 
 class CountrySystem:
@@ -47,16 +49,34 @@ class CountrySystem:
         game = self._get_game(id)
         return game.get_results()
 
+    # add a parameter for user id if needed
     def update_name(self, new_name, bad_words):
-        pass
+        is_allowed = True
 
-    # ========================================
-    #   Private functions
-    # ========================================
+        if len(new_name) != NAME_LENGTH:
+            is_allowed = False
 
-    # ISSUE: Currently, this function will hang when too many games are in
-    # progress. We will need to implement a way to remove the oldest/completed
-    # games.
+        for char in new_name:
+            if char.lower() not in ALLOWED_NAME_CHARS:
+                is_allowed = False
+
+        if new_name.lower() in bad_words:
+            is_allowed = False
+
+        if is_allowed:
+            # TODO: update the user's name
+            pass
+
+        return is_allowed
+
+        # ========================================
+        #   Private functions
+        # ========================================
+
+        # ISSUE: Currently, this function will hang when too many games are in
+        # progress. We will need to implement a way to remove the oldest/completed
+        # games.
+
     def _generate_new_id(self):
         id = str(random.randrange(ID_RANGE))
         while id in self._games:
