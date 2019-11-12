@@ -1,52 +1,74 @@
-import React from "react";
-import { withStyles, Theme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
+import React from 'react';
+import { withStyles, Theme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { Link as RouterLink } from 'react-router-dom'
+import Link from '@material-ui/core/Link';
 
 const styles = (theme: Theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 });
 
 interface P {
-  classes: any;
+  classes: any
 }
 
-class NavBar extends React.Component<P> {
+interface S {
+  isEnglish: boolean;
+}
+
+class NavBar extends React.Component<P,S> {
+  constructor(props: P) {
+    super(props);
+    if(window.location.pathname.substr(1, 2) === "en") {
+      this.state = {isEnglish: true};
+    } else if(window.location.pathname.substr(1, 2) === "jp") {
+      this.state = {isEnglish: false};
+    } else {
+      this.state = {isEnglish: true};
+    }
+  }
+
   render() {
     const { classes } = this.props;
+    const isEnglish = this.state.isEnglish;
+    let LangButton;
+    let HomeLink;
+    let LoginButton;
+
+    if(isEnglish) {
+      LangButton = <Button color="inherit" onClick={() => this.setState({ isEnglish: false })}>
+        <Link color="inherit" component={RouterLink} to="/jp/game">ENG</Link>
+      </Button>;
+      HomeLink = <Link color="inherit" component={RouterLink} to="/en/game">Sesalta</Link>;
+      LoginButton = <Button color="inherit">Login</Button>;
+    } else {
+      LangButton = <Button color="inherit" onClick={() => this.setState({ isEnglish: true })}>
+        <Link color="inherit" component={RouterLink} to="/en/game">日本語</Link>
+      </Button>;
+      HomeLink = <Link color="inherit" component={RouterLink} to="/jp/game">セサルタ</Link>;
+      LoginButton = <Button color="inherit">ログイン</Button>;
+    }
 
     return (
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              <Link color="inherit" component={RouterLink} to="/game">
-                Sesalta
-              </Link>
+            {LangButton}
+            <Typography variant="h6" className={classes.title} >
+              {HomeLink}
             </Typography>
-            <Button color="inherit">Login</Button>
+            {LoginButton}
           </Toolbar>
         </AppBar>
       </div>

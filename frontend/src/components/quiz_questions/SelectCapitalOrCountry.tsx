@@ -214,7 +214,7 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
               next question
             </Button>
             <Link
-              to={{ pathname: "/game/results", state: this.state.gameResults }}
+              to={{ pathname: "/en/game/results", state: this.state.gameResults }}
             >
               <Button
                 className={

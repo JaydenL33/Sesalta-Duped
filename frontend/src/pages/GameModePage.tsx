@@ -66,14 +66,14 @@ export default function GameHome(props: Props) {
       <div className={classes.horizontalItems}>
         <Chip
           clickable
-          onClick={() => history.push("/game/options")}
+          onClick={() => history.push("/en/game/options")}
           color="secondary"
           className={classes.chip}
           label="Lone Warrior"
         />
         <Chip
           clickable
-          onClick={() => history.push("/game/options")}
+          onClick={() => history.push("/en/game/options")}
           color="primary"
           className={classes.chip}
           label="I Have Friends To Dethrone"

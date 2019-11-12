@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Map from "../Map";
 import { Link } from "react-router-dom";
+import { Furigana } from 'furigana-react';
 
 const styles = {
   card: {
@@ -115,23 +116,47 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
-    return (
-      <Container maxWidth="sm">
-        <Card className={classes.card}>
-          <CardContent>
-            <div>
-              <Map callback={this.handleMapClickCallback} />
-            </div>
-            <Typography color="textSecondary" gutterBottom>
-              Find {this.props.countryExpected}
-            </Typography>
-          </CardContent>
-          <Typography>
-            {this.state.isCorrect !== undefined &&
-              (this.state.isCorrect ? "Correct" : "Wrong")}
-          </Typography>
-          <CardActions style={{ justifyContent: "center" }}>
-            <Button
+    let QuestionText, ResponseText, QuizButton, EndButton;
+    
+    if(window.location.pathname.substr(1,2) === "jp") {
+      QuestionText = <Typography color="textSecondary" gutterBottom>
+                       {this.props.countryExpected}
+                       <Furigana furigana="み" opacity={1.0}> を見つける</Furigana>
+                     </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ? "正解" : "不正解")}
+        </Typography>;
+      QuizButton = <Button
+              // className={classes.button}
+              className={
+                this.state.showButton ? classes.button : classes.hidden
+              }
+              variant="contained"
+              color="primary"
+              size="medium"
+              onClick={this.handleNextQuestion}
+            >
+              次の質問
+            </Button>
+      EndButton = <Link
+              to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
+            >
+              <Button
+                className={
+                  this.state.showFinishButton ? classes.button : classes.hidden
+                }
+                variant="contained"
+                color="primary"
+                size="medium"
+              >
+                  おわり！
+              </Button>
+            </Link>
+    } else {
+      QuestionText = <Typography color="textSecondary" gutterBottom>
+                       Find {this.props.countryExpected} 
+                     </Typography>;
+      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>
+      QuizButton = <Button
               // className={classes.button}
               className={
                 this.state.showButton ? classes.button : classes.hidden
@@ -143,8 +168,8 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
             >
               Next Question
             </Button>
-            <Link
-              to={{ pathname: "/game/results", state: this.state.gameResults }}
+      EndButton = <Link
+              to={{ pathname: "/en/game/results", state: this.state.gameResults }}
             >
               <Button
                 className={
@@ -157,6 +182,21 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
                 Finish!
               </Button>
             </Link>
+    }
+    
+    return (
+      <Container maxWidth="sm">
+        <Card className={classes.card}>
+          <CardContent>
+            <div>
+              <Map callback={this.handleMapClickCallback} />
+            </div>
+            {QuestionText}
+          </CardContent>
+          {ResponseText}
+          <CardActions style={{ justifyContent: "center" }}>
+            {QuizButton}
+            {EndButton}
           </CardActions>
         </Card>
       </Container>
