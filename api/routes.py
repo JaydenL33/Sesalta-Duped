@@ -142,14 +142,49 @@ def get_firebase_data(path):
     return firebase_session.child(path).get()
 
 
-@app.route("/pushfbdata")
-def push_fb_data():
-    # path = path.strip("/what")
-    result = firebase_session.child("what").push({"hi": "test"})
-    print(result)
-    return result
+
+
+# tested and working, just need to change  methods=['GET'] to  methods=['POST'] and uncomment player and score
+# returns string "done" once db has finished updating
+# can refactor but going to sleep now
+@app.route("/api/pushPlayerAndScoreToLeaderboard",  methods=['GET'])
+def push_player_and_score_to_leaderboard():
+
+    player = "raydai"
+    score = 250
+
+    # player = request.form.get('player')
+    # score = request.form.get('score')
+
+
+    playerData = firebase_session.child("userLeaderboard" + "/" + player).get()
+
+    if playerData == None:
+        firebase_session.child("userLeaderboard"+ "/" + player).update({"GameCount": 1, "GamesPlayed": {"Game1": int(score)}})
+        return "done"
+
+
+    this_game_count = playerData["GameCount"] + 1
+
+    firebase_session.child("userLeaderboard"+ "/" + player).update({"GameCount": int(this_game_count)})
+    this_game = "Game" + str(this_game_count)  
+
+
+    currentScores = playerData["GamesPlayed"]
+    keysList = list(currentScores.keys())
+
+    if len(keysList) >= 5:
+        data = extractGameNumberAndLowestScore(currentScores)
+        if data["score"] <= score:
+            firebase_session.child("userLeaderboard"+ "/" + player + "/GamesPlayed/" + data["game"]).delete()
+            firebase_session.child("userLeaderboard"+ "/" + player + "/GamesPlayed").update({this_game: int(score)})
+    else:
+        firebase_session.child("userLeaderboard"+ "/" + player + "/GamesPlayed").update({this_game: int(score)})
+
+    return "done"
 
 
 
-
-
+def extractGameNumberAndLowestScore(currentScores):
+    currentScoresSorted = sorted(currentScores.items(), key=lambda kv: kv[1])
+    return { "game": currentScoresSorted[0][0], "score": currentScoresSorted[0][1] }
