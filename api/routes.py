@@ -131,48 +131,106 @@ def get_firebase_data(path):
     return firebase_session.child(path).get()
 
 
+
+# tested and working, just need to uncomment out the args stuff and delete the hardcoded name
+# just need to json.parse on the frontend
+@app.route("/api/getPlayersScoreboard/",  methods=['GET'])
+def get_players_scoreboard():
+    # args = request.args
+    # name = get_arg(args, "user", required=True)
+
+    name = "prasadsuniquename"
+    data = extract_games_and_score_for_user(name)
+    return json.dumps(data)
+
+
+@app.route("/api/getGlobalLeaderboard/",  methods=['GET'])
+def get_global_scoreboard():
+    all_users_data = firebase_session.child("users" + "/").get()
+    users_names = list(all_users_data.keys())
+    all_users_with_games_and_scores = {}
+    for users_name in users_names:
+        all_users_with_games_and_scores[users_name] = extract_games_and_score_for_user(users_name)
+        
+    return json.dumps(all_users_with_games_and_scores)
+
+
+def extract_games_and_score_for_user(name):
+    user_data = firebase_session.child("users/" + name).get()
+    game_count = user_data['gameIDs']['GameCount']
+    if game_count == 0:
+        return {}
+    else:
+        games_played = user_data['gameIDs']['GamesPlayed']
+        game_id_list = list(games_played.keys())
+        game_number_and_score = {}
+
+        for game_id in game_id_list:
+            game_data = firebase_session.child("games" + "/" + games_played[game_id]).get()
+            game_number_and_score[game_id] = calculateScore(game_data)
+            
+        game_number_and_score_sorted = sorted(game_number_and_score.items(), key=lambda kv: kv[1], reverse=True)
+        return game_number_and_score_sorted
+
+def calculateScore(game_data):
+    total_score = 0
+    for question in game_data['questions']:
+        total_score += question['points']
+    return total_score
+
+
+
+
+
+
+
+
+
+
+
+
 # tested and working, just need to change  methods=['GET'] to  methods=['POST'] and uncomment player and score
 # returns string "done" once db has finished updating
 # can refactor but going to sleep now
-@app.route("/api/pushPlayerAndScoreToLeaderboard/",  methods=['GET'])
-def push_player_and_score_to_leaderboard():
+# @app.route("/api/pushPlayerAndScoreToLeaderboard/",  methods=['GET'])
+# def push_player_and_score_to_leaderboard():
 
-    player = "raydai"
-    score = 250
+#     player = "raydai"
+#     score = 250
 
-    # player = request.form.get('player')
-    # score = request.form.get('score')
+#     # player = request.form.get('player')
+#     # score = request.form.get('score')
 
-    playerData = firebase_session.child("userLeaderboard" + "/" + player).get()
+#     playerData = firebase_session.child("userLeaderboard" + "/" + player).get()
 
-    if playerData == None:
-        firebase_session.child("userLeaderboard" + "/" + player).update(
-            {"GameCount": 1, "GamesPlayed": {"Game1": int(score)}})
-        return "done"
+#     if playerData == None:
+#         firebase_session.child("userLeaderboard" + "/" + player).update(
+#             {"GameCount": 1, "GamesPlayed": {"Game1": int(score)}})
+#         return "done"
 
-    this_game_count = playerData["GameCount"] + 1
+#     this_game_count = playerData["GameCount"] + 1
 
-    firebase_session.child("userLeaderboard" + "/" +
-                           player).update({"GameCount": int(this_game_count)})
-    this_game = "Game" + str(this_game_count)
+#     firebase_session.child("userLeaderboard" + "/" +
+#                            player).update({"GameCount": int(this_game_count)})
+#     this_game = "Game" + str(this_game_count)
 
-    currentScores = playerData["GamesPlayed"]
-    keysList = list(currentScores.keys())
+#     currentScores = playerData["GamesPlayed"]
+#     keysList = list(currentScores.keys())
 
-    if len(keysList) >= 5:
-        data = extractGameNumberAndLowestScore(currentScores)
-        if data["score"] <= score:
-            firebase_session.child("userLeaderboard" + "/" +
-                                   player + "/GamesPlayed/" + data["game"]).delete()
-            firebase_session.child(
-                "userLeaderboard" + "/" + player + "/GamesPlayed").update({this_game: int(score)})
-    else:
-        firebase_session.child(
-            "userLeaderboard" + "/" + player + "/GamesPlayed").update({this_game: int(score)})
+#     if len(keysList) >= 5:
+#         data = extractGameNumberAndLowestScore(currentScores)
+#         if data["score"] <= score:
+#             firebase_session.child("userLeaderboard" + "/" +
+#                                    player + "/GamesPlayed/" + data["game"]).delete()
+#             firebase_session.child(
+#                 "userLeaderboard" + "/" + player + "/GamesPlayed").update({this_game: int(score)})
+#     else:
+#         firebase_session.child(
+#             "userLeaderboard" + "/" + player + "/GamesPlayed").update({this_game: int(score)})
 
-    return "done"
+#     return "done"
 
 
-def extractGameNumberAndLowestScore(currentScores):
-    currentScoresSorted = sorted(currentScores.items(), key=lambda kv: kv[1])
-    return {"game": currentScoresSorted[0][0], "score": currentScoresSorted[0][1]}
+# def extractGameNumberAndLowestScore(currentScores):
+#     currentScoresSorted = sorted(currentScores.items(), key=lambda kv: kv[1])
+#     return {"game": currentScoresSorted[0][0], "score": currentScoresSorted[0][1]}
