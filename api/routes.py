@@ -44,7 +44,7 @@ def new_game():
     asked_for = get_arg(args, "given", required=False)
     country_data = get_firebase_data('countryData')     # list of jsons
 
-    new_game = country_system.new_game(given, asked_for)
+    new_game = country_system.new_game(country_data, given, asked_for)
     print(new_game.id, type(new_game.id))
     return new_game.id
 
