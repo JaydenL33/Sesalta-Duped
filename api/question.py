@@ -32,11 +32,11 @@ class Question:
 
         time_asked_str = get_arg(
             question_data, "time_asked", required=False)
-        time_asked = Question._str_to_datetime(time_asked)
+        time_asked = Question._str_to_datetime(time_asked_str)
 
         time_answered_str = get_arg(
             question_data, "time_answered", required=False)
-        time_answered = Question._str_to_datetime(time_asked_str)
+        time_answered = Question._str_to_datetime(time_answered_str)
         print("TIME", time_answered, type(time_answered))
 
         return Question(options, question_num, expected_answer=expected_answer, observed_answers=observed_answers)
@@ -55,7 +55,8 @@ class Question:
     def to_dict(self):
         print(f"observed_answers = {self._observed_answers}")
         points = self.points_scored()
-        print(f"  OBSERVED: {self._observed_answers}")
+        print(
+            f"  time_answered: {(self._time_answered)}")
         return {
             "options": self._options,
             "question_num": self._question_num,
