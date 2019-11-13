@@ -1,7 +1,7 @@
+from country_system import CountrySystem
 from exceptions import *
 from flask import Flask, jsonify, request
 import json
-import random
 from setup import firebase_session
 from flask_cors import CORS
 
@@ -11,6 +11,8 @@ app.config["DEBUG"] = True
 
 SUCCESS = '1'
 FAILURE = '0'
+
+country_system = CountrySystem()
 
 """
 
