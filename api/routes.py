@@ -145,7 +145,7 @@ def get_firebase_data(path):
 # tested and working, just need to change  methods=['GET'] to  methods=['POST'] and uncomment player and score
 # returns string "done" once db has finished updating
 # can refactor but going to sleep now
-@app.route("/api/pushPlayerAndScoreToLeaderboard",  methods=['GET'])
+@app.route("/api/pushPlayerAndScoreToLeaderboard/",  methods=['GET'])
 def push_player_and_score_to_leaderboard():
 
     player = "raydai"
