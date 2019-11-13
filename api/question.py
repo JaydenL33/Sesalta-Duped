@@ -39,24 +39,21 @@ class Question:
         time_answered = Question._str_to_datetime(time_answered_str)
         print("TIME", time_answered, type(time_answered))
 
-        return Question(options, question_num, expected_answer=expected_answer, observed_answers=observed_answers)
+        return Question(options, question_num, expected_answer=expected_answer, observed_answers=observed_answers, time_asked=time_asked, time_answered=time_answered)
 
-    def __init__(self, options, question_num, expected_answer=None, observed_answers=set(), max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
+    def __init__(self, options, question_num, expected_answer=None, observed_answers=set(), max_answers=DEFAULT_MAX_ANSWERS, force_answers=False, time_asked=None, time_answered=None):
         self._options = options
         self._question_num = question_num
         self._expected_answer = expected_answer
         self._observed_answers = observed_answers
         self._max_answers = max_answers
         self._force_answers = force_answers
-        self._time_asked = datetime.now()
-        self._time_answered = None
+        self._time_asked = time_asked if time_asked is not None else datetime.now()
+        self._time_answered = time_answered
 
     # Returns a dictionary summarising the question/answer
     def to_dict(self):
-        print(f"observed_answers = {self._observed_answers}")
         points = self.points_scored()
-        print(
-            f"  time_answered: {(self._time_answered)}")
         return {
             "options": self._options,
             "question_num": self._question_num,
@@ -118,7 +115,7 @@ class Question:
 
             elif points < INCORRECT_ANSWER_POINTS:
                 points = INCORRECT_ANSWER_POINTS
-
+        print(f"POINTS::::: {points}")
         # Allow for rounding up before casting to int
         return math.ceil(round(points, 0))
 
@@ -126,13 +123,15 @@ class Question:
     def _datetime_to_str(cls, dt):
         if type(dt) is not datetime:
             return dt
-        return dt.time().isoformat()
+        return dt.isoformat()
 
     @classmethod
     def _str_to_datetime(cls, dt_string):
+        if dt_string == "None":
+            return None
         try:
-            return datetime.strptime(dt_string, "%Y-%m-%d %H:%M:%S.%f").time()
-        except(Exception):
+            return datetime.strptime(dt_string, "%Y-%m-%dT%H:%M:%S.%f")
+        except(TypeError):
             return dt_string
 
     # Sets the _expected_answer after ensuring it isn't set already.
