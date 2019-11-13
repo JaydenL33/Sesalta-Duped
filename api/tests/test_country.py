@@ -86,7 +86,8 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        assert results["points"] == 100
+        assert results["points"] > 95
+        assert results["points"] < 101
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
         assert results["observed_answers"] == [answer_name]
@@ -100,7 +101,8 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        assert results["points"] == 100
+        assert results["points"] > 95
+        assert results["points"] < 101
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
         assert results["observed_answers"] == [answer_name]
@@ -116,6 +118,8 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
+        assert results["points"] > 45
+        assert results["points"] < 51
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
         assert results["observed_answers"].sort() == [wrong_answer,
@@ -137,7 +141,8 @@ class TestCheckAnswer:
             id, expected_answer_name, expected_answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        assert results["points"] == 50
+        assert results["points"] > 45
+        assert results["points"] < 51
         assert results["potential"] == 100
         assert results["expected_answer"] == expected_answer_name
         assert results["observed_answers"].sort() == [

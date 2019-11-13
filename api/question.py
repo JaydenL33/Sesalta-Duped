@@ -8,6 +8,10 @@ DEFAULT_MAX_ANSWERS = 2
 MAX_CORRECT_ANSWER_POINTS = 100
 INCORRECT_ANSWER_POINTS = 0
 
+MICROS_PER_SECOND = 1000000
+SECONDS_PER_DAY = 86400
+MICROS_ALLOWED = 20 * MICROS_PER_SECOND
+
 
 class Question:
 
@@ -25,8 +29,8 @@ class Question:
         self._observed_answers = observed_answers
         self._max_answers = max_answers
         self._force_answers = force_answers
-        # self._time_asked = datetime.now()
-        # self._time_answered = None
+        self._time_asked = datetime.now()
+        self._time_answered = None
 
     # Returns a dictionary summarising the question/answer
     def to_dict(self):
@@ -45,6 +49,8 @@ class Question:
     # expected answer will be compared against the previous accepted one
     # Returns the number of points scored.
     def check_answer(self, expected, observed):
+        answer_time = datetime.now()
+
         if expected not in self._options:
             raise AnswerNotFoundError(expected, self._options)
 
@@ -60,17 +66,33 @@ class Question:
         self._add_observed_answer(observed)
 
         if expected in self._options and observed == expected:
+            self._set_time_answered(answer_time)
             return CORRECT
         else:
             return INCORRECT
 
     def points_scored(self):
+        points = INCORRECT_ANSWER_POINTS
+
         if self._answered_correctly():
-            points = min(MAX_CORRECT_ANSWER_POINTS,
-                         math.ceil(MAX_CORRECT_ANSWER_POINTS / len(self._observed_answers)))
-        else:
-            points = INCORRECT_ANSWER_POINTS
-        return points
+            micros_taken = self._micros_between(
+                self._time_asked, self._time_answered
+            )
+            fraction_time_remaining = 1 - (micros_taken / MICROS_ALLOWED)
+
+            points = (MAX_CORRECT_ANSWER_POINTS *
+                      fraction_time_remaining /
+                      len(self._observed_answers))
+
+            # Additional checks to ensure that the score is in the allowed range
+            if points > MAX_CORRECT_ANSWER_POINTS:
+                points = MAX_CORRECT_ANSWER_POINTS
+
+            elif points < INCORRECT_ANSWER_POINTS:
+                points = INCORRECT_ANSWER_POINTS
+
+        # Allow for rounding up before casting to int
+        return math.ceil(round(points, 0))
 
     # Sets the _expected_answer after ensuring it isn't set already.
     def _set_expected_answer(self, expected_answer):
@@ -97,3 +119,13 @@ class Question:
             return True
         else:
             return False
+
+    def _set_time_answered(self, answer_time):
+        if self._time_answered is None and self._answered_correctly():
+            self._time_answered = answer_time
+
+    def _micros_between(self, t1, t2):
+        diff = t2 - t1
+        return (diff.days * SECONDS_PER_DAY * MICROS_PER_SECOND +
+                diff.seconds * MICROS_PER_SECOND +
+                diff.microseconds)
