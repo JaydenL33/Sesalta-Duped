@@ -8,7 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Map from "../Map";
 import { Link } from "react-router-dom";
-import { Furigana } from 'furigana-react';
+import { Furigana } from "furigana-react";
+import axios from "axios";
 
 const styles = {
   card: {
@@ -67,28 +68,16 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
 
   async answerVerifier() {
     const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${this.state.countryObserved}&id=${this.props.gameID}`;
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    const response = await res.json();
+    const res = await axios.get(url);
+    const response = res.data;
     this.setState({ isCorrect: response });
     return response;
   }
 
   async attemptChecker(correctBoolean: number) {
-    const gameResultsResponse = await fetch(
-      `http://127.0.0.1:5000/api/country/results/?id=${this.props.gameID}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
-    let gameResults = await gameResultsResponse.json();
+    const url = `http://127.0.0.1:5000/api/country/results/?id=${this.props.gameID}`;
+    const gameResultsResponse = await axios.get(url);
+    let gameResults = gameResultsResponse.data;
     this.setState({ gameResults: JSON.parse(JSON.stringify(gameResults)) });
     console.log("these are the game results", gameResults);
     const currentQuestion = gameResults.length;
@@ -117,73 +106,93 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
   render() {
     const { classes } = this.props;
     let QuestionText, ResponseText, QuizButton, EndButton;
-    
-    if(window.location.pathname.substr(1,2) === "jp") {
-      QuestionText = <Typography color="textSecondary" gutterBottom>
-                       {this.props.countryExpected}
-                       <Furigana furigana="み" opacity={1.0}> を見つける</Furigana>
-                     </Typography>;
-      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ? "正解" : "不正解")}
-        </Typography>;
-      QuizButton = <Button
-              // className={classes.button}
-              className={
-                this.state.showButton ? classes.button : classes.hidden
-              }
-              variant="contained"
-              color="primary"
-              size="medium"
-              onClick={this.handleNextQuestion}
-            >
-              次の質問
-            </Button>
-      EndButton = <Link
-              to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
-            >
-              <Button
-                className={
-                  this.state.showFinishButton ? classes.button : classes.hidden
-                }
-                variant="contained"
-                color="primary"
-                size="medium"
-              >
-                  おわり！
-              </Button>
-            </Link>
+
+    if (window.location.pathname.substr(1, 2) === "jp") {
+      QuestionText = (
+        <Typography color="textSecondary" gutterBottom>
+          {this.props.countryExpected}
+          <Furigana furigana="み" opacity={1.0}>
+            {" "}
+            を見つける
+          </Furigana>
+        </Typography>
+      );
+      ResponseText = (
+        <Typography>
+          {this.state.isCorrect !== undefined &&
+            (this.state.isCorrect ? "正解" : "不正解")}
+        </Typography>
+      );
+      QuizButton = (
+        <Button
+          // className={classes.button}
+          className={this.state.showButton ? classes.button : classes.hidden}
+          variant="contained"
+          color="primary"
+          size="medium"
+          onClick={this.handleNextQuestion}
+        >
+          次の質問
+        </Button>
+      );
+      EndButton = (
+        <Link
+          to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
+        >
+          <Button
+            className={
+              this.state.showFinishButton ? classes.button : classes.hidden
+            }
+            variant="contained"
+            color="primary"
+            size="medium"
+          >
+            おわり！
+          </Button>
+        </Link>
+      );
     } else {
-      QuestionText = <Typography color="textSecondary" gutterBottom>
-                       Find {this.props.countryExpected} 
-                     </Typography>;
-      ResponseText = <Typography>{this.state.isCorrect !== undefined && (this.state.isCorrect ?  "Correct": "Wrong")}</Typography>
-      QuizButton = <Button
-              // className={classes.button}
-              className={
-                this.state.showButton ? classes.button : classes.hidden
-              }
-              variant="contained"
-              color="primary"
-              size="medium"
-              onClick={this.handleNextQuestion}
-            >
-              Next Question
-            </Button>
-      EndButton = <Link
-              to={{ pathname: "/en/game/results", state: this.state.gameResults }}
-            >
-              <Button
-                className={
-                  this.state.showFinishButton ? classes.button : classes.hidden
-                }
-                variant="contained"
-                color="primary"
-                size="medium"
-              >
-                Finish!
-              </Button>
-            </Link>
+      QuestionText = (
+        <Typography color="textSecondary" gutterBottom>
+          Find {this.props.countryExpected}
+        </Typography>
+      );
+      ResponseText = (
+        <Typography>
+          {this.state.isCorrect !== undefined &&
+            (this.state.isCorrect ? "Correct" : "Wrong")}
+        </Typography>
+      );
+      QuizButton = (
+        <Button
+          // className={classes.button}
+          className={this.state.showButton ? classes.button : classes.hidden}
+          variant="contained"
+          color="primary"
+          size="medium"
+          onClick={this.handleNextQuestion}
+        >
+          Next Question
+        </Button>
+      );
+      EndButton = (
+        <Link
+          to={{ pathname: "/en/game/results", state: this.state.gameResults }}
+        >
+          <Button
+            className={
+              this.state.showFinishButton ? classes.button : classes.hidden
+            }
+            variant="contained"
+            color="primary"
+            size="medium"
+          >
+            Finish!
+          </Button>
+        </Link>
+      );
     }
-    
+
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>

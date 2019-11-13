@@ -2,7 +2,7 @@
 import React from "react";
 import SelectCountryOnMap from "../components/quiz_questions/SelectCountryOnMap";
 // import AnswerComponent from "../components/quiz_questions/AnswerComponent";
-
+import axios from "axios";
 interface P {}
 
 interface S {
@@ -46,43 +46,19 @@ export default class GamePlayPage extends React.Component<P, S> {
   /*
     get game id for this game
   */
-  getGameID(): Promise<string> {
+  async getGameID(): Promise<string> {
     const url = "http://127.0.0.1:5000/api/country/new_game/";
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then((response: any) => response.json())
-      .then((response: any) => {
-        console.log(response);
-        return response;
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    const response = await axios.get(url);
+    return response.data;
   }
 
   /*
     get random options
   */
-  getRandomCountryOptions() {
+  async getRandomCountryOptions() {
     const url = `http://127.0.0.1:5000/api/country/random/?amount=1&id=${this.state.gameID}`;
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then((response: any) => response.json())
-      .then((response: any) => {
-        console.log(response);
-        return response;
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    const response = await axios.get(url);
+    return response.data;
   }
 
   nextQuestionPlsCallback = async () => {
