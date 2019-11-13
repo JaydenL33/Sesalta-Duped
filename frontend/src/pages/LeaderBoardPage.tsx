@@ -4,6 +4,7 @@ import Container from '@material-ui/core/Container';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import axios from 'axios';
 
 interface Row {
   name: string;
@@ -16,6 +17,13 @@ interface TableState {
   columns: Array<Column<Row>>;
   data: Row[];
   title: string;
+  name: string | undefined; // player's name
+  isauthenticated: boolean;
+}
+
+interface Props {
+  name: string | undefined; // player's name
+  isauthenticated: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,9 +40,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 // component from: https://material-table.com/#/docs/all-props
-export default function MaterialTableDemo() {
+export default function MaterialTableDemo(props: Props) {
   const classes = useStyles();
-  const [state] = React.useState<TableState>({
+  const [state, setState] = React.useState<TableState>({
     columns: [
       { title: 'Name', field: 'name' },
       { title: 'Date', field: 'date' },
@@ -56,13 +64,40 @@ export default function MaterialTableDemo() {
       { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
     ],
     title: "Global Ranking",
+    name: props.name,
+    isauthenticated: true, // should be props.isauthenticated
   });
 
   const [value, setValue] = React.useState(1);
-
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
+    if (value === 0 && props.name) {
+    // setState({
+    //   ...state,
+    //   data: getPlayerData(state.name)
+    // });
+    } else {
+    // setState({
+    //   ...state,
+    //   data: getGlobalData()
+    // });
+    }
   };
+
+  // Make a request for a player's record with a given publicName
+  const getPlayerData = async (publicName: string) => 
+  await axios.get(`http://127.0.0.1:5000/api/score?publicName=${publicName}`)
+  .then(function (response) {
+    console.log(response);
+    return response.data;
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+  // TODO
+  // Make a request to get all game records
+  // const getGlobalData = async () => ...
 
   return (
     <Container maxWidth="lg" className={classes.root}>
@@ -73,7 +108,7 @@ export default function MaterialTableDemo() {
         textColor="primary"
         centered
       >
-        <Tab label="Player Ranking" disabled/>
+        <Tab label="Player Ranking" disabled={!state.isauthenticated}/>
         <Tab label="Global Ranking" />
       </Tabs>
       <MaterialTable
