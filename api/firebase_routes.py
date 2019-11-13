@@ -2,7 +2,7 @@ from setup import firebase_session
 
 
 def new_game_id():
-    response = firebase_session.child('games').get()
+    response = firebase_session.child('games').push()
     return response.key
 
 
