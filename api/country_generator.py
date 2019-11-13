@@ -19,4 +19,4 @@ class CountryGenerator:
 
     @property
     def remaining_countries(self):
-        return self._remaining_countries
+        return self._remaining_country_indices

@@ -11,7 +11,7 @@ def get_game(game_id):
 
 
 def update_game(game_id, new_game_data):
-    firebase_session.child(f"games/{key}").set(new_game_data)
+    firebase_session.child(f"games/{game_id}").set(new_game_data)
 
 
 def get_country_by_index(country_index):

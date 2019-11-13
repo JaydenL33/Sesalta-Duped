@@ -19,7 +19,7 @@ class Game:
 
     def to_dict(self):
         mode = f"{str(self._given_mode)}->{str(self._asked_for_mode)}"
-        questions = self.get_results
+        questions = self.get_results()
         remaining_countries = self._country_generator.remaining_countries
 
         return {
