@@ -1,3 +1,4 @@
+from arg_fetcher import get_arg
 from datetime import datetime
 from exceptions import *
 import math
@@ -16,10 +17,15 @@ MICROS_ALLOWED = 20 * MICROS_PER_SECOND
 class Question:
 
     def from_dict(question_data):
+        print(f"question_data: {question_data}")
         options = question_data["options"]
         question_num = question_data["question_num"]
-        expected_answer = question_data["expected_answer"]
-        observed_answers = question_data["observed_answers"]
+        expected_answer = get_arg(
+            question_data, "expected_answer", required=False)
+        observed_answers = get_arg(
+            question_data, "observed_answers", required=False, default=set())
+        if observed_answers == None:
+            observed_answers = set()
         return Question(options, question_num, expected_answer, observed_answers)
 
     def __init__(self, options, question_num, expected_answer=None, observed_answers=set(), max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
@@ -34,7 +40,8 @@ class Question:
 
     # Returns a dictionary summarising the question/answer
     def to_dict(self):
-        points = self.points_scored()
+        print(f"observed_answers = {self._observed_answers}")
+        points = 5  # = self.points_scored()
         return {
             "options": self._options,
             "question_num": self._question_num,
