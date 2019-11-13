@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link as RouterLink } from 'react-router-dom'
 import Link from '@material-ui/core/Link';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import IconButton from '@material-ui/core/IconButton';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -65,6 +67,9 @@ class NavBar extends React.Component<P,S> {
         <AppBar position="static">
           <Toolbar>
             {LangButton}
+            <IconButton color="inherit">
+              <Link color="inherit" component={RouterLink} to="/en/leaderboard"><FormatListNumberedIcon/></Link>
+            </IconButton>
             <Typography variant="h6" className={classes.title} >
               {HomeLink}
             </Typography>
