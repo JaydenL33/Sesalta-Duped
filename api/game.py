@@ -15,7 +15,8 @@ class Game:
         given_mode = game_data["mode"].split("-")[0]
         asked_for_mode = game_data["mode"].split(">")[1]
         if "questions" in game_data:
-            questions = game_data["questions"]
+            question_data = game_data["questions"]
+            # questions = [question.]
         else:
             questions = []
         return Game(id, country_data, given_mode, asked_for_mode, questions)

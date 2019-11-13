@@ -11,6 +11,9 @@ INCORRECT_ANSWER_POINTS = 0
 
 class Question:
 
+    def from_dict(question_data):
+        pass
+
     def __init__(self, options, question_num, max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
         self._options = options
         self._question_num = question_num
