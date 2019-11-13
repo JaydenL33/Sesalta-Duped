@@ -13,7 +13,6 @@ class Game:
         self._asked_for_mode = asked_for
         self._questions = []
         self._country_generator = CountryGenerator(country_data)
-        # self._is_finished = False
 
     def choose_random_countries(self, amount):
         if len(self._questions) >= MAX_QUESTIONS:
@@ -48,9 +47,6 @@ class Game:
     def check_answer(self, expected, observed):
         question = self._questions[-1]
         return question.check_answer(expected, observed)
-
-    # def correct_answer_given(self, expected, observed):
-    #     self._questions[-1].correct_answer()
 
     def get_results(self):
         results = []

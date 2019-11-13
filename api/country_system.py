@@ -1,5 +1,6 @@
 import copy
 from exceptions import *
+from setup import firebase_session
 from game import Game
 import random
 
@@ -11,9 +12,13 @@ ALLOWED_NAME_CHARS = "qwertyuiopasdfghjklzxcvbnm"
 
 class CountrySystem:
 
-    def __init__(self, country_data):
-        self._country_data = country_data
-        self._games = {}
+    def __init__(self, country_data=None, games=None):
+        self._country_data = country_data  # isn't used anymore
+        self._users = users
+        if games:
+            self._games = games
+        else:
+            self._games = {}
 
     # ========================================
     #   Public functions
