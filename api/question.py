@@ -41,7 +41,7 @@ class Question:
     # Returns a dictionary summarising the question/answer
     def to_dict(self):
         print(f"observed_answers = {self._observed_answers}")
-        points = 5  # = self.points_scored()
+        points = self.points_scored()
         return {
             "options": self._options,
             "question_num": self._question_num,
