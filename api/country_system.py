@@ -1,6 +1,7 @@
 import copy
 from exceptions import *
 from setup import firebase_session
+import firebase_routes
 from game import Game
 import random
 
@@ -12,7 +13,7 @@ ALLOWED_NAME_CHARS = "qwertyuiopasdfghjklzxcvbnm"
 
 class CountrySystem:
 
-    def __init__(self, country_data=None, games=None):
+    def __init__(self, country_data=None, users=None, games=None):
         self._country_data = country_data  # isn't used anymore
         self._users = users
         if games:
@@ -27,10 +28,8 @@ class CountrySystem:
     # NOTE: id is stored as a string. This reduces the need for
     # type conversions
     def new_game(self, country_data, given, asked_for):
-        new_id = str(self._generate_new_id())
-        new_game = Game(new_id, country_data, given, asked_for)
-
-        self._games[new_id] = new_game
+        id = firebase_routes.new_game_id()
+        new_game = Game(id, country_data, given, asked_for)
         return new_game
 
     def random_countries(self, id, amount):

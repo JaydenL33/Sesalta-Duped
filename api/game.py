@@ -1,5 +1,6 @@
 from country_generator import CountryGenerator
 from exceptions import *
+import firebase_routes
 from question import Question
 
 MAX_QUESTIONS = 10
@@ -13,6 +14,8 @@ class Game:
         self._asked_for_mode = asked_for
         self._questions = []
         self._country_generator = CountryGenerator(country_data)
+
+        firebase_routes.update_game(self._id, self.to_dict())
 
     def choose_random_countries(self, amount):
         if len(self._questions) >= MAX_QUESTIONS:
@@ -53,6 +56,14 @@ class Game:
         for question in self._questions:
             results.append(question.to_dict())
         return results
+
+    def to_dict(self):
+        mode = f"{str(self._given_mode)}->{str(self._asked_for_mode)}"
+        questions = self.get_results
+        return {
+            "mode": mode,
+            "questions": questions
+        }
 
     @property
     def id(self):
