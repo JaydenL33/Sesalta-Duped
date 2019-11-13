@@ -17,6 +17,17 @@ class Game:
 
         firebase_routes.update_game(self._id, self.to_dict())
 
+    def to_dict(self):
+        mode = f"{str(self._given_mode)}->{str(self._asked_for_mode)}"
+        questions = self.get_results
+        remaining_countries = self._country_generator.remaining_countries
+
+        return {
+            "mode": mode,
+            "questions": questions,
+            "remainingCountries": remaining_countries
+        }
+
     def choose_random_countries(self, amount):
         if len(self._questions) >= MAX_QUESTIONS:
             raise MaxQuestionsReached(
@@ -33,6 +44,8 @@ class Game:
             random_countries.append(self._country_generator.next_country())
 
         self._new_question(random_countries)
+
+        firebase_routes.update_game(self._id, self.to_dict())
         return random_countries
 
     def _new_question(self, countries_used):
@@ -49,6 +62,8 @@ class Game:
 
     def check_answer(self, expected, observed):
         question = self._questions[-1]
+
+        firebase_routes.update_game(self._id, self.to_dict())
         return question.check_answer(expected, observed)
 
     def get_results(self):
@@ -56,14 +71,6 @@ class Game:
         for question in self._questions:
             results.append(question.to_dict())
         return results
-
-    def to_dict(self):
-        mode = f"{str(self._given_mode)}->{str(self._asked_for_mode)}"
-        questions = self.get_results
-        return {
-            "mode": mode,
-            "questions": questions
-        }
 
     @property
     def id(self):
