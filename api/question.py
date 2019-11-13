@@ -22,7 +22,7 @@ class Question:
         observed_answers = question_data["observed_answers"]
         return Question(options, question_num, expected_answer, observed_answers)
 
-    def __init__(self, options, question_num, expected_answer=None, observed_answers=set() max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
+    def __init__(self, options, question_num, expected_answer=None, observed_answers=set(), max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
         self._options = options
         self._question_num = question_num
         self._expected_answer = expected_answer

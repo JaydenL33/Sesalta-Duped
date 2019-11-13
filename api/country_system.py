@@ -88,6 +88,7 @@ class CountrySystem:
         return id
 
     def _get_game(self, id):
+        print(f"id is {id}")
         game_data = firebase_routes.get_game(id)
         game = Game.from_dict(id, game_data)
         return game

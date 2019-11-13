@@ -9,14 +9,14 @@ MAX_QUESTIONS = 10
 class Game:
 
     def from_dict(id, game_data):
-        print(game_data)
+        print(f"game data: {game_data}")
         id = id
         country_data = game_data["remainingCountries"]
         given_mode = game_data["mode"].split("-")[0]
         asked_for_mode = game_data["mode"].split(">")[1]
         if "questions" in game_data:
             question_data = game_data["questions"]
-            questions = [Question(q) for q in question_data]
+            questions = [Question.from_dict(q) for q in question_data]
         else:
             questions = []
         return Game(id, country_data, given_mode, asked_for_mode, questions)
