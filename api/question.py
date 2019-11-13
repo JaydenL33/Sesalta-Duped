@@ -16,8 +16,6 @@ class Question:
         question_num = question_data["question_num"]
         expected_answer = question_data["expected_answer"]
         observed_answers = question_data["observed_answers"]
-        points = question_data["points"]
-        potential = question_data["potential"]
         return Question(options, question_num, expected_answer, observed_answers)
 
     def __init__(self, options, question_num, expected_answer=None, observed_answers=set() max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
