@@ -46,7 +46,7 @@ def new_game():
 
     new_game = country_system.new_game(country_data, given, asked_for)
     print(new_game.id, type(new_game.id))
-    return new_game.id
+    return json.dumps(new_game.id)
 
 
 # Returns a list of jsons for random distinct countries
