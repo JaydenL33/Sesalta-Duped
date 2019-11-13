@@ -22,25 +22,37 @@ class Question:
         question_num = question_data["question_num"]
         expected_answer = get_arg(
             question_data, "expected_answer", required=False)
+
         observed_answers = get_arg(
             question_data, "observed_answers", required=False, default=set())
-        if observed_answers == None:
+        if observed_answers is None:
             observed_answers = set()
-        return Question(options, question_num, expected_answer, observed_answers)
+        elif type(observed_answers) is list:
+            observed_answers = set(observed_answers)
 
-    def __init__(self, options, question_num, expected_answer=None, observed_answers=set(), max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
+        time_asked_str = get_arg(
+            question_data, "time_asked", required=False)
+        time_asked = Question._str_to_datetime(time_asked_str)
+
+        time_answered_str = get_arg(
+            question_data, "time_answered", required=False)
+        time_answered = Question._str_to_datetime(time_answered_str)
+        print("TIME", time_answered, type(time_answered))
+
+        return Question(options, question_num, expected_answer=expected_answer, observed_answers=observed_answers, time_asked=time_asked, time_answered=time_answered)
+
+    def __init__(self, options, question_num, expected_answer=None, observed_answers=set(), max_answers=DEFAULT_MAX_ANSWERS, force_answers=False, time_asked=None, time_answered=None):
         self._options = options
         self._question_num = question_num
         self._expected_answer = expected_answer
         self._observed_answers = observed_answers
         self._max_answers = max_answers
         self._force_answers = force_answers
-        self._time_asked = datetime.now()
-        self._time_answered = None
+        self._time_asked = time_asked if time_asked is not None else datetime.now()
+        self._time_answered = time_answered
 
     # Returns a dictionary summarising the question/answer
     def to_dict(self):
-        print(f"observed_answers = {self._observed_answers}")
         points = self.points_scored()
         return {
             "options": self._options,
@@ -48,7 +60,9 @@ class Question:
             "expected_answer": self._expected_answer,
             "observed_answers": list(self._observed_answers),
             "points": points,
-            "potential": MAX_CORRECT_ANSWER_POINTS
+            "potential": MAX_CORRECT_ANSWER_POINTS,
+            "time_asked": type(self)._datetime_to_str(self._time_asked),
+            "time_answered": type(self)._datetime_to_str(self._time_answered)
         }
 
     # Checks if the observed answer matches the expected answer.
@@ -82,9 +96,13 @@ class Question:
         points = INCORRECT_ANSWER_POINTS
 
         if self._answered_correctly():
-            micros_taken = self._micros_between(
-                self._time_asked, self._time_answered
-            )
+            try:
+                micros_taken = self._micros_between(
+                    self._time_asked, self._time_answered
+                )
+            except TypeError:
+                micros_taken = MICROS_ALLOWED
+
             fraction_time_remaining = 1 - (micros_taken / MICROS_ALLOWED)
 
             points = (MAX_CORRECT_ANSWER_POINTS *
@@ -97,9 +115,24 @@ class Question:
 
             elif points < INCORRECT_ANSWER_POINTS:
                 points = INCORRECT_ANSWER_POINTS
-
+        print(f"POINTS::::: {points}")
         # Allow for rounding up before casting to int
         return math.ceil(round(points, 0))
+
+    @classmethod
+    def _datetime_to_str(cls, dt):
+        if type(dt) is not datetime:
+            return dt
+        return dt.isoformat()
+
+    @classmethod
+    def _str_to_datetime(cls, dt_string):
+        if dt_string == "None":
+            return None
+        try:
+            return datetime.strptime(dt_string, "%Y-%m-%dT%H:%M:%S.%f")
+        except(TypeError):
+            return dt_string
 
     # Sets the _expected_answer after ensuring it isn't set already.
     def _set_expected_answer(self, expected_answer):
@@ -114,6 +147,7 @@ class Question:
             return
         elif observed_answer in self._options or not self._force_answers:
             self._observed_answers.add(observed_answer)
+        print(self._observed_answers, "WAS OBSERVED")
 
     def _answered_correctly(self):
         if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
@@ -130,6 +164,7 @@ class Question:
     def _set_time_answered(self, answer_time):
         if self._time_answered is None and self._answered_correctly():
             self._time_answered = answer_time
+        print(self._time_answered, "WAS ANSWERED @@@")
 
     def _micros_between(self, t1, t2):
         diff = t2 - t1

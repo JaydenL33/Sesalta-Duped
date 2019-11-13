@@ -76,8 +76,9 @@ class Game:
     def check_answer(self, expected, observed):
         question = self._questions[-1]
 
+        result = question.check_answer(expected, observed)
         firebase_routes.update_game(self._id, self.to_dict())
-        return question.check_answer(expected, observed)
+        return result
 
     def get_results(self):
         results = []
