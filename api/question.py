@@ -12,13 +12,19 @@ INCORRECT_ANSWER_POINTS = 0
 class Question:
 
     def from_dict(question_data):
-        pass
+        options = question_data["options"]
+        question_num = question_data["question_num"]
+        expected_answer = question_data["expected_answer"]
+        observed_answers = question_data["observed_answers"]
+        points = question_data["points"]
+        potential = question_data["potential"]
+        return Question(options, question_num, expected_answer, observed_answers)
 
-    def __init__(self, options, question_num, max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
+    def __init__(self, options, question_num, expected_answer=None, observed_answers=set() max_answers=DEFAULT_MAX_ANSWERS, force_answers=False):
         self._options = options
         self._question_num = question_num
-        self._expected_answer = None
-        self._observed_answers = set()
+        self._expected_answer = expected_answer
+        self._observed_answers = observed_answers
         self._max_answers = max_answers
         self._force_answers = force_answers
         # self._time_asked = datetime.now()
@@ -28,6 +34,7 @@ class Question:
     def to_dict(self):
         points = self.points_scored()
         return {
+            "options": self._options,
             "question_num": self._question_num,
             "expected_answer": self._expected_answer,
             "observed_answers": list(self._observed_answers),
