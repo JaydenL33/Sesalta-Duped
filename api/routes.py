@@ -36,7 +36,7 @@ Example usage:
 # Params:
 # given: the given game mode for each question (not yet needed)
 # asked_for: the answer mode for each question (not yet needed)
-@app.route("/api/country/new_game/")
+@app.route("/api/country/new_game/", methods=['GET'])
 def new_game():
     args = request.args
 
@@ -46,7 +46,8 @@ def new_game():
 
     new_game = country_system.new_game(country_data, given, asked_for)
     print(new_game.id, type(new_game.id))
-    return json.dumps(new_game.id)
+    return new_game.id
+    # return json.dumps(new_game.id)
 
 
 # Returns a list of jsons for random distinct countries

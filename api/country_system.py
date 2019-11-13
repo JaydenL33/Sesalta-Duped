@@ -88,7 +88,10 @@ class CountrySystem:
         return id
 
     def _get_game(self, id):
-        if id in self._games:
-            return self._games[id]
-        else:
-            raise GameNotFoundError(id, self._games)
+        game_data = firebase_routes.get_game(id)
+        game = Game.from_dict(id, game_data)
+        return game
+        # if id in self._games:
+        #     return self._games[id]
+        # else:
+        #     raise GameNotFoundError(id, self._games)
