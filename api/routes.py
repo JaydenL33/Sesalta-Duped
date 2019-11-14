@@ -133,7 +133,7 @@ def get_firebase_data(path):
 
 
 # tested and working, just need to uncomment out the args stuff and delete the hardcoded name
-# just need to json.parse on the frontend
+# just need to json.parse in the frontend
 @app.route("/api/getPlayersScoreboard/",  methods=['GET'])
 def get_players_scoreboard():
     # args = request.args
@@ -167,19 +167,20 @@ def extract_games_and_score_for_user(name):
 
         for game_id in game_id_list:
             game_data = firebase_session.child("games" + "/" + games_played[game_id]).get()
-            game_number_and_score[game_id] = calculateScore(game_data)
+            game_number_and_score[game_id] = calculateModeScoreAndDate(game_data)
             
-        game_number_and_score_sorted = sorted(game_number_and_score.items(), key=lambda kv: kv[1], reverse=True)
-        return game_number_and_score_sorted
+        # game_number_and_score_sorted = sorted(game_number_and_score.items(), key=lambda kv: kv[1], reverse=True)
+        return game_number_and_score
 
-def calculateScore(game_data):
-    total_score = 0
+def calculateModeScoreAndDate(game_data):
+    data = {}
+    print(game_data)
+    data["Mode"] = game_data['mode']
+    data["Date"] = 0
+    data["Score"] = 0
     for question in game_data['questions']:
-        total_score += question['points']
-    return total_score
-
-
-
+        data["Score"] += question['points']
+    return data
 
 
 
