@@ -1,6 +1,7 @@
 import React from "react";
 import SelectCapitalOrCountry from "../components/quiz_questions/SelectCapitalOrCountry";
 import axios from "axios";
+import LinearDeterminate from '../components/LinearDeterminate';
 
 interface P {
   match: any;
@@ -134,18 +135,19 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <SelectCapitalOrCountry
-            gameID={this.state.gameID}
-            questionCountry={this.state.question.name}
-            questionCapital={this.state.question.capital}
-            optionsList={this.state.optionsList}
-            countryList={this.state.countryList}
-            capitalList={this.state.capitalList}
-            callback={this.nextQuestionPlsCallback}
-            indexCallback={this.indexCallback}
-            selectedIndex={this.state.selectedIndex}
-            mode={this.state.mode}
-          />
+          <LinearDeterminate/>
+            <SelectCapitalOrCountry
+              gameID={this.state.gameID}
+              questionCountry={this.state.question.name}
+              questionCapital={this.state.question.capital}
+              optionsList={this.state.optionsList}
+              countryList={this.state.countryList}
+              capitalList={this.state.capitalList}
+              callback={this.nextQuestionPlsCallback}
+              indexCallback={this.indexCallback}
+              selectedIndex={this.state.selectedIndex}
+              mode={this.state.mode}
+            />
         </div>
       );
     } else {
