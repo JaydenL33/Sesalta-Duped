@@ -12,6 +12,7 @@ import GameOptionsPageJp from "./pages/GameOptionsPage-jp";
 import GamePlayPageCapital from "./pages/GamePlayPageCapital";
 import GameResultsPage from "./pages/GameResultsPage";
 import GameResultsPageJp from "./pages/GameResultsPage-jp";
+import LeaderBoardPage from "./pages/LeaderBoardPage";
 import AppliedRoute from "./components/AppliedRoute";
 
 
@@ -71,6 +72,12 @@ const Routes: React.FC<RouteProps> = ({ appProps }) => (
       path="/en/game/results"
       exact
       component={GameResultsPage}
+      props={appProps}
+    />
+    <AppliedRoute
+      path="/en/leaderboard"
+      exact
+      component={LeaderBoardPage}
       props={appProps}
     />
     <AppliedRoute
