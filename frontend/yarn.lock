@@ -8540,6 +8540,7 @@ react-app-polyfill@^1.0.4:
     regenerator-runtime "0.13.3"
     whatwg-fetch "3.0.0"
 
+<<<<<<< HEAD
 react-beautiful-dnd@11.0.3:
   version "11.0.3"
   resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-11.0.3.tgz#5678bb3e725d8b56cb7cf57f56e952105fc4f2af"
@@ -8553,6 +8554,12 @@ react-beautiful-dnd@11.0.3:
     redux "^4.0.1"
     tiny-invariant "^1.0.4"
     use-memo-one "^1.1.0"
+=======
+react-countdown-circle-timer@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-countdown-circle-timer/-/react-countdown-circle-timer-1.0.2.tgz#58ad89b0f9e09ab03615e80d17eb9b48a063d4c8"
+  integrity sha512-nudmkjmD1DM627s8JfNZYnMLct2I+S4ATscu63peP/pvsWIan3vQGRKe3D71uhY7VBeAi0hnCpssHi4iUbBmZA==
+>>>>>>> timed-scores
 
 react-dev-utils@^9.1.0:
   version "9.1.0"
