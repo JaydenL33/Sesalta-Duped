@@ -6,9 +6,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      '& > * + *': {
-        marginTop: theme.spacing(2),
-      },
     },
   }),
 );
@@ -21,7 +18,7 @@ export default function LinearDeterminate() {
     function progress() {
       setCompleted(oldCompleted => {
         if (oldCompleted === 100) {
-          return 0;
+          // Action to open 'next question' button
         }
         const diff = 8.4;
         return Math.min(oldCompleted + diff, 100);
