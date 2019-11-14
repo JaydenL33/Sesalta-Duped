@@ -17,12 +17,12 @@ interface TableState {
   columns: Array<Column<Row>>;
   data: Row[];
   title: string;
-  name: string | undefined; // player's name
+  name: string // player's name
   isauthenticated: boolean;
 }
 
 interface Props {
-  name: string | undefined; // player's name
+  name: string; // player's name
   isauthenticated: boolean;
 }
 
@@ -54,50 +54,88 @@ export default function MaterialTableDemo(props: Props) {
       },
     ],
     data: [ // this is the data we need to put into table
-      { name: 'Mehmet', date: '2019-11-14', score: 999, mode: 0 },
-      { name: 'Frozen yoghurt', date: '2019-11-14', score: 900, mode: 1 },
-      { name: 'Eclair', date: '2019-11-14', score: 900, mode: 1 },
-      { name: 'Cupcake', date: '2019-11-14', score: 850, mode: 4 },
-      { name: 'Ice cream sandwichcake', date: '2019-11-14', score: 850, mode: 4 },
-      { name: 'Ice cream sandwich', date: '2019-11-10', score: 600, mode: 3 },
-      { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
-      { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
+      // { name: 'Mehmet', date: '2019-11-14', score: 999, mode: 0 },
+      // { name: 'Frozen yoghurt', date: '2019-11-14', score: 900, mode: 1 },
+      // { name: 'Eclair', date: '2019-11-14', score: 900, mode: 1 },
+      // { name: 'Cupcake', date: '2019-11-14', score: 850, mode: 4 },
+      // { name: 'Ice cream sandwichcake', date: '2019-11-14', score: 850, mode: 4 },
+      // { name: 'Ice cream sandwich', date: '2019-11-10', score: 600, mode: 3 },
+      // { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
+      // { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
     ],
     title: "Global Ranking",
-    name: props.name,
-    isauthenticated: true, // should be props.isauthenticated
+    name: "prasadsuniquename", // should be sth like props.name
+    isauthenticated: true, // should be sth like props.isauthenticated
   });
 
   const [value, setValue] = React.useState(1);
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = async (event: React.ChangeEvent<{}>, newValue: number) => {
+    console.log(value);
     setValue(newValue);
-    if (value === 0 && props.name) {
-    // setState({
-    //   ...state,
-    //   data: getPlayerData(state.name)
-    // });
-    } else {
-    // setState({
-    //   ...state,
-    //   data: getGlobalData()
-    // });
+    // if (newValue === 0 && props.name) {
+    if (newValue === 0) {
+      setState({
+        ...state,
+        data: await getPlayerData(state.name)
+      });
+      console.log(state)
+    } else if (newValue === 1) {
+      setState({
+        ...state,
+        data: await getGlobalData()
+      });
     }
   };
 
   // Make a request for a player's record with a given publicName
-  const getPlayerData = async (publicName: string) => 
-  await axios.get(`http://127.0.0.1:5000/api/score?publicName=${publicName}`)
+  const getPlayerData:any = async (name: string) => 
+  await axios.get(`http://127.0.0.1:5000/api/getPlayersScoreboard?name=${name}`)
   .then(function (response) {
-    console.log(response);
-    return response.data;
+    console.log(response.data);
+    // modify to array structure
+    let data: Row[] = [];
+    Object.values(response.data).map((item: any)=> {
+      let row: Row = {
+        name: name,
+        date: "2019-11-14", // should be item.Date
+        score: item.Score,
+        mode: 0
+      }
+      data.push(row);
+    })
+    console.log(data)
+    return data;
   })
   .catch(function (error) {
     console.log(error);
   });
 
-  // TODO
   // Make a request to get all game records
-  // const getGlobalData = async () => ...
+  const getGlobalData:any = async () => 
+  await axios.get(`http://127.0.0.1:5000/api/getGlobalLeaderboard`)
+  .then(function (response) {
+    console.log(response.data);
+    // modify to array structure
+    let data: Row[] = [];
+    Object.entries(response.data).map((user: any)=> {
+      let name = user[0];
+      console.log(user[1])
+      Object.values(user[1]).map((item: any)=> {
+        let row: Row = {
+          name: name,
+          date: "2019-11-14", // should be item.Date
+          score: item.Score,
+          mode: 0
+        }
+        data.push(row);
+      });
+    });
+    console.log(data)
+    return data;
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 
   return (
     <Container maxWidth="lg" className={classes.root}>
@@ -108,8 +146,8 @@ export default function MaterialTableDemo(props: Props) {
         textColor="primary"
         centered
       >
-        <Tab label="Player Ranking" disabled={!state.isauthenticated}/>
-        <Tab label="Global Ranking" />
+        <Tab label="My Score" disabled={!state.isauthenticated}/>
+        <Tab label="leaderboard" />
       </Tabs>
       <MaterialTable
         title={state.title}
