@@ -98,7 +98,7 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
     const countryExpectedName = this.props.countryExpected
       ? this.props.countryExpected.name
       : "";
-    const url = `http://127.0.0.1:5000/api/country/check/?expected=${countryExpectedName}&observed=${countryObserved}&id=${this.props.gameID}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/check/?expected=${countryExpectedName}&observed=${countryObserved}&id=${this.props.gameID}`;
     const res = await axios.get(url);
     let response = res.data;
     console.log("this is the response", response);
@@ -107,7 +107,7 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
   }
 
   async attemptChecker(correctBoolean: number) {
-    const url = `http://127.0.0.1:5000/api/country/results/?id=${this.props.gameID}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/results/?id=${this.props.gameID}`;
     const gameResultsResponse = await axios.get(url);
     let gameResults = gameResultsResponse.data;
     this.setState({ gameResults: JSON.parse(JSON.stringify(gameResults)) });

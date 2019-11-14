@@ -113,7 +113,7 @@ export default function MaterialTableDemo(props: Props) {
   
   // Make a request for a player's record with a given publicName
   const getPlayerData:any = async (name: string) => 
-  await axios.get(`http://127.0.0.1:5000/api/getPlayersScoreboard?name=${name}`)
+  await axios.get(`${process.env.REACT_APP_API_URL}/api/getPlayersScoreboard?name=${name}`)
   .then(function (response) {
     console.log(response.data);
     // modify to array structure
@@ -136,7 +136,7 @@ export default function MaterialTableDemo(props: Props) {
 
   // Make a request to get all game records
   const getGlobalData:any = async () => 
-  await axios.get(`http://127.0.0.1:5000/api/getGlobalLeaderboard`)
+  await axios.get(`${process.env.REACT_APP_API_URL}/api/getGlobalLeaderboard`)
   .then(function (response) {
     console.log(response.data);
     // modify to array structure
