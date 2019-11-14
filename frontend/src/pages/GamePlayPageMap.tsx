@@ -3,7 +3,6 @@ import React from "react";
 import SelectCountryOnMap from "../components/quiz_questions/SelectCountryOnMap";
 // import AnswerComponent from "../components/quiz_questions/AnswerComponent";
 import axios from "axios";
-import LinearDeterminate from '../components/LinearDeterminate';
 
 interface P {}
 
@@ -79,7 +78,6 @@ export default class GamePlayPage extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <LinearDeterminate/>
           <SelectCountryOnMap
             gameID={this.state.gameID}
             countryExpected={this.state.countryExpected}

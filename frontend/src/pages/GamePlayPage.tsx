@@ -3,7 +3,6 @@ import React from "react";
 import SelectCountryFromMap from "../components/quiz_questions/SelectCountryFromMap";
 import axios from "axios";
 // import AnswerComponent from "../components/quiz_questions/AnswerComponent";
-import LinearDeterminate from '../components/LinearDeterminate';
 
 interface P {}
 
@@ -98,10 +97,10 @@ export default class GamePlayPage extends React.Component<P, S> {
   };
 
   render() {
+    
     if (this.state.gameID !== "") {
       return (
         <div>
-          <LinearDeterminate/>
           <SelectCountryFromMap
             selectedIndex={this.state.selectedIndex}
             // attemptCount={this.state.attemptCount}
