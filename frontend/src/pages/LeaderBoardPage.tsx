@@ -5,6 +5,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface Row {
   name: string;
@@ -19,6 +20,7 @@ interface TableState {
   title: string;
   name: string // player's name
   isauthenticated: boolean;
+  isLoading: boolean;
 }
 
 interface Props {
@@ -31,10 +33,14 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
       marginTop: theme.spacing(5),
-      overflowX: 'auto',
+      // overflowX: 'auto',
     },
     tabs: {
       flexGrow: 1,
+    },
+    spinner: {
+      display: 'block',
+      marginTop: theme.spacing(10),
     },
   }),
 );
@@ -42,6 +48,13 @@ const useStyles = makeStyles((theme: Theme) =>
 // component from: https://material-table.com/#/docs/all-props
 export default function MaterialTableDemo(props: Props) {
   const classes = useStyles();
+  const [value, setValue] = React.useState(1);
+  // handle tab change
+  const handleChange = async (event: React.ChangeEvent<{}>, newValue: number) => {
+    console.log(value);
+    setValue(newValue);
+    await addNewDataToState(newValue);
+  };
   const [state, setState] = React.useState<TableState>({
     columns: [
       { title: 'Name', field: 'name' },
@@ -66,38 +79,38 @@ export default function MaterialTableDemo(props: Props) {
     title: "",
     name: "prasadsuniquename", // should be sth like props.name
     isauthenticated: true, // should be sth like props.isauthenticated
+    isLoading: true,
   });
 
-  // passing an empty array as second argument triggers the callback in useEffect only after the initial render
-  //  thus replicating `componentDidMount` lifecycle behaviour
-  useEffect(() => {
-    addNewDataToState(1);
-    console.log('mount it!');
-  }, []); 
-
   const addNewDataToState = async (newValue: number) => {
+    setState({
+      ...state,
+      isLoading: true
+    });
     // if (newValue === 0 && props.name) {
     if (newValue === 0) {
       setState({
         ...state,
-        data: await getPlayerData(state.name)
+        data: await getPlayerData(state.name),
+        isLoading: false
       });
       console.log(state)
     } else if (newValue === 1) {
       setState({
         ...state,
-        data: await getGlobalData()
+        data: await getGlobalData(),
+        isLoading: false
       });
     }
   }
 
-  const [value, setValue] = React.useState(1);
-  const handleChange = async (event: React.ChangeEvent<{}>, newValue: number) => {
-    console.log(value);
-    setValue(newValue);
-    await addNewDataToState(newValue);
-  };
-
+  // passing an empty array as second argument triggers the callback in useEffect only after the initial render
+  // thus replicating `componentDidMount` lifecycle behaviour
+  useEffect(() => {
+    addNewDataToState(1);
+    console.log('mount it!');
+  }, []);
+  
   // Make a request for a player's record with a given publicName
   const getPlayerData:any = async (name: string) => 
   await axios.get(`http://127.0.0.1:5000/api/getPlayersScoreboard?name=${name}`)
@@ -160,16 +173,21 @@ export default function MaterialTableDemo(props: Props) {
         <Tab label="My Score" disabled={!state.isauthenticated}/>
         <Tab label="leaderboard" />
       </Tabs>
-      <MaterialTable
-        title={state.title}
-        columns={state.columns}
-        data={state.data}
-        options={{
-          search: true,
-          filtering: true,
-          pageSize: 10
-        }}
-      />
+      { state.isLoading ? 
+        <div className={classes.spinner}>
+          <CircularProgress />
+        </div>
+      : <MaterialTable
+          title={state.title}
+          columns={state.columns}
+          data={state.data}
+          options={{
+            search: true,
+            filtering: true,
+            pageSize: 10
+          }}
+        />
+      }
     </Container>
   );
 }
