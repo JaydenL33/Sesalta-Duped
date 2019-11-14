@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MaterialTable, { Column } from 'material-table';
 import Container from '@material-ui/core/Container';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
@@ -63,15 +63,19 @@ export default function MaterialTableDemo(props: Props) {
       // { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
       // { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
     ],
-    title: "Global Ranking",
+    title: "",
     name: "prasadsuniquename", // should be sth like props.name
     isauthenticated: true, // should be sth like props.isauthenticated
   });
 
-  const [value, setValue] = React.useState(1);
-  const handleChange = async (event: React.ChangeEvent<{}>, newValue: number) => {
-    console.log(value);
-    setValue(newValue);
+  // passing an empty array as second argument triggers the callback in useEffect only after the initial render
+  //  thus replicating `componentDidMount` lifecycle behaviour
+  useEffect(() => {
+    addNewDataToState(1);
+    console.log('mount it!');
+  }, []); 
+
+  const addNewDataToState = async (newValue: number) => {
     // if (newValue === 0 && props.name) {
     if (newValue === 0) {
       setState({
@@ -85,6 +89,13 @@ export default function MaterialTableDemo(props: Props) {
         data: await getGlobalData()
       });
     }
+  }
+
+  const [value, setValue] = React.useState(1);
+  const handleChange = async (event: React.ChangeEvent<{}>, newValue: number) => {
+    console.log(value);
+    setValue(newValue);
+    await addNewDataToState(newValue);
   };
 
   // Make a request for a player's record with a given publicName
