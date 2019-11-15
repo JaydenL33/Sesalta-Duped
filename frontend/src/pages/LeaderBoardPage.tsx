@@ -107,8 +107,10 @@ export default function MaterialTableDemo(props: Props) {
   // passing an empty array as second argument triggers the callback in useEffect only after the initial render
   // thus replicating `componentDidMount` lifecycle behaviour
   useEffect(() => {
-    addNewDataToState(1);
+    addNewDataToState(1); 
     console.log('mount it!');
+    // need to read more about react hooks, a temporaty fix:
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   // Make a request for a player's record with a given publicName
@@ -118,7 +120,7 @@ export default function MaterialTableDemo(props: Props) {
     console.log(response.data);
     // modify to array structure
     let data: Row[] = [];
-    Object.values(response.data).map((item: any)=> {
+    Object.values(response.data).forEach((item: any)=> {
       let row: Row = {
         name: name,
         date: "2019-11-14", // should be item.Date
@@ -141,10 +143,10 @@ export default function MaterialTableDemo(props: Props) {
     console.log(response.data);
     // modify to array structure
     let data: Row[] = [];
-    Object.entries(response.data).map((user: any)=> {
+    Object.entries(response.data).forEach((user: any)=> {
       let name = user[0];
       console.log(user[1])
-      Object.values(user[1]).map((item: any)=> {
+      Object.values(user[1]).forEach((item: any)=> {
         let row: Row = {
           name: name,
           date: "2019-11-14", // should be item.Date

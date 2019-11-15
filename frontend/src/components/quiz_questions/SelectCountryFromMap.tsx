@@ -209,7 +209,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       );
     }
 
-    if(this.state.progBar == 0) {
+    if(this.state.progBar === 0) {
       ProgBar = <LinearDeterminate/>
     } else {
       this.setState({ progBar: 0 });

@@ -65,6 +65,7 @@ jobs:
           command: |
             sudo apt-get -y -qq update
             sudo apt-get install python-pip python-dev build-essential
+            sudo pip install -U pip
             sudo pip install awsebcli==3.14.11
       - run:
           name: Deploying
