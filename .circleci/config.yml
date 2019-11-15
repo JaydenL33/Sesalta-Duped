@@ -78,6 +78,7 @@ workflows:
             branches:
               only:  # only branches matching the below regex filters will run
                 - deploy
+                - master
       - yarn_audit:
           name: yarn_audit
           requires:
@@ -86,11 +87,13 @@ workflows:
             branches:
               only:  # only branches matching the below regex filters will run
                 - deploy
+                - master
       - yarn_deploy:
           filters:  # using regex filters requires the entire branch to match
             branches:
               only:  # only branches matching the below regex filters will run
                 - deploy
+                - master
           name: yarn_deploy
           requires:
             - yarn_audit
@@ -101,4 +104,5 @@ workflows:
               branches:
                 only:  # only branches matching the below regex filters will run
                   - deploy
+                  - master
           name: deploy_flask
