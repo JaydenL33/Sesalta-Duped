@@ -76,7 +76,7 @@ Switch to the project:
 `workon sesalta`
 
 Run the Flask server:  
-`cd api && pipenv sync && flask run`  
+`cd api && pipenv sync && python application.py`  
 
 Run the React server:  
 `cd frontend && yarn start`  
