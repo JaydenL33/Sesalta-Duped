@@ -26,14 +26,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "frontend/yarn-lock" }}
+          - v1-dependencies-{{ checksum "frontend/yarn.lock" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
       - run: cd frontend && yarn install --frozen-lockfile
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "frontend/yarn-lock" }}
+          key: v1-dependencies-{{ checksum "frontend/yarn.lock" }}
       - run:
           name: audit
           command: |
@@ -65,7 +65,7 @@ jobs:
           command: |
             sudo apt-get -y -qq update
             sudo apt-get install python-pip python-dev build-essential
-            sudo pip install awsebcli --upgrade
+            sudo pip install awsebcli==3.14.11
       - run:
           name: Deploying
           command: eb deploy
