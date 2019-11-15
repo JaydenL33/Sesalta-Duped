@@ -1,8 +1,9 @@
 import json
 from firebase_admin import credentials, db
 import firebase_admin
+import subprocess
 
-
+subprocess.call(['./env.sh']) # produce the firebase_key.json from shell env var
 # Authenticate a credential with the service account
 cred = credentials.Certificate("./firebase_key.json")
 firebase_admin.initialize_app(

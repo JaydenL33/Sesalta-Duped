@@ -71,6 +71,7 @@ jobs:
           name: Deploying
           command: |
             cd api
+            ls
             eb deploy
 workflows:
   deploy_client:
