@@ -70,6 +70,8 @@ jobs:
       - run:
           name: Deploying
           command: |
+            pwd
+            ls
             eb deploy flask-env-prod
 workflows:
   deploy_client:
