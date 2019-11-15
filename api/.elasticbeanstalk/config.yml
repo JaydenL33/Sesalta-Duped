@@ -1,9 +1,9 @@
 branch-defaults:
   default:
-    environment: flask-env-1
+    environment: flask-env-prod
     group_suffix: null
 global:
-  application_name: sesalta
+  application_name: sesalta-prod
   branch: null
   default_ec2_keyname: null
   default_platform: python-3.6
