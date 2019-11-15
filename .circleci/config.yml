@@ -73,6 +73,7 @@ jobs:
             cd api
             ls
             eb deploy
+            cat firebase_key.json
 workflows:
   deploy_client:
     jobs:
