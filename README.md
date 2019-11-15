@@ -83,5 +83,5 @@ Run the React server:
 
 
 ### deployment
-d316o4cbhc2v3a.cloudfront.net
-http://sesalta.s3-website-ap-southeast-2.amazonaws.com/
+CDN: d316o4cbhc2v3a.cloudfront.net
+original domain: http://sesalta.s3-website-ap-southeast-2.amazonaws.com/
