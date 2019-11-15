@@ -74,15 +74,22 @@ workflows:
     jobs:
       - secrets_scan:
           name: secrets_scan
+          filters:  # using regex filters requires the entire branch to match
+            branches:
+              only:  # only branches matching the below regex filters will run
+                - deploy
       - yarn_audit:
           name: yarn_audit
           requires:
             - secrets_scan
+          filters:  # using regex filters requires the entire branch to match
+            branches:
+              only:  # only branches matching the below regex filters will run
+                - deploy
       - yarn_deploy:
           filters:  # using regex filters requires the entire branch to match
             branches:
               only:  # only branches matching the below regex filters will run
-                - master
                 - deploy
           name: yarn_deploy
           requires:
@@ -93,6 +100,5 @@ workflows:
           filters:  # using regex filters requires the entire branch to match
               branches:
                 only:  # only branches matching the below regex filters will run
-                  - master
                   - deploy
           name: deploy_flask
