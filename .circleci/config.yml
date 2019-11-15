@@ -65,13 +65,12 @@ jobs:
           command: |
             sudo apt-get -y -qq update
             sudo apt-get install python-pip python-dev build-essential
-            sudo pip install -U pip
-            sudo pip install --upgrade awsebcli
+            sudo pip install --upgrade setuptools
+            sudo pip install awsebcli --upgrade
       - run:
           name: Deploying
           command: |
-            eb init -p python-3.6 sesalta-prod --region ap-southeast-2
-            eb deploy
+            eb deploy flask-env-prod
 workflows:
   deploy_client:
     jobs:
