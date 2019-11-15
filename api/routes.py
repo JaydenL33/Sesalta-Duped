@@ -6,9 +6,9 @@ import json
 from setup import firebase_session
 from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)
-app.config["DEBUG"] = True
+application = Flask(__name__)
+CORS(application)
+application.config["DEBUG"] = True
 
 SUCCESS = '1'
 FAILURE = '0'
@@ -37,7 +37,7 @@ Example usage:
 # Params:
 # given: the given game mode for each question (not yet needed)
 # asked_for: the answer mode for each question (not yet needed)
-@app.route("/api/country/new_game/", methods=['GET'])
+@application.route("/api/country/new_game/", methods=['GET'])
 def new_game():
     args = request.args
 
@@ -56,7 +56,7 @@ def new_game():
 # Params:
 # id: the game ID. Raises ParameterNotFoundError if not given
 # amount: the number of countries requested. Default = 1
-@app.route("/api/country/random/")
+@application.route("/api/country/random/")
 def random_countries():
     args = request.args
 
@@ -75,7 +75,7 @@ def random_countries():
 # id: the game ID
 # expected: the NAME_LONG of the correct answer(e.g. "Australia")
 # observed: the NAME_LONG of the given answer(e.g. "Canada")
-@app.route("/api/country/check/")
+@application.route("/api/country/check/")
 def check_country():
     args = request.args
     id = get_arg(args, "id", required=True)
@@ -92,7 +92,7 @@ def check_country():
 # "observed_answers": The NAME_LONGs of the observed answers
 # "points": the number of points scored for that question.
 # "potential": the maximum number of points that could be scored in that question.
-@app.route("/api/country/results/")
+@application.route("/api/country/results/")
 def get_results():
     args = request.args
     id = get_arg(args, "id", required=True)
@@ -108,7 +108,7 @@ def get_results():
 # Params:
 # name: the desired public name
 # (probably needs a user id included as well)
-@app.route("/api/user/update/")
+@application.route("/api/user/update/")
 def update_name():
     args = request.args
     name = get_arg(args, "name", required=True)
@@ -134,7 +134,7 @@ def get_firebase_data(path):
 
 # tested and working, just need to uncomment out the args stuff and delete the hardcoded name
 # just need to json.parse in the frontend
-@app.route("/api/getPlayersScoreboard/",  methods=['GET'])
+@application.route("/api/getPlayersScoreboard/",  methods=['GET'])
 def get_players_scoreboard():
     # args = request.args
     # name = get_arg(args, "user", required=True)
@@ -144,7 +144,7 @@ def get_players_scoreboard():
     return json.dumps(data)
 
 
-@app.route("/api/getGlobalLeaderboard/",  methods=['GET'])
+@application.route("/api/getGlobalLeaderboard/",  methods=['GET'])
 def get_global_scoreboard():
     all_users_data = firebase_session.child("users" + "/").get()
     users_names = list(all_users_data.keys())
@@ -193,7 +193,7 @@ def calculateModeScoreAndDate(game_data):
 # tested and working, just need to change  methods=['GET'] to  methods=['POST'] and uncomment player and score
 # returns string "done" once db has finished updating
 # can refactor but going to sleep now
-# @app.route("/api/pushPlayerAndScoreToLeaderboard/",  methods=['GET'])
+# @application.route("/api/pushPlayerAndScoreToLeaderboard/",  methods=['GET'])
 # def push_player_and_score_to_leaderboard():
 
 #     player = "raydai"

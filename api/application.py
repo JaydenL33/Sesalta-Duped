@@ -1,6 +1,5 @@
 from flask import Flask
-from routes import app
+from routes import application
 
-application = app
 if __name__ == "__main__":
     application.run()
