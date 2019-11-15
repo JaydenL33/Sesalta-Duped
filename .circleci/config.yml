@@ -71,7 +71,7 @@ jobs:
           name: Deploying
           command: |
             eb init -p python-3.6 sesalta-prod --region ap-southeast-2
-            eb create flask-env-prod
+            eb use flask-env-prod
             eb deploy
 workflows:
   deploy_client:
