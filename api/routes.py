@@ -109,7 +109,7 @@ def get_results():
 # Returns "1" if update is successful, otherwise "0"
 # Params:
 # name: the desired public name
-# (probably needs a user id included as well)
+# Needs some kind of user id included as well
 @app.route("/api/user/update/")
 def update_name():
     args = request.args
@@ -147,6 +147,16 @@ def get_global_scoreboard():
             users_name)
 
     return json.dumps(all_users_with_games_and_scores)
+
+# This function also needs to be updated to handle user accounts properly
+@app.route("/api/game/trophy/")
+def get_game_trophies():
+    args = request.args
+    user_id = get_arg(args, "user", required=True)
+    game_id = get_arg(args, "game", required=True)
+
+
+# Helper functions
 
 
 def extract_games_and_score_for_user(name):
