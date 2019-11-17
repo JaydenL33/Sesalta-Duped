@@ -1,6 +1,5 @@
 import copy
 from exceptions import *
-from setup import firebase_session
 import firebase_routes
 from game import Game
 import random

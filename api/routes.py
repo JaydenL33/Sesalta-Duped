@@ -3,7 +3,8 @@ from country_system import CountrySystem
 from exceptions import *
 from flask import Flask, jsonify, request
 import json
-from setup import firebase_session
+import firebase_routes
+# from setup import firebase_session
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -43,7 +44,7 @@ def new_game():
 
     given = get_arg(args, "given", required=False)
     asked_for = get_arg(args, "given", required=False)
-    country_data = get_firebase_data('countryData')     # list of jsons
+    country_data = firebase_routes.get_country_data()     # list of jsons
 
     new_game = country_system.new_game(country_data, given, asked_for)
     print(new_game.id, type(new_game.id))
@@ -102,6 +103,7 @@ def get_results():
 
 # NOTE: The functions used by this route are not complete.
 # Names can't be updated yet since users don't exist. Raycole will add this.
+# Prasad suggested using public name as a unique key. This isn't implemented yet.
 #
 # Will update the user's public name IF it is valid (3 letters, not profane).
 # Returns "1" if update is successful, otherwise "0"
@@ -113,7 +115,7 @@ def update_name():
     args = request.args
     name = get_arg(args, "name", required=True)
 
-    bad_words = get_firebase_data('badWords')       # list of strings
+    bad_words = firebase_routes.get_bad_words()       # list of strings
 
     # TODO: finish country_system.update_name()
     name_was_updated = country_system.update_name(name, bad_words)
@@ -121,15 +123,6 @@ def update_name():
         return SUCCESS
     else:
         return FAILURE
-    return country_system.update_name(name, bad_words)
-
-# Helper function (should probs be moved to another file)
-
-
-def get_firebase_data(path):
-    path = path.strip("/")
-    return firebase_session.child(path).get()
-
 
 
 # tested and working, just need to uncomment out the args stuff and delete the hardcoded name
@@ -146,18 +139,20 @@ def get_players_scoreboard():
 
 @app.route("/api/getGlobalLeaderboard/",  methods=['GET'])
 def get_global_scoreboard():
-    all_users_data = firebase_session.child("users" + "/").get()
+    all_users_data = firebase_routes.get_all_users()
     users_names = list(all_users_data.keys())
     all_users_with_games_and_scores = {}
     for users_name in users_names:
-        all_users_with_games_and_scores[users_name] = extract_games_and_score_for_user(users_name)
-        
+        all_users_with_games_and_scores[users_name] = extract_games_and_score_for_user(
+            users_name)
+
     return json.dumps(all_users_with_games_and_scores)
 
 
 def extract_games_and_score_for_user(name):
-    user_data = firebase_session.child("users/" + name).get()
+    user_data = firebase_routes.get_user_by_id(name)
     game_count = user_data['gameIDs']['GameCount']
+
     if game_count == 0:
         return {}
     else:
@@ -165,73 +160,19 @@ def extract_games_and_score_for_user(name):
         game_id_list = list(games_played.keys())
         game_number_and_score = {}
 
-        for game_id in game_id_list:
-            game_data = firebase_session.child("games" + "/" + games_played[game_id]).get()
-            game_number_and_score[game_id] = calculateModeScoreAndDate(game_data)
-            
-        # game_number_and_score_sorted = sorted(game_number_and_score.items(), key=lambda kv: kv[1], reverse=True)
+        for game_name, game_id in games_played.items():
+            game_data = firebase_routes.get_game_by_id(game_id)
+            game_number_and_score[game_name] = calculate_mode_score_and_date(
+                game_data)
+
         return game_number_and_score
 
-def calculateModeScoreAndDate(game_data):
+
+def calculate_mode_score_and_date(game_data):
     data = {}
-    print(game_data)
     data["Mode"] = game_data['mode']
     data["Date"] = 0
     data["Score"] = 0
     for question in game_data['questions']:
         data["Score"] += question['points']
     return data
-
-
-
-
-
-
-
-
-
-# tested and working, just need to change  methods=['GET'] to  methods=['POST'] and uncomment player and score
-# returns string "done" once db has finished updating
-# can refactor but going to sleep now
-# @app.route("/api/pushPlayerAndScoreToLeaderboard/",  methods=['GET'])
-# def push_player_and_score_to_leaderboard():
-
-#     player = "raydai"
-#     score = 250
-
-#     # player = request.form.get('player')
-#     # score = request.form.get('score')
-
-#     playerData = firebase_session.child("userLeaderboard" + "/" + player).get()
-
-#     if playerData == None:
-#         firebase_session.child("userLeaderboard" + "/" + player).update(
-#             {"GameCount": 1, "GamesPlayed": {"Game1": int(score)}})
-#         return "done"
-
-#     this_game_count = playerData["GameCount"] + 1
-
-#     firebase_session.child("userLeaderboard" + "/" +
-#                            player).update({"GameCount": int(this_game_count)})
-#     this_game = "Game" + str(this_game_count)
-
-#     currentScores = playerData["GamesPlayed"]
-#     keysList = list(currentScores.keys())
-
-#     if len(keysList) >= 5:
-#         data = extractGameNumberAndLowestScore(currentScores)
-#         if data["score"] <= score:
-#             firebase_session.child("userLeaderboard" + "/" +
-#                                    player + "/GamesPlayed/" + data["game"]).delete()
-#             firebase_session.child(
-#                 "userLeaderboard" + "/" + player + "/GamesPlayed").update({this_game: int(score)})
-#     else:
-#         firebase_session.child(
-#             "userLeaderboard" + "/" + player + "/GamesPlayed").update({this_game: int(score)})
-
-#     return "done"
-
-
-# def extractGameNumberAndLowestScore(currentScores):
-#     currentScoresSorted = sorted(currentScores.items(), key=lambda kv: kv[1])
-#     return {"game": currentScoresSorted[0][0], "score": currentScoresSorted[0][1]}
