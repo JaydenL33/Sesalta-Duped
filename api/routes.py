@@ -47,7 +47,7 @@ def new_game():
     country_data = firebase_routes.get_country_data()     # list of jsons
 
     new_game = country_system.new_game(country_data, given, asked_for)
-    print(new_game.id, type(new_game.id))
+    print("NEW GAME route returned:", new_game.id, type(new_game.id))
     return new_game.id
     # return json.dumps(new_game.id)
 

@@ -20,9 +20,9 @@ class Game:
         else:
             questions = []
 
-        return Game(id, country_data, given_mode, asked_for_mode, questions, trophies)
+        return Game(id, country_data, given_mode, asked_for_mode, questions)
 
-    def __init__(self, id, country_data, given, asked_for, questions=[], trophies=[], date_started=None):
+    def __init__(self, id, country_data, given, asked_for, questions=[]):
         self._id = id
         self._country_generator = CountryGenerator(country_data)
         self._given_mode = given
@@ -87,16 +87,16 @@ class Game:
             results.append(question.to_dict())
         return results
 
-    def get_start_time(format="datetime"):
+    def get_start_time(self, format="datetime"):
         if len(self._questions) == 0:
             return None
         else:
             return self._questions[0].get_time_asked(format=format)
 
-    def is_finished():
-        if game._is_finished:
-            return True
-        elif len(self._questions) < MAX_QUESTIONS:
+    def is_finished(self):
+        # if self._is_finished:
+        #     return True
+        if len(self._questions) < MAX_QUESTIONS:
             return False
         else:
             for question in self._questions:
@@ -104,11 +104,17 @@ class Game:
                     return False
             return True
 
-    def all_questions_correct():
+    def all_questions_correct(self):
         for question in self._questions:
             if not question.answered_correctly():
                 return False
         return True
+
+    def has_incorrect_guesses(self):
+        for question in self._questions:
+            if question.has_incorrect_guesses():
+                return True
+        return False
 
     @property
     def id(self):

@@ -11,7 +11,9 @@ NAME_LENGTH = 3
 ALLOWED_NAME_CHARS = "qwertyuiopasdfghjklzxcvbnm"
 
 ALL_TROPHIES = [
-    trophy.AllQuestionsCorrectTrophy
+    trophy.GameCompletedTrophy,
+    trophy.AllQuestionsCorrectTrophy,
+    trophy.NoWrongAnswersTrophy
 ]
 
 
@@ -77,18 +79,31 @@ class CountrySystem:
 
         return is_allowed
 
-    def get_trophies_for_game(self, game_id, user_id):
-        game = Game.from_dict(firebase_routes.get_game(game_id))
-        existing_trophies = firebase_routes.get_user_trophies(user_id)
-        existing_trophy_names = [trophy.get_name()
-                                 for trophy in existing_trophies]
+    def get_trophies_for_game(self, user_id, game_id):
+        game = Game.from_dict(game_id, firebase_routes.get_game(game_id))
+        existing_trophy_data = firebase_routes.get_user_trophies(user_id)
+
+        print(existing_trophy_data)
+
+        if existing_trophy_data is None:
+            existing_trophy_names = []
+        else:
+            existing_trophy_names = [trophy_data["name"]
+                                     for trophy_data in existing_trophy_data]
+
+        print("EXISTING TROPHY DATA:", existing_trophy_data)
+        print("EXISTING TROPHY NAMES:", existing_trophy_names)
+
         new_trophies = []
-
         for trophy in ALL_TROPHIES:
-            if trophy.get_name() not in existing_trophy_names and trophy.game_satisfies(game):
-                new_trophies.append(trophy.to_dict())
+            trophy_test = trophy(game)
+            if (trophy_test.get_name() not in existing_trophy_names and
+                    trophy_test.game_satisfies()):
+                new_trophies.append(trophy_test.to_dict())
 
-        firebase_routes.add_trophies(user_id, new_trophies)
+        print("NEW TROPHIES:", new_trophies)
+        firebase_routes.update_trophies_if_user_exists(
+            user_id, new_trophies + existing_trophy_data)
 
         return new_trophies
 

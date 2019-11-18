@@ -45,8 +45,23 @@ def get_bad_words():
 
 
 def get_user_trophies(user_id):
-    return firebase_session.child(f"users/{user_id}/trophies").get()
+    data = firebase_session.child(f"users/{user_id}/trophies").get()
+    return data
 
 
-def add_trophies(user_id, trophies):
-    firebase_session.child(f"users/{user_id}/trophies").push(trophies)
+def add_trophies(user_id, trophy):
+    firebase_session.child(f"users/{user_id}/trophies").push(trophy)
+
+
+def update_trophies(user_id, trophies):
+    firebase_session.child(f"users/{user_id}/trophies").set(trophies)
+
+
+def update_trophies_if_user_exists(user_id, trophies):
+    user_data = get_user_by_id(user_id)
+
+    if user_data is not None:
+        update_trophies(user_id, trophies)
+        return True
+    else:
+        return False

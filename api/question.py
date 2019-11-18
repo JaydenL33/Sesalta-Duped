@@ -119,13 +119,13 @@ class Question:
         # Allow for rounding up before casting to int
         return math.ceil(round(points, 0))
 
-    def get_time_asked(format="datetime"):
+    def get_time_asked(self, format="datetime"):
         if format == "datetime":
             return self._time_asked
         elif format == "string":
             return type(self)._datetime_to_str(self._time_asked)
 
-    def is_finished():
+    def is_finished(self):
         if self.answered_correctly():
             return True
         elif self._max_answers_reached():
@@ -137,6 +137,12 @@ class Question:
 
     def answered_correctly(self):
         if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
+            return True
+        else:
+            return False
+
+    def has_incorrect_guesses(self):
+        if not self.answered_correctly() or len(self._observed_answers) != 1:
             return True
         else:
             return False
