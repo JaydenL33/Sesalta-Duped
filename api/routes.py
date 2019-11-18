@@ -155,8 +155,9 @@ def get_game_trophies():
     user_id = get_arg(args, "user", required=True)
     game_id = get_arg(args, "game", required=True)
 
+    return country_system.get_game_trophies(user_id, game_id)
 
-# Helper functions
+# Helper functions - may be better in system or elsewhere
 
 
 def extract_games_and_score_for_user(name):

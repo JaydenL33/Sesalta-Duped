@@ -13,19 +13,27 @@ class Game:
         country_data = game_data["remainingCountries"]
         given_mode = game_data["mode"].split("-")[0]
         asked_for_mode = game_data["mode"].split(">")[1]
+
         if "questions" in game_data:
             question_data = game_data["questions"]
             questions = [Question.from_dict(q) for q in question_data]
         else:
             questions = []
-        return Game(id, country_data, given_mode, asked_for_mode, questions)
+        #
+        # if "trophies" in game_data:
+        #     trophies = game_data["trophies"]
+        # else:
+        #     trophies = []
 
-    def __init__(self, id, country_data, given, asked_for, questions=[]):
+        return Game(id, country_data, given_mode, asked_for_mode, questions, trophies)
+
+    def __init__(self, id, country_data, given, asked_for, questions=[], trophies=[]):
         self._id = id
         self._country_generator = CountryGenerator(country_data)
         self._given_mode = given
         self._asked_for_mode = asked_for
         self._questions = questions
+        # self.trophies = [Trophy.from_num(num) for num in trophies]
 
         firebase_routes.update_game(self._id, self.to_dict())
 

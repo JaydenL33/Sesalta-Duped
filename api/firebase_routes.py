@@ -14,6 +14,14 @@ def get_game_by_id(id):
     return firebase_session.child("games" + "/" + id).get()
 
 
+def get_all_games_for_user(user_id):
+    return firebase_session.child(f"users/{user_id}/gameIDs/GamesPlayed").get()
+
+
+def get_game_by_user_game_id(user_id, game_id):
+    pass
+
+
 def update_game(game_id, new_game_data):
     print(f"UPDATING GAME {game_id}: {new_game_data}")
     firebase_session.child(f"games/{game_id}").set(new_game_data)

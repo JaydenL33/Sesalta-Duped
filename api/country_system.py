@@ -72,6 +72,8 @@ class CountrySystem:
 
         return is_allowed
 
+    get_game_trophies(self, game_id, user_id):
+
         # ========================================
         #   Private functions
         # ========================================
