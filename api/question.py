@@ -95,7 +95,7 @@ class Question:
     def points_scored(self):
         points = INCORRECT_ANSWER_POINTS
 
-        if self._answered_correctly():
+        if self.answered_correctly():
             try:
                 micros_taken = self._micros_between(
                     self._time_asked, self._time_answered
@@ -119,6 +119,28 @@ class Question:
         # Allow for rounding up before casting to int
         return math.ceil(round(points, 0))
 
+    def get_time_asked(format="datetime"):
+        if format == "datetime":
+            return self._time_asked
+        elif format == "string":
+            return type(self)._datetime_to_str(self._time_asked)
+
+    def is_finished():
+        if self.answered_correctly():
+            return True
+        elif self._max_answers_reached():
+            return True
+        elif self._time_expired():
+            return True
+        else:
+            return False
+
+    def answered_correctly(self):
+        if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
+            return True
+        else:
+            return False
+
     @classmethod
     def _datetime_to_str(cls, dt):
         if type(dt) is not datetime:
@@ -141,19 +163,15 @@ class Question:
 
     # Adds the observed_answer after ensuring it's a valid choice.
     def _add_observed_answer(self, observed_answer):
-        if self._answered_correctly():
-            return
+        if self.answered_correctly():
+            pass
         if self._max_answers_reached():
-            return
+            pass
+        elif self._max_answers_reached():
+            pass
         elif observed_answer in self._options or not self._force_answers:
             self._observed_answers.add(observed_answer)
-        print(self._observed_answers, "WAS OBSERVED")
-
-    def _answered_correctly(self):
-        if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
-            return True
-        else:
-            return False
+            print(self._observed_answers, "WAS OBSERVED")
 
     def _max_answers_reached(self):
         if len(self._observed_answers) >= self._max_answers:
@@ -162,9 +180,14 @@ class Question:
             return False
 
     def _set_time_answered(self, answer_time):
-        if self._time_answered is None and self._answered_correctly():
+        if self._time_answered is None and self.answered_correctly():
             self._time_answered = answer_time
-        print(self._time_answered, "WAS ANSWERED @@@")
+
+    def _time_expired():
+        if self._time_asked is None:
+            return None
+        else:
+            return self._micros_between(self._time_asked, datetime.now()) < MICROS_ALLOWED
 
     def _micros_between(self, t1, t2):
         diff = t2 - t1

@@ -3,7 +3,7 @@ from exceptions import *
 import firebase_routes
 from question import Question
 
-MAX_QUESTIONS = 10
+MAX_QUESTIONS = 3
 
 
 class Game:
@@ -19,21 +19,15 @@ class Game:
             questions = [Question.from_dict(q) for q in question_data]
         else:
             questions = []
-        #
-        # if "trophies" in game_data:
-        #     trophies = game_data["trophies"]
-        # else:
-        #     trophies = []
 
         return Game(id, country_data, given_mode, asked_for_mode, questions, trophies)
 
-    def __init__(self, id, country_data, given, asked_for, questions=[], trophies=[]):
+    def __init__(self, id, country_data, given, asked_for, questions=[], trophies=[], date_started=None):
         self._id = id
         self._country_generator = CountryGenerator(country_data)
         self._given_mode = given
         self._asked_for_mode = asked_for
         self._questions = questions
-        # self.trophies = [Trophy.from_num(num) for num in trophies]
 
         firebase_routes.update_game(self._id, self.to_dict())
 
@@ -92,6 +86,29 @@ class Game:
         for question in self._questions:
             results.append(question.to_dict())
         return results
+
+    def get_start_time(format="datetime"):
+        if len(self._questions) == 0:
+            return None
+        else:
+            return self._questions[0].get_time_asked(format=format)
+
+    def is_finished():
+        if game._is_finished:
+            return True
+        elif len(self._questions) < MAX_QUESTIONS:
+            return False
+        else:
+            for question in self._questions:
+                if not question.is_finished:
+                    return False
+            return True
+
+    def all_questions_correct():
+        for question in self._questions:
+            if not question.answered_correctly():
+                return False
+        return True
 
     @property
     def id(self):

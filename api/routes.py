@@ -155,7 +155,8 @@ def get_game_trophies():
     user_id = get_arg(args, "user", required=True)
     game_id = get_arg(args, "game", required=True)
 
-    return country_system.get_game_trophies(user_id, game_id)
+    trophies = country_system.get_trophies_for_game(user_id, game_id)
+    return json.dumps(trophies)
 
 # Helper functions - may be better in system or elsewhere
 

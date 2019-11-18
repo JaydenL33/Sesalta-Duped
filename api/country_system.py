@@ -3,11 +3,16 @@ from exceptions import *
 import firebase_routes
 from game import Game
 import random
+import trophy
 
 # Make ID_RANGE this much larger for release
 ID_RANGE = 1000
 NAME_LENGTH = 3
 ALLOWED_NAME_CHARS = "qwertyuiopasdfghjklzxcvbnm"
+
+ALL_TROPHIES = [
+    trophy.AllQuestionsCorrectTrophy
+]
 
 
 class CountrySystem:
@@ -72,15 +77,28 @@ class CountrySystem:
 
         return is_allowed
 
-    get_game_trophies(self, game_id, user_id):
+    def get_trophies_for_game(self, game_id, user_id):
+        game = Game.from_dict(firebase_routes.get_game(game_id))
+        existing_trophies = firebase_routes.get_user_trophies(user_id)
+        existing_trophy_names = [trophy.get_name()
+                                 for trophy in existing_trophies]
+        new_trophies = []
 
-        # ========================================
-        #   Private functions
-        # ========================================
+        for trophy in ALL_TROPHIES:
+            if trophy.get_name() not in existing_trophy_names and trophy.game_satisfies(game):
+                new_trophies.append(trophy.to_dict())
 
-        # ISSUE: Currently, this function will hang when too many games are in
-        # progress. We will need to implement a way to remove the oldest/completed
-        # games.
+        firebase_routes.add_trophies(user_id, new_trophies)
+
+        return new_trophies
+
+    # ========================================
+    #   Private functions
+    # ========================================
+
+    # ISSUE: Currently, this function will hang when too many games are in
+    # progress. We will need to implement a way to remove the oldest/completed
+    # games.
 
     def _generate_new_id(self):
         id = str(random.randrange(ID_RANGE))

@@ -1,4 +1,5 @@
 from setup import firebase_session
+import json
 
 
 def new_game_id():
@@ -10,16 +11,12 @@ def get_game(game_id):
     return firebase_session.child(f"games/{game_id}").get()
 
 
-def get_game_by_id(id):
-    return firebase_session.child("games" + "/" + id).get()
+def get_all_games():
+    return firebase_session.child("games/").get()
 
 
-def get_all_games_for_user(user_id):
+def get_all_game_ids_for_user(user_id):
     return firebase_session.child(f"users/{user_id}/gameIDs/GamesPlayed").get()
-
-
-def get_game_by_user_game_id(user_id, game_id):
-    pass
 
 
 def update_game(game_id, new_game_data):
@@ -45,3 +42,11 @@ def get_user_by_id(id):
 
 def get_bad_words():
     return firebase_session.child('badWords').get()
+
+
+def get_user_trophies(user_id):
+    return firebase_session.child(f"users/{user_id}/trophies").get()
+
+
+def add_trophies(user_id, trophies):
+    firebase_session.child(f"users/{user_id}/trophies").push(trophies)
