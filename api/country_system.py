@@ -136,16 +136,6 @@ class CountrySystem:
     #   Private functions
     # ========================================
 
-    # ISSUE: Currently, this function will hang when too many games are in
-    # progress. We will need to implement a way to remove the oldest/completed
-    # games.
-
-    # def _generate_new_id(self):
-    #     id = str(random.randrange(ID_RANGE))
-    #     while id in self._games:
-    #         id = str(random.randrange(ID_RANGE))
-    #     return id
-
     def _get_game(self, id):
         game_data = firebase_routes.get_game_by_id(id)
         game = Game.from_dict(id, game_data)

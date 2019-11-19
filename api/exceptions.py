@@ -6,8 +6,7 @@ class AnswerNotFoundError(Exception):
 
 
 class FormatNotFoundError(Exception):
-    def __init__(self):
-        super()
+    pass
 
 
 class GameNotFoundError(Exception):
@@ -18,8 +17,7 @@ class GameNotFoundError(Exception):
 
 
 class MaxQuestionsReached(Exception):
-    def __init__(self):
-        super()
+    pass
 
 
 class ParameterNotFoundError(Exception):

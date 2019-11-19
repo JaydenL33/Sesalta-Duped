@@ -50,7 +50,6 @@ def new_game():
     new_game = country_system.new_game(country_data, given, asked_for)
     print("NEW GAME route returned:", new_game.id, type(new_game.id))
     return new_game.id
-    # return json.dumps(new_game.id)
 
 
 # Returns a list of jsons for random distinct countries
@@ -63,10 +62,7 @@ def random_countries():
     args = request.args
 
     id = get_arg(args, "id", required=True)
-    if "amount" in args:
-        amount = int(get_arg(args, "amount", required=False))
-    else:
-        amount = 1
+    amount = int(get_arg(args, "amount", required=False, default=1))
     return json.dumps(country_system.random_countries(id, amount))
 
 
@@ -150,10 +146,11 @@ def get_global_scoreboard():
     return json.dumps(all_users_with_games_and_scores)
 
 # This function also needs to be updated to handle user accounts/user IDs properly
-@app.route("/api/game/trophy/")
+# NOTE: This is /game/trophies, not /user/trophies
+@app.route("/api/game/trophies/")
 def get_game_trophies():
     args = request.args
-    user_id = get_arg(args, "user", required=True)
+    user_id = get_arg(args, "user", required=False)
     game_id = get_arg(args, "game", required=True)
 
     t1 = datetime.now()
@@ -164,6 +161,15 @@ def get_game_trophies():
     print("TIME TAKEN:", (t2 - t1).total_seconds())
 
     return json.dumps(trophies)
+
+# This function also needs to be updated to handle user accounts/user IDs properly
+# NOTE: This is /user/trophies, not /game/trophies
+@app.route("/api/user/trophies/")
+def get_user_trophies():
+    args = request.args
+    user_id = get_arg(args, "user", required=True)
+
+    return json.dumps(firebase_routes.get_user_trophies(user_id), sort_keys=True)
 
 # Helper functions - may be relocated
 

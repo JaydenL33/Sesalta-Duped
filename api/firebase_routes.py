@@ -35,8 +35,11 @@ def get_all_users():
     return firebase_session.child('users').get()
 
 
-def get_user_by_id(id):
-    return firebase_session.child("users/" + id).get()
+def get_user_by_id(user_id):
+    if user_id is None:
+        return None
+    else:
+        return firebase_session.child("users/" + user_id).get()
 
 
 def get_bad_words():
