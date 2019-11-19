@@ -147,6 +147,9 @@ def get_global_scoreboard():
 
 # This function also needs to be updated to handle user accounts/user IDs properly
 # NOTE: This is /game/trophies, not /user/trophies
+# Lists the new trophies a user earned in a game. Also updates DB to match.
+# If this route is called twice for the same game, it will give a valid answer
+# the first time but nothing the second time (since it only considers NEW trophies)
 @app.route("/api/game/trophies/")
 def get_game_trophies():
     args = request.args
@@ -164,6 +167,7 @@ def get_game_trophies():
 
 # This function also needs to be updated to handle user accounts/user IDs properly
 # NOTE: This is /user/trophies, not /game/trophies
+# Lists all of the trophies a user has earned
 @app.route("/api/user/trophies/")
 def get_user_trophies():
     args = request.args
