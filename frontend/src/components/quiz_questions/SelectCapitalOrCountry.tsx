@@ -10,6 +10,7 @@ import AnswerComponent from "./AnswerComponent";
 import { Link } from "react-router-dom";
 import { Furigana } from "furigana-react";
 import axios from "axios";
+import LinearDeterminate from "../LinearDeterminate";
 
 const styles = {
   card: {
@@ -40,6 +41,7 @@ interface IState {
   showButton: boolean;
   showFinishButton: boolean;
   gameResults: QuestionData[];
+  progBar: number;
 }
 
 interface Option {
@@ -80,7 +82,8 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       bgColor: "primary",
       showButton: false,
       showFinishButton: false,
-      gameResults: []
+      gameResults: [],
+      progBar: 1
     };
   }
 
@@ -185,13 +188,13 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
   };
 
   handleButtonClick = (e: React.SyntheticEvent) => {
-    this.setState({ showButton: false, isCorrect: undefined });
+    this.setState({ showButton: false, isCorrect: undefined, progBar: 1 });
     this.props.callback(); // trigger getting new quiz and render
   };
 
   render() {
     const { classes } = this.props;
-    let QuestionText, ResponseText, ButtonText, EndButton;
+    let QuestionText, ResponseText, ButtonText, EndButton, ProgBar;
 
     if (window.location.pathname.substr(1, 2) === "jp") {
       if (this.props.mode === 0) {
@@ -274,10 +277,18 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       );
     }
 
+    if(this.state.progBar == 0) {
+      ProgBar = <LinearDeterminate/>
+    } else {
+      ProgBar = <div></div>
+      this.setState({ progBar: 0 });
+    }
+
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
           <CardContent>{QuestionText}</CardContent>
+          {ProgBar}
           <AnswerComponent
             optionsList={
               this.props.mode === 0

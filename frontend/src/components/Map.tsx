@@ -53,7 +53,7 @@ class Map extends Component<MapProp> {
             rotation: [-11, 0, 0]
           }}
           width={980}
-          height={551}
+          height={650}
           style={{
             width: "100%",
             height: "auto"

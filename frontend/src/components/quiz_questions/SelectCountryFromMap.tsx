@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { Furigana } from "furigana-react";
 import axios from "axios";
 import LinearDeterminate from "../LinearDeterminate";
+
 const styles = {
   card: {
     minWidth: 275,
@@ -44,6 +45,7 @@ interface IState {
   showFinishButton: boolean;
   gameResults: QuestionData[];
   progBar: number;
+  pointsScored: number;
 }
 
 interface IProps {
@@ -73,7 +75,8 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       showButton: false,
       showFinishButton: false,
       gameResults: [],
-      progBar: 1
+      progBar: 1,
+      pointsScored: 0
     };
   }
 
@@ -102,8 +105,9 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      if (currentQuestion === 3) this.setState({ showFinishButton: true });
-      else this.setState({ showButton: true });
+      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points });
+      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points });
+      console.log(this.state.pointsScored);
     }
   }
 
@@ -119,7 +123,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
   };
 
   handleButtonClick = (e: React.SyntheticEvent) => {
-    this.setState({ showButton: false, isCorrect: undefined, progBar: 1 });
+    this.setState({ showButton: false, isCorrect: undefined, progBar: 1, pointsScored: 0 });
     this.props.callback(); // trigger getting new quiz and render
   };
 
@@ -212,8 +216,8 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
     if(this.state.progBar == 0) {
       ProgBar = <LinearDeterminate/>
     } else {
-      this.setState({ progBar: 0 });
       ProgBar = <div></div>
+      this.setState({ progBar: 0 });
     }
 
     return (
@@ -233,6 +237,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
             callback={this.answerComponentCallback}
           />
           {ResponseText}
+          <Typography>{this.state.pointsScored}</Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}
