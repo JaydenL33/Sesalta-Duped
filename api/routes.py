@@ -1,5 +1,6 @@
 from arg_fetcher import get_arg
 from country_system import CountrySystem
+from datetime import datetime
 from exceptions import *
 from flask import Flask, jsonify, request
 import json
@@ -148,17 +149,23 @@ def get_global_scoreboard():
 
     return json.dumps(all_users_with_games_and_scores)
 
-# This function also needs to be updated to handle user accounts properly
+# This function also needs to be updated to handle user accounts/user IDs properly
 @app.route("/api/game/trophy/")
 def get_game_trophies():
     args = request.args
     user_id = get_arg(args, "user", required=True)
     game_id = get_arg(args, "game", required=True)
 
+    t1 = datetime.now()
+
     trophies = country_system.get_trophies_for_game(user_id, game_id)
+
+    t2 = datetime.now()
+    print("TIME TAKEN:", (t2 - t1).total_seconds())
+
     return json.dumps(trophies)
 
-# Helper functions - may be better in system or elsewhere
+# Helper functions - may be relocated
 
 
 def extract_games_and_score_for_user(name):

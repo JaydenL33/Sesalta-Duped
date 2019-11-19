@@ -7,7 +7,7 @@ def new_game_id():
     return response.key
 
 
-def get_game(game_id):
+def get_game_by_id(game_id):
     return firebase_session.child(f"games/{game_id}").get()
 
 
@@ -41,6 +41,10 @@ def get_user_by_id(id):
 
 def get_bad_words():
     return firebase_session.child('badWords').get()
+
+
+def update_bad_words(words):
+    return firebase_session.child('badWords').set(words)
 
 
 def get_user_trophies(user_id):

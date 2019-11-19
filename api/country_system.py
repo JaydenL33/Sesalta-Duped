@@ -1,3 +1,4 @@
+from arg_fetcher import get_arg
 import copy
 from exceptions import *
 import firebase_routes
@@ -81,29 +82,53 @@ class CountrySystem:
         return is_allowed
 
     def get_trophies_for_game(self, user_id, game_id):
-        game = Game.from_dict(game_id, firebase_routes.get_game(game_id))
-        existing_trophy_data = firebase_routes.get_user_trophies(user_id)
+        game = self._get_game(game_id)
 
-        if existing_trophy_data is None:
-            existing_trophy_names = []
-        else:
-            existing_trophy_names = [trophy_data["name"]
-                                     for trophy_data in existing_trophy_data]
+        user_data = firebase_routes.get_user_by_id(user_id)
+        print("user_data : ", user_data)
 
-        new_trophy_data = []
-        for trophy in ALL_TROPHIES:
-            trophy_test = trophy(game)
-            if (trophy_test.get_name() not in existing_trophy_names and
-                    trophy_test.game_satisfies()):
-                new_trophy_data.append(trophy_test.to_dict())
+        existing_trophy_data = self._get_existing_trophy_data(user_data)
+        existing_trophy_names = self._get_trophy_names(existing_trophy_data)
+        new_trophy_data = self._get_new_trophy_data(game, existing_trophy_names)
+        print("\n\nNEW : ", new_trophy_data)
 
         if existing_trophy_data is None:
             all_earned_trophies = new_trophy_data
         else:
             all_earned_trophies = new_trophy_data + existing_trophy_data
 
-        firebase_routes.update_trophies_if_user_exists(
-            user_id, all_earned_trophies)
+        # Update firebase is the user is valid
+        if user_data is not None:
+            firebase_routes.update_trophies(
+                user_id, all_earned_trophies)
+
+        return new_trophy_data
+
+    def _get_existing_trophy_data(self, user_data):
+        if user_data is None:
+            existing_trophy_data = None
+        else:
+            existing_trophy_data = get_arg(user_data, "trophies", required=False)
+        return existing_trophy_data
+
+    def _get_trophy_names(self, trophy_data):
+
+        if trophy_data is None or trophy_data == []:
+            trophy_names = []
+        else:
+            trophy_names = [trophy_record["name"]
+                            for trophy_record in trophy_data]
+
+        return trophy_names
+
+    def _get_new_trophy_data(self, game, existing_trophy_names):
+        new_trophy_data = []
+
+        for trophy in ALL_TROPHIES:
+            trophy_test = trophy(game)
+            if (trophy_test.get_name() not in existing_trophy_names and
+                    trophy_test.game_satisfies()):
+                new_trophy_data.append(trophy_test.to_dict())
 
         return new_trophy_data
 
@@ -115,14 +140,14 @@ class CountrySystem:
     # progress. We will need to implement a way to remove the oldest/completed
     # games.
 
-    def _generate_new_id(self):
-        id = str(random.randrange(ID_RANGE))
-        while id in self._games:
-            id = str(random.randrange(ID_RANGE))
-        return id
+    # def _generate_new_id(self):
+    #     id = str(random.randrange(ID_RANGE))
+    #     while id in self._games:
+    #         id = str(random.randrange(ID_RANGE))
+    #     return id
 
     def _get_game(self, id):
-        game_data = firebase_routes.get_game(id)
+        game_data = firebase_routes.get_game_by_id(id)
         game = Game.from_dict(id, game_data)
         return game
         # raise GameNotFoundError(id, self._games)
