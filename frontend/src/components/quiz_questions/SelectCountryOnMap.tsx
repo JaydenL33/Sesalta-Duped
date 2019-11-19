@@ -70,7 +70,7 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
   }
 
   async answerVerifier() {
-    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.countryExpected}&observed=${this.state.countryObserved}&id=${this.props.gameID}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/check/?expected=${this.props.countryExpected}&observed=${this.state.countryObserved}&id=${this.props.gameID}`;
     const res = await axios.get(url);
     const response = res.data;
     this.setState({ isCorrect: response });
@@ -78,7 +78,7 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
   }
 
   async attemptChecker(correctBoolean: number) {
-    const url = `http://127.0.0.1:5000/api/country/results/?id=${this.props.gameID}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/results/?id=${this.props.gameID}`;
     const gameResultsResponse = await axios.get(url);
     let gameResults = gameResultsResponse.data;
     this.setState({ gameResults: JSON.parse(JSON.stringify(gameResults)) });

@@ -62,7 +62,7 @@ export default class GamePlayPageFlag extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
-    const url = "http://127.0.0.1:5000/api/country/new_game/";
+    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/`;
     const response = await axios.get(url);
     return response.data;
   }
@@ -71,7 +71,7 @@ export default class GamePlayPageFlag extends React.Component<P, S> {
     get random options
   */
   async getRandomCountryOptions() {
-    const url = `http://127.0.0.1:5000/api/country/random/?amount=4&id=${this.state.gameID}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/random/?amount=4&id=${this.state.gameID}`;
     const response = await axios.get(url);
     return response.data;
   }

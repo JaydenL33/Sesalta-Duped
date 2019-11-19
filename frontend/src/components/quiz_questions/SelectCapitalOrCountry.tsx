@@ -99,7 +99,7 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
     check with backend
   */
   async answerVerifier(answerObserved: string) {
-    const url = `http://127.0.0.1:5000/api/country/check/?expected=${this.props.questionCountry}&observed=${answerObserved}&id=${this.props.gameID}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/check/?expected=${this.props.questionCountry}&observed=${answerObserved}&id=${this.props.gameID}`;
     const res = await axios.get(url);
     let response = res.data;
     console.log("this is the response", response);
@@ -108,7 +108,7 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
   }
 
   async attemptChecker(correctBoolean: number) {
-    const url = `http://127.0.0.1:5000/api/country/results/?id=${this.props.gameID}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/results/?id=${this.props.gameID}`;
     const gameResultsResponse = await axios.get(url);
     let gameResults = gameResultsResponse.data;
     let gr: Array<QuestionData> = JSON.parse(JSON.stringify(gameResults));
