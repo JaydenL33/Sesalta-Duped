@@ -213,7 +213,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       );
     }
 
-    if(this.state.progBar == 0) {
+    if(this.state.progBar === 0) {
       ProgBar = <LinearDeterminate/>
     } else {
       ProgBar = <div></div>
@@ -237,7 +237,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
             callback={this.answerComponentCallback}
           />
           {ResponseText}
-          <Typography>{this.state.pointsScored}</Typography>
+          <Typography>You scored {this.state.pointsScored}!</Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}

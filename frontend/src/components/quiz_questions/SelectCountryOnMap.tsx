@@ -196,7 +196,7 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
       );
     }
     
-    if(this.state.progBar == 0) {
+    if(this.state.progBar === 0) {
       ProgBar = <LinearDeterminate/>
     } else {
       ProgBar = <div></div>
