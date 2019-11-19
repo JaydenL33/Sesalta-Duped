@@ -59,3 +59,17 @@ class NoWrongAnswersTrophy(Trophy):
             return True
         else:
             return False
+
+
+class BronzePointsTrophy(Trophy):
+
+    def __init__(self, game):
+        super().__init__(game)
+        self._required_score = 200
+        self._trophy_name = f"Bronze ({self._required_score} points)"
+
+    def game_satisfies(self):
+        if self._game.is_finished() and self._game.score() > self._required_score:
+            return True
+        else:
+            return False

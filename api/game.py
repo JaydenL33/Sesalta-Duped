@@ -9,7 +9,6 @@ MAX_QUESTIONS = 3
 class Game:
 
     def from_dict(id, game_data):
-        print(f"game data: {game_data}")
         country_data = game_data["remainingCountries"]
         given_mode = game_data["mode"].split("-")[0]
         asked_for_mode = game_data["mode"].split(">")[1]
@@ -115,6 +114,10 @@ class Game:
             if question.has_incorrect_guesses():
                 return True
         return False
+
+    def score(self):
+        score = sum([question.points_scored() for question in self._questions])
+        return score
 
     @property
     def id(self):

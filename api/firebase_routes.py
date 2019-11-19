@@ -20,7 +20,6 @@ def get_all_game_ids_for_user(user_id):
 
 
 def update_game(game_id, new_game_data):
-    print(f"UPDATING GAME {game_id}: {new_game_data}")
     firebase_session.child(f"games/{game_id}").set(new_game_data)
 
 
@@ -60,7 +59,7 @@ def update_trophies(user_id, trophies):
 def update_trophies_if_user_exists(user_id, trophies):
     user_data = get_user_by_id(user_id)
 
-    if user_data is not None:
+    if user_data is not None and trophies is not None:
         update_trophies(user_id, trophies)
         return True
     else:

@@ -17,7 +17,6 @@ MICROS_ALLOWED = 20 * MICROS_PER_SECOND
 class Question:
 
     def from_dict(question_data):
-        print(f"question_data: {question_data}")
         options = question_data["options"]
         question_num = question_data["question_num"]
         expected_answer = get_arg(
@@ -37,7 +36,6 @@ class Question:
         time_answered_str = get_arg(
             question_data, "time_answered", required=False)
         time_answered = Question._str_to_datetime(time_answered_str)
-        print("TIME", time_answered, type(time_answered))
 
         return Question(options, question_num, expected_answer=expected_answer, observed_answers=observed_answers, time_asked=time_asked, time_answered=time_answered)
 
@@ -115,7 +113,7 @@ class Question:
 
             elif points < INCORRECT_ANSWER_POINTS:
                 points = INCORRECT_ANSWER_POINTS
-        print(f"POINTS::::: {points}")
+
         # Allow for rounding up before casting to int
         return math.ceil(round(points, 0))
 
@@ -177,7 +175,6 @@ class Question:
             pass
         elif observed_answer in self._options or not self._force_answers:
             self._observed_answers.add(observed_answer)
-            print(self._observed_answers, "WAS OBSERVED")
 
     def _max_answers_reached(self):
         if len(self._observed_answers) >= self._max_answers:

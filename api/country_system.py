@@ -13,7 +13,8 @@ ALLOWED_NAME_CHARS = "qwertyuiopasdfghjklzxcvbnm"
 ALL_TROPHIES = [
     trophy.GameCompletedTrophy,
     trophy.AllQuestionsCorrectTrophy,
-    trophy.NoWrongAnswersTrophy
+    trophy.NoWrongAnswersTrophy,
+    trophy.BronzePointsTrophy
 ]
 
 
@@ -83,29 +84,28 @@ class CountrySystem:
         game = Game.from_dict(game_id, firebase_routes.get_game(game_id))
         existing_trophy_data = firebase_routes.get_user_trophies(user_id)
 
-        print(existing_trophy_data)
-
         if existing_trophy_data is None:
             existing_trophy_names = []
         else:
             existing_trophy_names = [trophy_data["name"]
                                      for trophy_data in existing_trophy_data]
 
-        print("EXISTING TROPHY DATA:", existing_trophy_data)
-        print("EXISTING TROPHY NAMES:", existing_trophy_names)
-
-        new_trophies = []
+        new_trophy_data = []
         for trophy in ALL_TROPHIES:
             trophy_test = trophy(game)
             if (trophy_test.get_name() not in existing_trophy_names and
                     trophy_test.game_satisfies()):
-                new_trophies.append(trophy_test.to_dict())
+                new_trophy_data.append(trophy_test.to_dict())
 
-        print("NEW TROPHIES:", new_trophies)
+        if existing_trophy_data is None:
+            all_earned_trophies = new_trophy_data
+        else:
+            all_earned_trophies = new_trophy_data + existing_trophy_data
+
         firebase_routes.update_trophies_if_user_exists(
-            user_id, new_trophies + existing_trophy_data)
+            user_id, all_earned_trophies)
 
-        return new_trophies
+        return new_trophy_data
 
     # ========================================
     #   Private functions
@@ -122,11 +122,7 @@ class CountrySystem:
         return id
 
     def _get_game(self, id):
-        print(f"id is {id}")
         game_data = firebase_routes.get_game(id)
         game = Game.from_dict(id, game_data)
         return game
-        # if id in self._games:
-        #     return self._games[id]
-        # else:
-        #     raise GameNotFoundError(id, self._games)
+        # raise GameNotFoundError(id, self._games)
