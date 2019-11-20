@@ -36,13 +36,15 @@ class CountrySystem:
     # NOTE: id is stored as a string. This reduces the need for
     # type conversions
     def new_game(self, country_data, given, asked_for):
-        id = firebase_routes.new_game_id()
-        new_game = Game(id, country_data, given, asked_for)
+        game_id = firebase_routes.new_game_id()
+        new_game = Game(game_id, country_data, given, asked_for)
+        firebase_routes.update_game(game_id, new_game)
         return new_game
 
     def random_countries(self, game_id, amount):
         game = self._get_game(game_id)
         random_countries = game.choose_random_countries(amount)
+        firebase_routes.update_game(game_id, game)
         return random_countries
 
     # Takes the answer given in a game.
@@ -52,9 +54,11 @@ class CountrySystem:
     # id: the game ID
     # expected: the name of the correct answer (e.g. "Australia")
     # observed: the name of the given answer (e.g. "Canada")
-    def check_answer(self, id, expected, observed):
-        game = self._get_game(id)
-        return game.check_answer(expected, observed)
+    def check_answer(self, game_id, expected, observed):
+        game = self._get_game(game_id)
+        response = game.check_answer(expected, observed)
+        firebase_routes.update_game(game_id, game)
+        return response
 
     # Returns a list of the results for a game
     def get_results(self, id):
