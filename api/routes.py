@@ -43,8 +43,8 @@ Example usage:
 def new_game():
     args = request.args
 
-    given = get_arg(args, "given", required=False)
-    asked_for = get_arg(args, "given", required=False)
+    given = get_arg(args, "given", required=True)
+    asked_for = get_arg(args, "asked_for", required=True)
     country_data = firebase_routes.get_country_data()     # list of jsons
 
     new_game = country_system.new_game(country_data, given, asked_for)
@@ -126,24 +126,17 @@ def update_name():
 # just need to json.parse in the frontend
 @app.route("/api/getPlayersScoreboard/",  methods=['GET'])
 def get_players_scoreboard():
-    # args = request.args
-    # name = get_arg(args, "user", required=True)
-
-    name = "prasadsuniquename"
+    args = request.args
+    name = get_arg(args, "name", required=True)
     data = extract_games_and_score_for_user(name)
     return json.dumps(data)
 
 
 @app.route("/api/getGlobalLeaderboard/",  methods=['GET'])
 def get_global_scoreboard():
-    all_users_data = firebase_routes.get_all_users()
-    users_names = list(all_users_data.keys())
-    all_users_with_games_and_scores = {}
-    for users_name in users_names:
-        all_users_with_games_and_scores[users_name] = extract_games_and_score_for_user(
-            users_name)
-
+    all_users_with_games_and_scores = retrieve_all_users_with_games_and_scores()
     return json.dumps(all_users_with_games_and_scores)
+
 
 # This function also needs to be updated to handle user accounts/user IDs properly
 # NOTE: This is /game/trophies, not /user/trophies
@@ -175,7 +168,31 @@ def get_user_trophies():
 
     return json.dumps(firebase_routes.get_user_trophies(user_id), sort_keys=True)
 
+
+@app.route("/api/getGlobalLeaderboardForParticularGameMode/",  methods=['GET'])
+def get_global_board_for_game_mode():
+    args = request.args
+    game_id = get_arg(args, "game_id", required=True)
+    game_data = firebase_routes.get_game_by_id(game_id)
+    mode = game_data['mode']
+    all_users_with_games_and_scores = retrieve_all_users_with_games_and_scores()
+    filtered_games_and_scores = filter_games_by_mode(
+        all_users_with_games_and_scores, mode)
+    return json.dumps(filtered_games_and_scores)
+
+
 # Helper functions - may be relocated
+
+
+def retrieve_all_users_with_games_and_scores():
+    all_users_data = firebase_routes.get_all_users()
+    users_names = list(all_users_data.keys())
+    all_users_with_games_and_scores = {}
+    for users_name in users_names:
+        all_users_with_games_and_scores[users_name] = extract_games_and_score_for_user(
+            users_name)
+
+    return all_users_with_games_and_scores
 
 
 def extract_games_and_score_for_user(name):
@@ -186,7 +203,6 @@ def extract_games_and_score_for_user(name):
         return {}
     else:
         games_played = user_data['gameIDs']['GamesPlayed']
-        game_id_list = list(games_played.keys())
         game_number_and_score = {}
 
         for game_name, game_id in games_played.items():
@@ -199,9 +215,31 @@ def extract_games_and_score_for_user(name):
 
 def calculate_mode_score_and_date(game_data):
     data = {}
-    data["Mode"] = game_data['mode']
-    data["Date"] = 0
+    data["Mode"] = mode_string_to_id(game_data['mode'])
+    data["Date"] = game_data['questions'][0]['time_asked']
     data["Score"] = 0
     for question in game_data['questions']:
         data["Score"] += question['points']
     return data
+
+
+def filter_games_by_mode(all_users_with_games_and_scores, mode):
+    name_list = list(all_users_with_games_and_scores.keys())
+    filtered_games_and_scores_by_mode = {}
+    for name in name_list:
+        game_names = list(all_users_with_games_and_scores[name].keys())
+        for game_name in game_names:
+            if all_users_with_games_and_scores[name][game_name]["Mode"] == mode:
+                if name not in filtered_games_and_scores_by_mode:
+                    filtered_games_and_scores_by_mode[name] = {}
+                if game_name not in filtered_games_and_scores_by_mode[name]:
+                    filtered_games_and_scores_by_mode[name][game_name] = {}
+                filtered_games_and_scores_by_mode[name][game_name] = all_users_with_games_and_scores[name][game_name]
+    return filtered_games_and_scores_by_mode
+
+
+
+def mode_string_to_id(mode_string):
+    mode_map = {'Country->Map': 0, 'Map->Country': 1,
+                'Capital->Country': 2, 'Country->Capital': 3, 'Flag->Country': 4 }
+    return mode_map[mode_string]

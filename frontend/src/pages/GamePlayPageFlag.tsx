@@ -1,7 +1,7 @@
 import React from "react";
 import SelectCountryFromFlag from "../components/quiz_questions/SelectCountryFromFlag";
 import axios from "axios";
-import LinearDeterminate from '../components/LinearDeterminate';
+import LinearDeterminate from "../components/LinearDeterminate";
 
 interface Country {
   name: string;
@@ -63,11 +63,10 @@ export default class GamePlayPageFlag extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
-    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/?given=Flag&asked_for=Country`;
     const response = await axios.get(url);
     return response.data;
   }
-
   /*
     get random options
   */
@@ -103,11 +102,10 @@ export default class GamePlayPageFlag extends React.Component<P, S> {
   }
 
   render() {
-  
     if (this.state.gameID !== "") {
       return (
         <div>
-          <LinearDeterminate/>
+          <LinearDeterminate />
           <SelectCountryFromFlag
             selectedIndex={this.state.selectedIndex}
             gameID={this.state.gameID}

@@ -1,7 +1,7 @@
 import React from "react";
 import SelectCapitalOrCountry from "../components/quiz_questions/SelectCapitalOrCountry";
 import axios from "axios";
-import LinearDeterminate from '../components/LinearDeterminate';
+import LinearDeterminate from "../components/LinearDeterminate";
 
 interface P {
   match: any;
@@ -90,11 +90,14 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
-    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/`;
+    let paramString = "?given=";
+    if (parseInt(this.props.match.params.id) === 0)
+      paramString += "Country&asked_for=Captial";
+    else paramString += "Capital&asked_for=Country";
+    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/${paramString}`;
     const response = await axios.get(url);
     return response.data;
   }
-
   /*
     get random country options
   */
@@ -135,19 +138,19 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <LinearDeterminate/>
-            <SelectCapitalOrCountry
-              gameID={this.state.gameID}
-              questionCountry={this.state.question.name}
-              questionCapital={this.state.question.capital}
-              optionsList={this.state.optionsList}
-              countryList={this.state.countryList}
-              capitalList={this.state.capitalList}
-              callback={this.nextQuestionPlsCallback}
-              indexCallback={this.indexCallback}
-              selectedIndex={this.state.selectedIndex}
-              mode={this.state.mode}
-            />
+          <LinearDeterminate />
+          <SelectCapitalOrCountry
+            gameID={this.state.gameID}
+            questionCountry={this.state.question.name}
+            questionCapital={this.state.question.capital}
+            optionsList={this.state.optionsList}
+            countryList={this.state.countryList}
+            capitalList={this.state.capitalList}
+            callback={this.nextQuestionPlsCallback}
+            indexCallback={this.indexCallback}
+            selectedIndex={this.state.selectedIndex}
+            mode={this.state.mode}
+          />
         </div>
       );
     } else {

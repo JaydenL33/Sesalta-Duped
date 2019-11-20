@@ -8,9 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AnswerComponent from "./AnswerComponent";
 import Map from "../Map";
-// import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-// import { browserHistory } from "react-router";
 import { Furigana } from "furigana-react";
 import axios from "axios";
 import LinearDeterminate from "../LinearDeterminate";
@@ -47,7 +45,7 @@ interface IState {
 }
 
 interface IProps {
-  gameID?: string;
+  gameID: string;
   countryExpected: string;
   optionsList: string[];
   classes: any;
@@ -154,7 +152,13 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       );
       EndButton = (
         <Link
-          to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
+          to={{
+            pathname: "/jp/game/results/",
+            state: {
+              stateData: this.state.gameResults,
+              gameID: this.props.gameID
+            }
+          }}
         >
           <Button
             className={
@@ -193,7 +197,13 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       );
       EndButton = (
         <Link
-          to={{ pathname: "/en/game/results", state: this.state.gameResults }}
+          to={{
+            pathname: "/en/game/results/",
+            state: {
+              stateData: this.state.gameResults,
+              gameID: this.props.gameID
+            }
+          }}
         >
           <Button
             className={
@@ -209,11 +219,11 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       );
     }
 
-    if(this.state.progBar === 0) {
-      ProgBar = <LinearDeterminate/>
+    if (this.state.progBar === 0) {
+      ProgBar = <LinearDeterminate />;
     } else {
       this.setState({ progBar: 0 });
-      ProgBar = <div></div>
+      ProgBar = <div></div>;
     }
 
     return (
@@ -224,7 +234,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
               <Map country={this.props.countryExpected} />
             </div>
             {QuestionTitle}
-          {ProgBar}
+            {ProgBar}
           </CardContent>
           <AnswerComponent
             selectedIndex={this.props.selectedIndex}
