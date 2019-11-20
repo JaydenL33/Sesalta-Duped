@@ -62,17 +62,23 @@ def update_game(game_id, game):
 
 @mini_timer
 def get_country_data():
-    cached_data = cache.get_country_data_copy()
+    cached_data = cache.get_country_data()
     if cached_data is None:
-        return firebase_session.child('countryData').get()
+        country_data = firebase_session.child('countryData').get()
+        cache.set_country_data(country_data)
+        return country_data
     else:
         return cached_data
 
 
 @mini_timer
 def get_country_by_index(country_index):
-    return cache.get_country_by_index(country_index)
-    return firebase_session.child(f'countryData/{country_index}').get()
+    cached_data = cache.get_country_by_index(country_index)
+    if cached_data is None:
+        data = firebase_session.child(f'countryData/{country_index}').get()
+        return data
+    else:
+        return cached_data
 
 
 @mini_timer
@@ -95,7 +101,13 @@ def update_user(user_id, user_data):
 
 @mini_timer
 def get_bad_words():
-    return firebase_session.child('badWords').get()
+    cached_bad_words = cache.get_bad_words()
+
+    if cached_bad_words is None:
+        bad_words = firebase_session.child('badWords').get()
+        cache.set_bad_words(cached_bad_words)
+    else:
+        return cached_bad_words
 
 
 @mini_timer
