@@ -44,13 +44,15 @@ def new_game():
 
     given = get_arg(args, "given", required=True)
     asked_for = get_arg(args, "asked_for", required=True)
+    users_unique_name = get_arg(args, "users_unique_name", required=True)
+
     country_data = firebase_routes.get_country_data()     # list of jsons
 
     new_game = country_system.new_game(country_data, given, asked_for)
 
     # pass in the logged in players name or the string not_a_user
 
-    users_unique_name = get_arg(args, "users_unique_name", required=True)
+    # users_unique_name = get_arg(args, "users_unique_name", required=True)
     update_user_data(users_unique_name, new_game.id)
 
 
@@ -256,7 +258,7 @@ def update_user_data(user_name, new_game_id):
         return
     user_data = firebase_routes.get_user_by_id(user_name)
     total_games_played = user_data["gameIDs"]["GameCount"] + 1
-    game_number_string = "Game" + total_games_played
+    game_number_string = "Game" + str(total_games_played)
     user_data["gameIDs"]["GameCount"] = total_games_played
     if "GamesPlayed" not in user_data["gameIDs"]:
         user_data["gameIDs"]["GamesPlayed"] = {}
