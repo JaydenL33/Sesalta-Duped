@@ -27,16 +27,8 @@ def get_game_data_by_id(game_id):
 
 @mini_timer
 def get_game_by_id(game_id):
-    cached_game = Game.from_dict(game_id, cache.get_game_by_id(game_id))
-
-    if cached_game is None:
-        # print("not cached (obj)")
-        game_data = firebase_session.child(f"games/{game_id}").get()
-        cache.add_game_data(game_id, game_data)
-        return Game.from_dict(game_data)
-    else:
-        # print("was cached (obj)")
-        return cached_game
+    game_data = get_game_data_by_id(game_id)
+    return Game.from_dict(game_id, game_data)
 
 
 @mini_timer
