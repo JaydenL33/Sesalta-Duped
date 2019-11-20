@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request
 import json
 import firebase_routes
 from flask_cors import CORS
+from wrappers import timer
 
 app = Flask(__name__)
 CORS(app)
@@ -39,6 +40,7 @@ Example usage:
 # given: the given game mode for each question (not yet needed)
 # asked_for: the answer mode for each question (not yet needed)
 @app.route("/api/country/new_game/", methods=['GET'])
+@timer
 def new_game():
     args = request.args
 
@@ -55,7 +57,6 @@ def new_game():
     # users_unique_name = get_arg(args, "users_unique_name", required=True)
     update_user_data(users_unique_name, new_game.id)
 
-
     print("NEW GAME route returned:", new_game.id, type(new_game.id))
     return new_game.id
 
@@ -66,6 +67,7 @@ def new_game():
 # id: the game ID. Raises ParameterNotFoundError if not given
 # amount: the number of countries requested. Default = 1
 @app.route("/api/country/random/")
+@timer
 def random_countries():
     args = request.args
 
@@ -82,6 +84,7 @@ def random_countries():
 # expected: the NAME_LONG of the correct answer(e.g. "Australia")
 # observed: the NAME_LONG of the given answer(e.g. "Canada")
 @app.route("/api/country/check/")
+@timer
 def check_country():
     args = request.args
     id = get_arg(args, "id", required=True)
@@ -99,6 +102,7 @@ def check_country():
 # "points": the number of points scored for that question.
 # "potential": the maximum number of points that could be scored in that question.
 @app.route("/api/country/results/")
+@timer
 def get_results():
     args = request.args
     id = get_arg(args, "id", required=True)
@@ -116,6 +120,7 @@ def get_results():
 # name: the desired public name
 # Needs some kind of user id included as well
 @app.route("/api/user/update/")
+@timer
 def update_name():
     args = request.args
     name = get_arg(args, "name", required=True)
@@ -133,6 +138,7 @@ def update_name():
 # tested and working, just need to uncomment out the args stuff and delete the hardcoded name
 # just need to json.parse in the frontend
 @app.route("/api/getPlayersScoreboard/",  methods=['GET'])
+@timer
 def get_players_scoreboard():
     args = request.args
     name = get_arg(args, "name", required=True)
@@ -141,6 +147,7 @@ def get_players_scoreboard():
 
 
 @app.route("/api/getGlobalLeaderboard/",  methods=['GET'])
+@timer
 def get_global_scoreboard():
     all_users_with_games_and_scores = retrieve_all_users_with_games_and_scores()
     return json.dumps(all_users_with_games_and_scores)
@@ -152,6 +159,7 @@ def get_global_scoreboard():
 # If this route is called twice for the same game, it will give a valid answer
 # the first time but nothing the second time (since it only considers NEW trophies)
 @app.route("/api/game/trophies/")
+@timer
 def get_game_trophies():
     args = request.args
     user_id = get_arg(args, "user", required=False)
@@ -170,6 +178,7 @@ def get_game_trophies():
 # NOTE: This is /user/trophies, not /game/trophies
 # Lists all of the trophies a user has earned
 @app.route("/api/user/trophies/")
+@timer
 def get_user_trophies():
     args = request.args
     user_id = get_arg(args, "user", required=True)
@@ -178,6 +187,7 @@ def get_user_trophies():
 
 
 @app.route("/api/getGlobalLeaderboardForParticularGameMode/",  methods=['GET'])
+@timer
 def get_global_board_for_game_mode():
     args = request.args
     game_id = get_arg(args, "game_id", required=True)
@@ -246,10 +256,9 @@ def filter_games_by_mode(all_users_with_games_and_scores, mode):
     return filtered_games_and_scores_by_mode
 
 
-
 def mode_string_to_id(mode_string):
     mode_map = {'Country->Map': 0, 'Map->Country': 1,
-                'Capital->Country': 2, 'Country->Capital': 3, 'Flag->Country': 4 }
+                'Capital->Country': 2, 'Country->Capital': 3, 'Flag->Country': 4}
     return mode_map[mode_string]
 
 

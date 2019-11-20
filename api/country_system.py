@@ -40,8 +40,8 @@ class CountrySystem:
         new_game = Game(id, country_data, given, asked_for)
         return new_game
 
-    def random_countries(self, id, amount):
-        game = self._get_game(id)
+    def random_countries(self, game_id, amount):
+        game = self._get_game(game_id)
         random_countries = game.choose_random_countries(amount)
         return random_countries
 
@@ -138,6 +138,8 @@ class CountrySystem:
 
     def _get_game(self, id):
         game_data = firebase_routes.get_game_by_id(id)
+        if game_data is None:
+            raise GameNotFoundError(game="id")
         game = Game.from_dict(id, game_data)
         return game
         # raise GameNotFoundError(id, self._games)

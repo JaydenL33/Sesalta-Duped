@@ -9,6 +9,7 @@ MAX_QUESTIONS = 3
 class Game:
 
     def from_dict(id, game_data):
+        # print(f"GAME DATA IS: {game_data}")
         country_data = game_data["remainingCountries"]
         given_mode = game_data["mode"].split("-")[0]
         asked_for_mode = game_data["mode"].split(">")[1]
