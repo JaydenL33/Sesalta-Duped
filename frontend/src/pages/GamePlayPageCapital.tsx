@@ -90,11 +90,12 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
+    const usersUniqueName = "not_a_user";
     let paramString = "?given=";
     if (parseInt(this.props.match.params.id) === 0)
       paramString += "Country&asked_for=Captial";
     else paramString += "Capital&asked_for=Country";
-    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/${paramString}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/${paramString}&users_unique_name=${usersUniqueName}`;
     const response = await axios.get(url);
     return response.data;
   }

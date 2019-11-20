@@ -42,6 +42,10 @@ def get_user_by_id(user_id):
         return firebase_session.child("users/" + user_id).get()
 
 
+def update_user(user_id, user_data):
+    return firebase_session.child("users" + "/" + user_id).update(user_data)
+
+
 def get_bad_words():
     return firebase_session.child('badWords').get()
 

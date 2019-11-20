@@ -62,7 +62,8 @@ export default class GamePlayPage extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
-    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/?given=Map&asked_for=Country`;
+    const usersUniqueName = "not_a_user";
+    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/?given=Map&asked_for=Country&users_unique_name=${usersUniqueName}`;
     const response = await axios.get(url);
     return response.data;
   }

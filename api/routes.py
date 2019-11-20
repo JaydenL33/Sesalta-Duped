@@ -5,7 +5,6 @@ from exceptions import *
 from flask import Flask, jsonify, request
 import json
 import firebase_routes
-# from setup import firebase_session
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -48,6 +47,13 @@ def new_game():
     country_data = firebase_routes.get_country_data()     # list of jsons
 
     new_game = country_system.new_game(country_data, given, asked_for)
+
+    # pass in the logged in players name or the string not_a_user
+
+    users_unique_name = get_arg(args, "users_unique_name", required=True)
+    update_user_data(users_unique_name, new_game.id)
+
+
     print("NEW GAME route returned:", new_game.id, type(new_game.id))
     return new_game.id
 
@@ -243,3 +249,17 @@ def mode_string_to_id(mode_string):
     mode_map = {'Country->Map': 0, 'Map->Country': 1,
                 'Capital->Country': 2, 'Country->Capital': 3, 'Flag->Country': 4 }
     return mode_map[mode_string]
+
+
+def update_user_data(user_name, new_game_id):
+    if "not_a_user" == user_name:
+        return
+    user_data = firebase_routes.get_user_by_id(user_name)
+    total_games_played = user_data["gameIDs"]["GameCount"] + 1
+    game_number_string = "Game" + total_games_played
+    user_data["gameIDs"]["GameCount"] = total_games_played
+    if "GamesPlayed" not in user_data["gameIDs"]:
+        user_data["gameIDs"]["GamesPlayed"] = {}
+    user_data["gameIDs"]["GamesPlayed"][game_number_string] = new_game_id
+
+    firebase_routes.update_user(user_name, user_data)
