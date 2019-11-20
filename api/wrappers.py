@@ -11,7 +11,7 @@ def timer(func):
 
         t2 = datetime.now()
         print(
-            f" ~ Function {func.__name__}() ran in:\t{(t2 - t1).total_seconds()} seconds")
+            f"- Function {func.__name__}() ran in:\t{(t2 - t1).total_seconds()} seconds")
         return response
     return wrapper
 
@@ -25,7 +25,7 @@ def mini_timer(func):
 
         t2 = datetime.now()
         print(
-            f"   ~ Function {func.__name__}() ran in:\t{(t2 - t1).total_seconds()} seconds")
+            f" - Function {func.__name__}() ran in:\t{(t2 - t1).total_seconds()} seconds")
         return response
     return wrapper
 
