@@ -136,7 +136,7 @@ export default function MaterialTableDemo(props: Props) {
         Object.values(response.data).forEach((item: any) => {
           let row: Row = {
             name: name,
-            date: "2019-11-14", // should be item.Date
+            date: item.Date.replace("T", " ").split(".")[0],
             score: item.Score,
             mode: 0
           };
@@ -163,7 +163,7 @@ export default function MaterialTableDemo(props: Props) {
           Object.values(user[1]).forEach((item: any) => {
             let row: Row = {
               name: name,
-              date: item.Date, // should be item.Date
+              date: item.Date.split("T")[0],
               score: item.Score,
               mode: item.Mode
             };
