@@ -35,7 +35,7 @@ class Cache:
 
     def _delete_games_if_max_exceeded(self, max_games):
         print(
-            f"There are {len(self._games)} cached games (reducing to {MAX_GAMES})")
+            f"There are {len(self._games)} cached games (may reduce to {MAX_GAMES})")
         while len(self._games) > max_games:
             self._delete_oldest_game(self._games)
 
