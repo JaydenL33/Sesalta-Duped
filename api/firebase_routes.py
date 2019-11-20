@@ -1,4 +1,5 @@
 from setup import cache
+from game import Game
 import json
 from setup import firebase_session
 from wrappers import timer
@@ -11,8 +12,23 @@ def new_game_id():
 
 
 # @timer
+def get_game_data_by_id(game_id):
+    cached_game_data = cache.get_game_by_id(game_id)
+
+    if cached_game_data is None:
+        return firebase_session.child(f"games/{game_id}").get()
+    else:
+        return cached_game_data
+
+
+# @timer
 def get_game_by_id(game_id):
-    return firebase_session.child(f"games/{game_id}").get()
+    cached_game = Game.from_dict(game_id, cache.get_game_by_id(game_id))
+
+    if cached_game is None:
+        return Game.from_dict(game_id, firebase_session.child(f"games/{game_id}").get())
+    else:
+        return cached_game
 
 
 # @timer
@@ -26,8 +42,10 @@ def get_all_game_ids_for_user(user_id):
 
 
 # @timer
-def update_game(game_id, new_game_data):
-    firebase_session.child(f"games/{game_id}").set(new_game_data)
+def update_game(game_id, game):
+    game_data = game.to_dict()
+    cache.add_game_data(game_id, game_data)
+    firebase_session.child(f"games/{game_id}").set(game_data)
 
 
 # @timer

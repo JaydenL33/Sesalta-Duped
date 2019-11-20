@@ -57,7 +57,7 @@ def new_game():
     # users_unique_name = get_arg(args, "users_unique_name", required=True)
     update_user_data(users_unique_name, new_game.id)
 
-    print("NEW GAME route returned:", new_game.id, type(new_game.id))
+    print("NEW GAME ID:", new_game.id, type(new_game.id))
     return new_game.id
 
 
@@ -165,12 +165,7 @@ def get_game_trophies():
     user_id = get_arg(args, "user", required=False)
     game_id = get_arg(args, "game", required=True)
 
-    t1 = datetime.now()
-
     trophies = country_system.get_trophies_for_game(user_id, game_id)
-
-    t2 = datetime.now()
-    print("TIME TAKEN:", (t2 - t1).total_seconds())
 
     return json.dumps(trophies)
 
@@ -191,7 +186,7 @@ def get_user_trophies():
 def get_global_board_for_game_mode():
     args = request.args
     game_id = get_arg(args, "game_id", required=True)
-    game_data = firebase_routes.get_game_by_id(game_id)
+    game_data = firebase_routes.get_game_data_by_id(game_id)
     mode = game_data['mode']
     all_users_with_games_and_scores = retrieve_all_users_with_games_and_scores()
     filtered_games_and_scores = filter_games_by_mode(
@@ -224,7 +219,7 @@ def extract_games_and_score_for_user(name):
         game_number_and_score = {}
 
         for game_name, game_id in games_played.items():
-            game_data = firebase_routes.get_game_by_id(game_id)
+            game_data = firebase_routes.get_game_data_by_id(game_id)
             game_number_and_score[game_name] = calculate_mode_score_and_date(
                 game_data)
 

@@ -85,12 +85,12 @@ class CountrySystem:
         game = self._get_game(game_id)
 
         user_data = firebase_routes.get_user_by_id(user_id)
-        print("user_data : ", user_data)
+        # print("user_data : ", user_data)
 
         existing_trophy_data = self._get_existing_trophy_data(user_data)
         existing_trophy_names = self._get_trophy_names(existing_trophy_data)
         new_trophy_data = self._get_new_trophy_data(game, existing_trophy_names)
-        print("\n\nNEW : ", new_trophy_data)
+        # print("\n\nNEW : ", new_trophy_data)
 
         if existing_trophy_data is None:
             all_earned_trophies = new_trophy_data
@@ -137,9 +137,6 @@ class CountrySystem:
     # ========================================
 
     def _get_game(self, id):
-        game_data = firebase_routes.get_game_by_id(id)
-        if game_data is None:
-            raise GameNotFoundError(game="id")
-        game = Game.from_dict(id, game_data)
+        game = firebase_routes.get_game_by_id(id)
         return game
         # raise GameNotFoundError(id, self._games)

@@ -29,7 +29,7 @@ class Game:
         self._asked_for_mode = asked_for
         self._questions = questions
 
-        firebase_routes.update_game(self._id, self.to_dict())
+        firebase_routes.update_game(self._id, self)
 
     def to_dict(self):
         mode = f"{str(self._given_mode)}->{str(self._asked_for_mode)}"
@@ -59,7 +59,7 @@ class Game:
 
         self._new_question(random_countries)
 
-        firebase_routes.update_game(self._id, self.to_dict())
+        firebase_routes.update_game(self._id, self)
         return random_countries
 
     def _new_question(self, countries_used):
@@ -75,10 +75,12 @@ class Game:
         self._questions.append(new_question)
 
     def check_answer(self, expected, observed):
+        # print(self._questions)
         question = self._questions[-1]
 
         result = question.check_answer(expected, observed)
-        firebase_routes.update_game(self._id, self.to_dict())
+
+        firebase_routes.update_game(self._id, self)
         return result
 
     def get_results(self):
