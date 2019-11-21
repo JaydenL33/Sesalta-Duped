@@ -54,6 +54,7 @@ interface QuestionData {
   showButton: boolean;
   gameResults: any;
   progBar: number;
+  pointsScored: number;
 }
 
 class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
@@ -65,7 +66,8 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
       showFinishButton: false,
       showButton: false,
       gameResults: [],
-      progBar: 1,
+      progBar: 0,
+      pointsScored: 0
     };
   }
 
@@ -89,13 +91,13 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      if (currentQuestion === 3) this.setState({ showFinishButton: true });
-      else this.setState({ showButton: true });
+      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
+      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
     }
   }
 
   handleNextQuestion = () => {
-    this.setState({ showButton: false, isCorrect: undefined, progBar: 1 });
+    this.setState({ showButton: false, isCorrect: undefined, progBar: 0 });
     this.props.callback(); // trigger getting new quiz and render
   };
 
@@ -200,7 +202,6 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
       ProgBar = <LinearDeterminate/>
     } else {
       ProgBar = <div></div>
-      this.setState({ progBar: 0 });
     }
 
     return (
@@ -214,6 +215,8 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
             {QuestionText}
           </CardContent>
           {ResponseText}
+          <Typography
+            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}
