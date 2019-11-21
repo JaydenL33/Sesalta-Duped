@@ -51,14 +51,14 @@ class ResultsPage extends React.Component<IProps, IState> {
   async componentDidMount() {
     console.log("Mounting GRP");
     try {
-      const gameResults = this.props.location.state;
+      const gameResults = this.props.location.state.stateData;
       let scoreSum = 0;
       for (const questionData of gameResults) {
         console.log(questionData.points);
         scoreSum += questionData.points;
       }
       this.setState({
-        gameData: this.props.location.state,
+        gameData: this.props.location.state.stateData,
         finalScore: scoreSum
       });
     } catch (e) {
