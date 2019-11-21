@@ -53,13 +53,13 @@ class Map extends Component<MapProp> {
             rotation: [-11, 0, 0]
           }}
           width={980}
-          height={551}
+          height={620}
           style={{
             width: "100%",
             height: "auto"
           }}
         >
-          <ZoomableGroup center={[10, 20]} disablePanning>
+          <ZoomableGroup center={[10, 20]}>
             <Geographies
               geography="https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json"
               disableOptimization
