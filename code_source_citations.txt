@@ -5,3 +5,6 @@ List of capital cities from:
 
 Integrated map and names of countries from:
   zcreativelabs. 2019. react-simple-maps. [ONLINE] Available at: https://github.com/zcreativelabs/react-simple-maps. [Accessed 10 October 2019].
+
+Material UI code snippets from:
+  Material-UI. 2019. Material-UI. [ONLINE] Available at: https://material-ui.com/.

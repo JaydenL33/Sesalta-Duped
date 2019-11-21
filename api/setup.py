@@ -1,3 +1,4 @@
+from cache import Cache
 import json
 from firebase_admin import credentials, db
 import firebase_admin
@@ -14,3 +15,5 @@ firebase_admin.initialize_app(
 firebase_session = db.reference()  # This.
 
 country_data = firebase_session.child('countryData').get()
+
+cache = Cache(country_data=country_data)
