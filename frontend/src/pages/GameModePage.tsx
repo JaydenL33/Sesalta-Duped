@@ -14,7 +14,18 @@ const useStyles = makeStyles((theme: Theme) =>
       maxHeight: 400
     },
     title: {
-      fontSize: 25
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
     },
     list: {
       width: "100%",
@@ -35,14 +46,23 @@ const useStyles = makeStyles((theme: Theme) =>
       resizeMode: "contain"
     },
     horizontalItems: {
+      paddingTop: 50,
       padding: 20,
       flex: 1,
       display: "flex",
       // alignItems: 'center',
-      justifyContent: "center"
+      justifyContent: "center",
+      [theme.breakpoints.down('sm')]: {
+        display: "block",
+      },
     },
     chip: {
-      padding: 50
+      padding: 50,
+      margin: 5,
+      maxWidth: 220,
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: 200,
+      },
     }
   })
 );
@@ -60,7 +80,7 @@ export default function GameHome(props: Props) {
       <Box component="span" m={1}>
         <img src={mainLogo} className={classes.img} alt="Logo" />
       </Box>
-      <Typography variant="h2" color="textSecondary">
+      <Typography className={classes.title} variant="h2" color="textSecondary">
         Welcome To Sesalta!
       </Typography>
       <div className={classes.horizontalItems}>

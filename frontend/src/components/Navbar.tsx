@@ -18,6 +18,7 @@ const styles = (theme: Theme) => ({
   },
   title: {
     flexGrow: 1,
+    justifyContent: "center"
   },
 });
 

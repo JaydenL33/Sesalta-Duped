@@ -1,5 +1,6 @@
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { createStyles, Theme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -13,33 +14,38 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Link as RouterLink } from "react-router-dom";
 
-const styles = {
-  root: {
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center"
-  },
-  card: {
-    marginTop: 5,
-    marginBottom: 4,
-    maxHeight: 500,
-    minWidth: 400
-  },
-  title: {
-    fontSize: 25
-  },
-  list: {
-    width: "100%",
-    display: "block",
-    backgroundColor: "white"
-  },
-  button: {
-    display: "block",
-    maxWidth: 50,
-    marginBottom: 1,
-    marginLeft: 1
-  }
-};
+const style = (theme: Theme) => (
+  createStyles({
+    root: {
+      display: "flex",
+      alignItems: "center",
+      alignContent: "center",
+      
+    },
+    card: {
+      marginTop: 40,
+      marginBottom: 4,
+      maxHeight: 500,
+      width: 500,
+      [theme.breakpoints.down('lg')]: {
+        maxWidth: 400,
+      },
+    },
+    title: {
+      fontSize: 25
+    },
+    list: {
+      width: "100%",
+      display: "block",
+      backgroundColor: "white"
+    },
+    button: {
+      display: "block",
+      maxWidth: 50,
+      marginBottom: 1,
+      marginLeft: 1
+    }
+}));
 
 interface Props {
   classes: any;
@@ -160,4 +166,4 @@ class OptionsPage extends React.Component<Props, States> {
   }
 }
 
-export default withStyles(styles)(OptionsPage);
+export default withStyles(style)(OptionsPage);
