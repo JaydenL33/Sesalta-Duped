@@ -106,6 +106,7 @@ class Map extends Component<MapProp, IState> {
         <ComposableMap
           projectionConfig={{
             scale: 205,
+            rotation: [-10,0,0]
           }}
           width={980}
           height={620}
