@@ -1,37 +1,33 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import NotFound from "./pages/NotFound";
-import GamePlayPage from "./pages/GamePlayPage";
-import GamePlayPageMap from "./pages/GamePlayPageMap";
-import GamePlayPageFlag from "./pages/GamePlayPageFlag";
-import GameModePage from "./pages/GameModePage";
-import GameModePageJp from "./pages/GameModePage-jp";
-import GameOptionsPage from "./pages/GameOptionsPage";
-import GameOptionsPageJp from "./pages/GameOptionsPage-jp";
-import GamePlayPageCapital from "./pages/GamePlayPageCapital";
-import GameResultsPage from "./pages/GameResultsPage";
-import GameResultsPageJp from "./pages/GameResultsPage-jp";
-import LeaderBoardPage from "./pages/LeaderBoardPage";
-import AppliedRoute from "./components/AppliedRoute";
-
+import NotFound from './pages/NotFound';
+import GamePlayPage from './pages/GamePlayPage';
+import GamePlayPageMap from './pages/GamePlayPageMap';
+import GamePlayPageFlag from './pages/GamePlayPageFlag';
+import GameModePage from './pages/GameModePage';
+import GameModePageJp from './pages/GameModePage-jp';
+import GameOptionsPage from './pages/GameOptionsPage';
+import GameOptionsPageJp from './pages/GameOptionsPage-jp';
+import GamePlayPageCapital from './pages/GamePlayPageCapital';
+import GameResultsPage from './pages/GameResultsPage';
+import GameResultsPageJp from './pages/GameResultsPage-jp';
+import LeaderBoardPage from './pages/LeaderBoardPage';
+import AppliedRoute from './components/AppliedRoute';
 
 interface RouteProps {
-  appProps: any;
+  appProps?: any;
 }
 
 const Routes: React.FC<RouteProps> = ({ appProps }) => (
   <Switch>
-    <Route exact path="/" render={() => (
-      <Redirect to="/en"/>
-    )} props={appProps}
-    />
-    <AppliedRoute
-      path="/en/"
+    <Route
       exact
-      component={GameModePage}
+      path="/"
+      render={() => <Redirect to="/en" />}
       props={appProps}
-    /> 
+    />
+    <AppliedRoute path="/en/" exact component={GameModePage} props={appProps} />
     <AppliedRoute
       path="/en/game/play"
       exact
@@ -121,7 +117,8 @@ const Routes: React.FC<RouteProps> = ({ appProps }) => (
       exact
       component={GameResultsPageJp}
       props={appProps}
-    />
+    />{' '}
+    */}
     {/*  catch all unmatched routes */}
     <Route component={NotFound} />
   </Switch>
