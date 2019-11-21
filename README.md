@@ -76,7 +76,7 @@ Switch to the project:
 `workon sesalta`
 
 Run the Flask server:  
-`cd api && pipenv sync && flask run`  
+`cd api && pipenv sync && python application.py`  
 
 Run the React server:  
 `cd frontend && yarn start`  
@@ -84,4 +84,5 @@ Run the React server:
 
 ### deployment
 CDN: d316o4cbhc2v3a.cloudfront.net
+
 original domain: http://sesalta.s3-website-ap-southeast-2.amazonaws.com/

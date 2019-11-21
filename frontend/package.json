@@ -28,7 +28,7 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"predeploy": "npm run build",
+		"predeploy": "yarn build",
     "deploy": "aws s3 sync build/ s3://sesalta --delete",
     "postdeploy": "aws cloudfront create-invalidation --distribution-id E3WQ5NB7L83S7 --paths '/*'"
 	},

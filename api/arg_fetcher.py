@@ -5,6 +5,8 @@
 # required: determines whether an exception will be raised if the argument
 # is not found.
 
+from exceptions import *
+
 
 def get_arg(args, param_name, required=False, default=None):
     if param_name in args:

@@ -48,11 +48,11 @@ export default class GamePlayPage extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
-    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/`;
+    const usersUniqueName = "not_a_user";
+    const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/?given=Country&asked_for=Map&users_unique_name=${usersUniqueName}`;
     const response = await axios.get(url);
     return response.data;
   }
-
   /*
     get random options
   */

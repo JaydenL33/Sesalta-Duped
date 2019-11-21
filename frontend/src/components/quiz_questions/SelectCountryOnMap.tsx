@@ -42,7 +42,7 @@ interface IState {
 }
 
 interface IProps {
-  gameID?: string;
+  gameID: string;
   countryExpected: string;
   classes: any;
   callback: any;
@@ -142,7 +142,13 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
       );
       EndButton = (
         <Link
-          to={{ pathname: "/jp/game/results", state: this.state.gameResults }}
+          to={{
+            pathname: "/jp/game/results/",
+            state: {
+              stateData: this.state.gameResults,
+              gameID: this.props.gameID
+            }
+          }}
         >
           <Button
             className={
@@ -182,7 +188,13 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
       );
       EndButton = (
         <Link
-          to={{ pathname: "/en/game/results", state: this.state.gameResults }}
+          to={{
+            pathname: "/en/game/results/",
+            state: {
+              stateData: this.state.gameResults,
+              gameID: this.props.gameID
+            }
+          }}
         >
           <Button
             className={
