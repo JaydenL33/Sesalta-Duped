@@ -41,7 +41,7 @@ export default function QuizElement() {
             What is the name of the highlighted country?
           </Typography>
           <div>
-            <Map country="" />
+            <Map country="" initialScale={1}/>
           </div>
         </CardContent>
         {/* <AnswerComponent/> */}
