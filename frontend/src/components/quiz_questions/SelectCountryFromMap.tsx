@@ -231,7 +231,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
         <Card className={classes.card}>
           <CardContent>
             <div>
-              <Map country={this.props.countryExpected} />
+              <Map country={this.props.countryExpected} initialScale={1}/>
             </div>
             {QuestionTitle}
             {ProgBar}

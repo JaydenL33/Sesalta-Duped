@@ -210,7 +210,7 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
         <Card className={classes.card}>
           <CardContent>
             <div>
-              <Map callback={this.handleMapClickCallback} />
+              <Map callback={this.handleMapClickCallback} initialScale={1}/>
             </div>
             {QuestionText}
           </CardContent>
