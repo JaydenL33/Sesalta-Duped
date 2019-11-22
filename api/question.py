@@ -11,7 +11,7 @@ INCORRECT_ANSWER_POINTS = 0
 
 MICROS_PER_SECOND = 1000000
 SECONDS_PER_DAY = 86400
-MICROS_ALLOWED = 20 * MICROS_PER_SECOND
+MICROS_ALLOWED = 13 * MICROS_PER_SECOND
 
 
 class Question:
@@ -25,9 +25,7 @@ class Question:
         observed_answers = get_arg(
             question_data, "observed_answers", required=False, default=set())
         if observed_answers is None:
-            observed_answers = set()
-        elif type(observed_answers) is list:
-            observed_answers = set(observed_answers)
+            observed_answers = []
 
         time_asked_str = get_arg(
             question_data, "time_asked", required=False)
@@ -39,11 +37,11 @@ class Question:
 
         return Question(options, question_num, expected_answer=expected_answer, observed_answers=observed_answers, time_asked=time_asked, time_answered=time_answered)
 
-    def __init__(self, options, question_num, expected_answer=None, observed_answers=set(), max_answers=DEFAULT_MAX_ANSWERS, force_answers=False, time_asked=None, time_answered=None):
+    def __init__(self, options, question_num, expected_answer=None, observed_answers=None, max_answers=DEFAULT_MAX_ANSWERS, force_answers=False, time_asked=None, time_answered=None):
         self._options = options
         self._question_num = question_num
         self._expected_answer = expected_answer
-        self._observed_answers = observed_answers
+        self._observed_answers = [] if observed_answers is None else observed_answers
         self._max_answers = max_answers
         self._force_answers = force_answers
         self._time_asked = time_asked if time_asked is not None else datetime.now()
@@ -56,7 +54,7 @@ class Question:
             "options": self._options,
             "question_num": self._question_num,
             "expected_answer": self._expected_answer,
-            "observed_answers": list(self._observed_answers),
+            "observed_answers": self._observed_answers,
             "points": points,
             "potential": MAX_CORRECT_ANSWER_POINTS,
             "time_asked": type(self)._datetime_to_str(self._time_asked),
@@ -135,8 +133,12 @@ class Question:
 
     def answered_correctly(self):
         if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
+            # print(
+            #     f"WAS answered correctly \n {self._expected_answer} \n {self._observed_answers} \n {self._options}")
             return True
         else:
+            # print(
+            #     f"NOT answered correctly \n {self._expected_answer} \n {self._observed_answers} \n {self._options}")
             return False
 
     def has_incorrect_guesses(self):
@@ -173,8 +175,10 @@ class Question:
             pass
         elif self._max_answers_reached():
             pass
+        elif observed_answer in self._observed_answers:
+            pass
         elif observed_answer in self._options or not self._force_answers:
-            self._observed_answers.add(observed_answer)
+            self._observed_answers.append(observed_answer)
 
     def _max_answers_reached(self):
         if len(self._observed_answers) >= self._max_answers:
