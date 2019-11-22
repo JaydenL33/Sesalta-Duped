@@ -1,5 +1,5 @@
 import React from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { withStyles, Theme } from '@material-ui/core/styles';
 import {
   Container,
   Box,
@@ -7,12 +7,16 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
+  Button,
+  Paper
 } from "@material-ui/core";
 import mainLogo from "../assets/sesaltaLogo.png";
 import Typography from "@material-ui/core/Typography";
+import { Link as RouterLink } from 'react-router-dom'
+import Link from '@material-ui/core/Link';
 
-const styles = {
+const styles = (theme: Theme) => ({
   root: {},
   img: {
     padding: 10,
@@ -20,8 +24,17 @@ const styles = {
     width: 225,
     height: 200,
     resizeMode: "contain"
+  },
+  paper: {
+    marginTop: theme.spacing(3),
+    width: '100%',
+    overflow: 'auto',
+    marginBottom: theme.spacing(2),
+  },
+  button: {
+    margin: 5,
   }
-};
+});
 
 interface QuestionData {
   expected_answer: string;
@@ -77,7 +90,7 @@ class ResultsPage extends React.Component<IProps, IState> {
         <Typography variant="h4" color="textSecondary">
           You scored {this.state.finalScore} points!
         </Typography>
-        <div>
+        <Paper className={classes.paper}>
           <Table
             className={classes.table}
             size="small"
@@ -120,10 +133,18 @@ class ResultsPage extends React.Component<IProps, IState> {
               )}
             </TableBody>
           </Table>
+        </Paper>
+        <div>
+          <Button variant="contained" color="primary" className={classes.button}>
+            <Link color="inherit" component={RouterLink} to="/en/leaderboard">Leaderboard</Link>
+          </Button>
+          <Button variant="contained" color="secondary" className={classes.button}>
+            <Link color="inherit" component={RouterLink} to="/en/game/options">Play Again</Link>
+          </Button>
         </div>
       </Container>
     );
   }
 }
 
-export default withStyles(styles)(ResultsPage);
+export default withStyles(styles, { withTheme: true })(ResultsPage);
