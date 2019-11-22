@@ -135,27 +135,30 @@ class Map extends Component<MapProp, IState> {
                         fill:
                           geography.properties.NAME_LONG ===
                           `${this.props.country}`
-                            ? "#DD4132"
+                            ? "#D02020"
                             : "#F0EAD6",
                         stroke:
-                          geography.properties.NAME === this.state.highlighted
-                            ? "#9E1030"
+                          geography.properties.NAME_LONG === `${this.props.country}`
+                            ? "#D02020"
                             : "#B2A27D",
-                        strokeWidth: 0.75,
+                        strokeWidth:
+                            geography.properties.NAME_LONG === `${this.props.country}`
+                              ? 4
+                              : 0.5,
                         outline: "none",
                         transition: "all 250ms"
                       },
                       hover: {
                         fill: "#FF6F61",
                         stroke: "#9E1030",
-                        strokeWidth: 0.75,
+                        strokeWidth: 1,
                         outline: "none",
                         transition: "all 250ms"
                       },
                       pressed: {
                         fill: "#DD4132",
                         stroke: "#9E1030",
-                        strokeWidth: 0.75,
+                        strokeWidth: 1,
                         outline: "none",
                         transition: "all 250ms"
                       }
