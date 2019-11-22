@@ -5,6 +5,7 @@ import math
 
 CORRECT = 1
 INCORRECT = 0
+ERROR = -1
 DEFAULT_MAX_ANSWERS = 2
 MAX_CORRECT_ANSWER_POINTS = 100
 INCORRECT_ANSWER_POINTS = 0
@@ -69,24 +70,35 @@ class Question:
         answer_time = datetime.now()
 
         if expected not in self._options:
-            raise AnswerNotFoundError(expected, self._options)
+            raise AnswerNotFoundError
 
         if observed not in self._options and self._force_answers:
-            raise AnswerNotFoundError(observed, self._options)
+            raise AnswerNotFoundError
 
         # If expected does not match the answer previously observed as expected,
         # some error or cheating has occurred.
         if self._expected_answer is not None and expected != self._expected_answer:
-            return INCORRECT
+            raise AnswerNotFoundError
 
         self._set_expected_answer(expected)
         self._add_observed_answer(observed)
 
-        if expected in self._options and observed == expected:
+        if self.answers_match_and_valid(expected, observed):
             self._set_time_answered(answer_time)
+        if self.answered_correctly() or expected == observed:
             return CORRECT
         else:
             return INCORRECT
+
+    def answers_match_and_valid(self, expected, observed):
+        if self._expected_answer not in (None, expected):
+            return False
+        elif expected != observed:
+            return False
+        elif self._force_answers == True and observed not in self._options:
+            return False
+        else:
+            return True
 
     def points_scored(self):
         points = INCORRECT_ANSWER_POINTS
@@ -113,7 +125,7 @@ class Question:
                 points = INCORRECT_ANSWER_POINTS
 
         # Allow for rounding up before casting to int
-        return math.ceil(round(points, 0))
+        return int(math.ceil(points))
 
     def get_time_asked(self, format="datetime"):
         if format == "datetime":
@@ -133,12 +145,8 @@ class Question:
 
     def answered_correctly(self):
         if self._expected_answer in self._observed_answers and self._expected_answer in self._options:
-            # print(
-            #     f"WAS answered correctly \n {self._expected_answer} \n {self._observed_answers} \n {self._options}")
             return True
         else:
-            # print(
-            #     f"NOT answered correctly \n {self._expected_answer} \n {self._observed_answers} \n {self._options}")
             return False
 
     def has_incorrect_guesses(self):
@@ -167,11 +175,10 @@ class Question:
         if self._expected_answer is None:
             self._expected_answer = expected_answer
 
-    # Adds the observed_answer after ensuring it's a valid choice.
+    # Adds the observed_answer after ensuring it's not already picked
+    # and the correct answer hasn't been given.
     def _add_observed_answer(self, observed_answer):
         if self.answered_correctly():
-            pass
-        if self._max_answers_reached():
             pass
         elif self._max_answers_reached():
             pass
