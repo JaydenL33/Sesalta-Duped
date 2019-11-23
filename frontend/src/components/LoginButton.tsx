@@ -2,6 +2,8 @@ import React from 'react';
 import firebase from 'firebase';
 import useAuth from '../utils/AuthContext';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import Button from '@material-ui/core/Button';
+
 
 export default function LoginButton() {
   const { isLoading, user, signin, signout } = useAuth();
@@ -19,9 +21,13 @@ export default function LoginButton() {
   };
 
   return !!user ? (
-    <a onClick={signout} style={{ cursor: 'pointer' }}>
+    <Button
+      color="inherit"
+      onClick={signout} style={{ cursor: 'pointer' }}
+    >
       Sign Out
-    </a>
+    </Button>
+    
   ) : (
     <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
   );
