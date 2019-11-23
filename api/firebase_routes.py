@@ -1,26 +1,9 @@
-from setup import cache
+from setup import cache, firebase_session
 from game import Game
 import json
-from setup import firebase_session
 from wrappers import timer, mini_timer
 
 # Returns True if user successfully added. Otherwise False
-
-
-def add_user(user_id):
-    success_status = False
-
-    existing_user_data = firebase_session.child(f"users/{user_id}").get()
-    print(existing_user_data)
-    if existing_user_data is None:
-        data = {user_id: {
-            "gameIDs": []
-        }}
-        a = firebase_session.child(f"users/prasadsuniquename/").push(data)
-        print(b for b in dir(a))
-        success_status = True
-
-    return success_status
 
 
 # @mini_timer
@@ -94,6 +77,52 @@ def get_all_users():
     return firebase_session.child('users').get()
 
 
+def new_user(user_id, email, public_scores=False):
+    success_status = False
+
+    all = firebase_session.child(f"users").get()
+    print("ALL: ", all)
+    print("")
+
+    existing_user_data = firebase_session.child(f"users/{user_id}").get()
+    print(existing_user_data)
+    if existing_user_data is None:
+        firebase_session.child(f"users/{user_id}").update(
+            {
+                "email": email,
+                "gameIDs": {
+                    "gameCount": 0, "gamesPlayed": []
+                },
+                "publicScores": public_scores
+            }
+        )
+        success_status = True
+
+    return success_status
+
+
+def update_user_id(new_user_id, old_user_id, email):
+    success_status = False
+
+    if old_user_id is None:
+        success_status = new_user(new_user_id, email)
+    else:
+        user_data = get_user_by_id(old_user_id)
+        new_user_id_existing = get_user_by_id(new_user_id)
+
+        # if the old_name has data and the new name has no data
+        if user_data is not None and new_user_id_existing is None:
+            update_user(new_user_id, user_data)
+            remove_user(old_user_id)
+            success_status = True
+
+    return success_status
+
+
+def update_public_scores(user_id, state):
+    firebase_session.child(f"users/{user_id}/publicScores").set(state)
+
+
 # @mini_timer
 def get_user_by_id(user_id):
     if user_id is None:
@@ -102,9 +131,33 @@ def get_user_by_id(user_id):
         return firebase_session.child("users/" + user_id).get()
 
 
+# Can be optimised with cache
+def get_user_id_by_email(email):
+    all_user_data = get_all_users()
+    for user_id, data in all_user_data.items():
+        if "email" in data:
+            if data["email"] == email:
+                return user_id
+    return None
+
+
+# Can be optimised with cache
+def get_user_data_by_email(email):
+    all_user_data = get_all_users()
+    for user_id, data in all_user_data.items():
+        if "email" in data:
+            if data["email"] == email:
+                return data
+    return None
+
+
 # @mini_timer
 def update_user(user_id, user_data):
     return firebase_session.child("users" + "/" + user_id).update(user_data)
+
+
+def remove_user(user_id):
+    response = firebase_session.child(f"users/{user_id}").set({})
 
 
 # @mini_timer

@@ -127,20 +127,34 @@ def get_results():
 # Params:
 # name: the desired public name
 # Needs some kind of user id included as well
-@app.route("/api/user/update/")
-@timer
-def update_name():
-    args = request.args
-    name = get_arg(args, "name", required=True)
 
-    bad_words = firebase_routes.get_bad_words()       # list of strings
+# Must give new name as param "name"
+# Must give either "email" or "old" (the user's old existing public name)
+@app.route("/api/user/update_name/")
+@timer
+def update_user():
+    args = request.args
+    new_name = get_arg(args, "name", required=True)
+    old_name = get_arg(args, "old", required=False)
+    email = get_arg(args, "email", required=True)
+    # public_scores = get_arg(args, "publicScores", required=False)
 
     # TODO: finish country_system.update_name()
-    name_was_updated = country_system.update_name(name, bad_words)
+    name_was_updated = country_system.update_name(
+        new_name, old_name, email)
     if name_was_updated:
         return SUCCESS
     else:
         return FAILURE
+
+
+@app.route("/api/user/get_id/")
+@timer
+def get_id_from_email():
+    args = request.args
+    email = get_arg(args, "email", required=True)
+
+    return firebase_routes.get_user_id_by_email(email)
 
 
 # tested and working, just need to uncomment out the args stuff and delete the hardcoded name
