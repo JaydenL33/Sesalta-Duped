@@ -35,6 +35,14 @@ Example usage:
 """
 
 
+@app.route("/api/user/new/")
+@timer
+def new_user():
+    args = request.args
+
+    user_id = get_arg(args, "user_id", required=True)
+
+
 # Returns the id of a new game of Sesalta
 # Params:
 # given: the given game mode for each question (not yet needed)

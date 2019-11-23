@@ -4,6 +4,24 @@ import json
 from setup import firebase_session
 from wrappers import timer, mini_timer
 
+# Returns True if user successfully added. Otherwise False
+
+
+def add_user(user_id):
+    success_status = False
+
+    existing_user_data = firebase_session.child(f"users/{user_id}").get()
+    print(existing_user_data)
+    if existing_user_data is None:
+        data = {user_id: {
+            "gameIDs": []
+        }}
+        a = firebase_session.child(f"users/prasadsuniquename/").push(data)
+        print(b for b in dir(a))
+        success_status = True
+
+    return success_status
+
 
 # @mini_timer
 def new_game_id():
