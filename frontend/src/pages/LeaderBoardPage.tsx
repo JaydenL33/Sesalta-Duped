@@ -7,6 +7,7 @@ import Tab from "@material-ui/core/Tab";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import useAuth from '../utils/AuthContext';
+import Setting from '../components/Setting';
 
 interface Row {
   name: string;
@@ -188,21 +189,27 @@ export default function MaterialTableDemo(props: Props) {
         <Tab label="My Score" disabled={!state.isauthenticated} />
         <Tab label="leaderboard" />
       </Tabs>
+      
       {state.isLoading ? (
         <div className={classes.spinner}>
           <CircularProgress />
         </div>
       ) : (
-        <MaterialTable
-          title={state.title}
-          columns={state.columns}
-          data={state.data}
-          options={{
-            search: true,
-            filtering: true,
-            pageSize: 10
-          }}
-        />
+        <div>
+          { value === 0 ? <Setting shared={true}/> // should be state.shared, get value from existingg api or new api
+          : <div/>
+          }
+          <MaterialTable
+            title={state.title}
+            columns={state.columns}
+            data={state.data}
+            options={{
+              search: true,
+              filtering: true,
+              pageSize: 10
+            }}
+          />
+        </div>
       )}
     </Container>
   );
