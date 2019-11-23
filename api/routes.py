@@ -200,16 +200,14 @@ def rankRivalAndDistanceToRival():
     game_id = get_arg(args, "game_id", required=True)
     user_name = get_arg(args, "user_name", required=True)
 
-
     all_users_with_games_and_scores = retrieve_all_users_with_games_and_scores()
     all_games = firebase_routes.get_all_games()
     all_user_data = firebase_routes.get_all_users()
 
-
     mode_of_this_game = mode_string_to_id(all_games[game_id]["mode"])
 
     all_users_names = list(all_users_with_games_and_scores.keys())
-    
+
     rank_list_of_relevant_game_data = []
 
     for users_name in all_users_names:
@@ -217,10 +215,11 @@ def rankRivalAndDistanceToRival():
         for gameName in games_played_by_user:
             game_data = all_users_with_games_and_scores[users_name][gameName]
             if game_data['Mode'] == mode_of_this_game:
-                rank_list_of_relevant_game_data.append({ "name": users_name, "score": game_data["Score"], "gameID":  all_user_data[users_name]["gameIDs"]["GamesPlayed"][gameName]})
+                rank_list_of_relevant_game_data.append(
+                    {"name": users_name, "score": game_data["Score"], "gameID":  all_user_data[users_name]["gameIDs"]["GamesPlayed"][gameName]})
 
-    
-    sorted_rank_list_of_relevant_game_data = sorted(rank_list_of_relevant_game_data, key=lambda k: k['score'], reverse=True) 
+    sorted_rank_list_of_relevant_game_data = sorted(
+        rank_list_of_relevant_game_data, key=lambda k: k['score'], reverse=True)
     this_game_rank = 1
     this_game_score = 0
     for relevant_game_data in sorted_rank_list_of_relevant_game_data:
@@ -238,26 +237,31 @@ def rankRivalAndDistanceToRival():
     print(sorted_rank_list_of_relevant_game_data)
     print(your_highest_game_rank)
     print(this_game_rank)
-    string_to_return = "You placed Number " + str(this_game_rank) + " out of " + str(len(sorted_rank_list_of_relevant_game_data)) + " on the World leaderboard. "
+    string_to_return = "You placed Number " + str(this_game_rank) + " out of " + str(
+        len(sorted_rank_list_of_relevant_game_data)) + " on the World leaderboard. "
     if your_highest_game_rank <= 10:
         print("dis")
         if your_highest_game_rank == this_game_rank:
             if this_game_rank == 1:
                 string_to_return += "You are the global leader. Congratulations!"
             else:
-                string_to_return += rival_finder(sorted_rank_list_of_relevant_game_data, user_name, this_game_rank-2, this_game_score, "")
+                string_to_return += rival_finder(sorted_rank_list_of_relevant_game_data,
+                                                 user_name, this_game_rank-2, this_game_score, "")
         else:
             if your_highest_game_rank == 1:
-                string_to_return += "You still remain the global leader with a score of " + str(sorted_rank_list_of_relevant_game_data[0]["score"]) + ". Congratulations!"
+                string_to_return += "You still remain the global leader with a score of " + \
+                    str(sorted_rank_list_of_relevant_game_data[0]
+                        ["score"]) + ". Congratulations!"
             else:
-                string_to_return += "You are still " + str(your_highest_game_rank) + " out of " + str(len(sorted_rank_list_of_relevant_game_data)) + " on the World leaderboard. "
-                string_to_return += rival_finder(sorted_rank_list_of_relevant_game_data, user_name, your_highest_game_rank-2, this_game_score, "")
+                string_to_return += "You are still " + str(your_highest_game_rank) + " out of " + str(
+                    len(sorted_rank_list_of_relevant_game_data)) + " on the World leaderboard. "
+                string_to_return += rival_finder(sorted_rank_list_of_relevant_game_data,
+                                                 user_name, your_highest_game_rank-2, this_game_score, "")
     else:
         print("make")
         string_to_return += "Try to aim for the top 10 next time!"
-    
-    return json.dumps({ "rival_info": string_to_return })
 
+    return json.dumps({"rival_info": string_to_return})
 
 
 # Helper functions - may be relocated
@@ -341,10 +345,13 @@ def rival_finder(sorted_list, this_user_name, index, this_game_score, return_str
     print(index)
     if sorted_list[index]["name"] == this_user_name:
         if index == 0:
-            return_string =  "You are still the global leader!"
-        else: 
-            return_string = rival_finder(sorted_list, this_user_name, index-1, this_game_score, return_string)
+            return_string = "You are still the global leader!"
+        else:
+            return_string = rival_finder(
+                sorted_list, this_user_name, index-1, this_game_score, return_string)
     else:
-        return_string =  "Your Rival is World Number " + str(index+1) + " " + sorted_list[index]["name"] + ". Defeat them by getting " + str(sorted_list[index]["score"]-this_game_score) + " more points."
+        return_string = "Your Rival is World Number " + \
+            str(index+1) + " " + sorted_list[index]["name"] + ". Defeat them by getting " + str(
+                sorted_list[index]["score"]-this_game_score) + " more points."
 
     return return_string
