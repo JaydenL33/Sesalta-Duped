@@ -11,6 +11,7 @@ import Flag from "../Flag";
 import { Link } from "react-router-dom";
 import { Furigana } from "furigana-react";
 import axios from "axios";
+import LinearDeterminate from "../LinearDeterminate";
 
 const styles = {
   card: {
@@ -45,6 +46,8 @@ interface IState {
   showButton: boolean;
   showFinishButton: boolean;
   gameResults: QuestionData[];
+  progBar: number;
+  pointsScored: number;
 }
 interface QuestionData {
   expected_answer: string;
@@ -73,7 +76,9 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
       bgColor: "primary",
       showButton: false,
       showFinishButton: false,
-      gameResults: []
+      gameResults: [],
+      progBar: 0,
+      pointsScored: 0
     };
   }
 
@@ -118,19 +123,19 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      if (currentQuestion === 3) this.setState({ showFinishButton: true });
-      else this.setState({ showButton: true });
+      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
+      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
     }
   }
 
   handleButtonClick = (e: React.SyntheticEvent) => {
-    this.setState({ showButton: false, isCorrect: undefined });
+    this.setState({ showButton: false, isCorrect: undefined, progBar: 0 });
     this.props.callback(); // trigger getting new quiz and render
   };
 
   render() {
     const { classes } = this.props;
-    let QuestionText, ResponseText, QuizButton, EndButton;
+    let QuestionText, ResponseText, QuizButton, EndButton, ProgBar;
 
     if (window.location.pathname.substr(1, 2) === "jp") {
       QuestionText = (
@@ -226,6 +231,12 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
       );
     }
 
+    if(this.state.progBar === 0) {
+      ProgBar = <LinearDeterminate/>
+    } else {
+      ProgBar = <div></div>
+    }
+
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
@@ -234,6 +245,7 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
               <Flag country={this.props.countryExpected} />
             </div>
             {QuestionText}
+            {ProgBar}
           </CardContent>
           <AnswerComponent
             selectedIndex={this.props.selectedIndex}
@@ -242,6 +254,8 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
             callback={this.answerComponentCallback}
           />
           {ResponseText}
+          <Typography
+            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}

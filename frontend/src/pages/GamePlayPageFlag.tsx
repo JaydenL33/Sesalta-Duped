@@ -1,7 +1,6 @@
 import React from "react";
 import SelectCountryFromFlag from "../components/quiz_questions/SelectCountryFromFlag";
 import axios from "axios";
-import LinearDeterminate from "../components/LinearDeterminate";
 
 interface Country {
   name: string;
@@ -106,7 +105,6 @@ export default class GamePlayPageFlag extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-          <LinearDeterminate />
           <SelectCountryFromFlag
             selectedIndex={this.state.selectedIndex}
             gameID={this.state.gameID}

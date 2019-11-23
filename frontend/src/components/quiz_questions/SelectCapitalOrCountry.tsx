@@ -10,6 +10,7 @@ import AnswerComponent from "./AnswerComponent";
 import { Link } from "react-router-dom";
 import { Furigana } from "furigana-react";
 import axios from "axios";
+import LinearDeterminate from "../LinearDeterminate";
 
 const styles = {
   card: {
@@ -40,6 +41,8 @@ interface IState {
   showButton: boolean;
   showFinishButton: boolean;
   gameResults: QuestionData[];
+  progBar: number;
+  pointsScored: number;
 }
 
 interface Option {
@@ -80,7 +83,9 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       bgColor: "primary",
       showButton: false,
       showFinishButton: false,
-      gameResults: []
+      gameResults: [],
+      progBar: 0,
+      pointsScored: 0
     };
   }
 
@@ -145,8 +150,8 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
       gameResults[currentQuestion - 1].observed_answers.length > 1 ||
       correctBoolean === 1
     ) {
-      if (currentQuestion === 3) this.setState({ showFinishButton: true });
-      else this.setState({ showButton: true });
+      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
+      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
     }
   }
 
@@ -185,13 +190,13 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
   };
 
   handleButtonClick = (e: React.SyntheticEvent) => {
-    this.setState({ showButton: false, isCorrect: undefined });
+    this.setState({ showButton: false, isCorrect: undefined, progBar: 0 });
     this.props.callback(); // trigger getting new quiz and render
   };
 
   render() {
     const { classes } = this.props;
-    let QuestionText, ResponseText, ButtonText, EndButton;
+    let QuestionText, ResponseText, ButtonText, EndButton, ProgBar;
 
     if (window.location.pathname.substr(1, 2) === "jp") {
       if (this.props.mode === 0) {
@@ -285,11 +290,18 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
         </Link>
       );
     }
+    
+    if(this.state.progBar === 0) {
+      ProgBar = <LinearDeterminate/>
+    } else {
+      ProgBar = <div></div>
+    }
 
     return (
       <Container maxWidth="sm">
         <Card className={classes.card}>
           <CardContent>{QuestionText}</CardContent>
+          {ProgBar}
           <AnswerComponent
             optionsList={
               this.props.mode === 0
@@ -301,6 +313,8 @@ class SelectCapitalOrCountry extends React.Component<IProps, IState> {
             callback={this.answerComponentCallback}
           />
           {ResponseText}
+          <Typography
+            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
           <CardActions style={{ justifyContent: "center" }}>
             <Button
               className={

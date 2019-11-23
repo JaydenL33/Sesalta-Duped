@@ -10,18 +10,22 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+interface IProps {
+  questionAnswered: boolean;
+}
+
 export default function LinearDeterminate() {
   const classes = useStyles();
-  const [completed, setCompleted] = React.useState(0);
+  const [completed, setCompleted] = React.useState(100);
 
   React.useEffect(() => {
     function progress() {
       setCompleted(oldCompleted => {
-        if (oldCompleted === 100) {
+        if (oldCompleted === 0) {
           // Action to open 'next question' button
         }
         const diff = 8.4;
-        return Math.min(oldCompleted + diff, 100);
+        return Math.max(oldCompleted - diff, 0);
       });
     }
 

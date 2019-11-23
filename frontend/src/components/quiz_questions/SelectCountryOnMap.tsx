@@ -10,6 +10,7 @@ import Map from "../Map";
 import { Link } from "react-router-dom";
 import { Furigana } from "furigana-react";
 import axios from "axios";
+import LinearDeterminate from "../LinearDeterminate";
 
 const styles = {
   card: {
@@ -47,14 +48,16 @@ interface IProps {
   callback: any;
 }
 interface QuestionData {
-  expected_answer: string;
-  observed_answers: string[];
-  points: number;
-  potentional: number;
-  question_num: number;
+  isCorrect: any;
+  countryObserved: string,
+  showFinishButton: boolean;
+  showButton: boolean;
+  gameResults: any;
+  progBar: number;
+  pointsScored: number;
 }
 
-class SelectCountryOnMap extends React.Component<IProps, IState> {
+class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -62,7 +65,9 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
       countryObserved: "",
       showFinishButton: false,
       showButton: false,
-      gameResults: []
+      gameResults: [],
+      progBar: 0,
+      pointsScored: 0
     };
   }
 
@@ -86,13 +91,13 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      if (currentQuestion === 3) this.setState({ showFinishButton: true });
-      else this.setState({ showButton: true });
+      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
+      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
     }
   }
 
   handleNextQuestion = () => {
-    this.setState({ showButton: false, isCorrect: undefined });
+    this.setState({ showButton: false, isCorrect: undefined, progBar: 0 });
     this.props.callback(); // trigger getting new quiz and render
   };
 
@@ -105,7 +110,7 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
-    let QuestionText, ResponseText, QuizButton, EndButton;
+    let QuestionText, ResponseText, QuizButton, EndButton, ProgBar;
 
     if (window.location.pathname.substr(1, 2) === "jp") {
       QuestionText = (
@@ -204,6 +209,12 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
         </Link>
       );
     }
+    
+    if(this.state.progBar === 0) {
+      ProgBar = <LinearDeterminate/>
+    } else {
+      ProgBar = <div></div>
+    }
 
     return (
       <Container maxWidth="sm">
@@ -212,9 +223,12 @@ class SelectCountryOnMap extends React.Component<IProps, IState> {
             <div>
               <Map callback={this.handleMapClickCallback} initialScale={1}/>
             </div>
+            {ProgBar}
             {QuestionText}
           </CardContent>
           {ResponseText}
+          <Typography
+            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}
