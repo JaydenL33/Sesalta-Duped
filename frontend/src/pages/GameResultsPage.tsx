@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, Theme } from '@material-ui/core/styles';
+import { withStyles, Theme } from "@material-ui/core/styles";
 import {
   Container,
   Box,
@@ -13,8 +13,8 @@ import {
 } from "@material-ui/core";
 import mainLogo from "../assets/sesaltaLogo.png";
 import Typography from "@material-ui/core/Typography";
-import { Link as RouterLink } from 'react-router-dom'
-import Link from '@material-ui/core/Link';
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@material-ui/core/Link";
 
 const styles = (theme: Theme) => ({
   root: {},
@@ -27,12 +27,12 @@ const styles = (theme: Theme) => ({
   },
   paper: {
     marginTop: theme.spacing(3),
-    width: '100%',
-    overflow: 'auto',
-    marginBottom: theme.spacing(2),
+    width: "100%",
+    overflow: "auto",
+    marginBottom: theme.spacing(2)
   },
   button: {
-    margin: 5,
+    margin: 5
   }
 });
 
@@ -135,11 +135,23 @@ class ResultsPage extends React.Component<IProps, IState> {
           </Table>
         </Paper>
         <div>
-          <Button variant="contained" color="primary" className={classes.button}>
-            <Link color="inherit" component={RouterLink} to="/en/leaderboard">Leaderboard</Link>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            <Link color="inherit" component={RouterLink} to="/en/leaderboard">
+              Leaderboard
+            </Link>
           </Button>
-          <Button variant="contained" color="secondary" className={classes.button}>
-            <Link color="inherit" component={RouterLink} to="/en/game/options">Play Again</Link>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+          >
+            <Link color="inherit" component={RouterLink} to="/en/game/options">
+              Play Again
+            </Link>
           </Button>
         </div>
       </Container>
