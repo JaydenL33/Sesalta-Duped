@@ -72,11 +72,7 @@ class ResultsPage extends React.Component<IProps, IState> {
       finalScore: 0,
       rivalData: "",
       isLoading: true,
-<<<<<<< HEAD
       trophies: [],
-=======
-      trophies: []
->>>>>>> jp-localisation
     };
   }
   async componentDidMount() {
