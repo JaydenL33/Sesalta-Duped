@@ -50,8 +50,13 @@ def update_user():
 
     name_was_updated = country_system.update_name(
         new_name, old_name, email)
+
+    return_value = {
+        "state": name_was_updated
+    }
+
     if name_was_updated:
-        return SUCCESS
+        return new_name
     else:
         return FAILURE
 
