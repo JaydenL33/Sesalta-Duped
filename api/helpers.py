@@ -13,6 +13,7 @@ def retrieve_all_users_with_games_and_scores():
 
 
 def extract_games_and_score_for_user(name):
+    print(name)
     user_data = firebase_routes.get_user_by_id(name)
     game_count = user_data['gameIDs']['gameCount']
 

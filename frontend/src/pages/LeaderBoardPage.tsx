@@ -104,7 +104,7 @@ export default function MaterialTableDemo(props: Props) {
         data: await getPlayerData(state.name),
         isLoading: false
       });
-      console.log(state);
+      console.log("here");
     } else if (newValue === 1) {
       setState({
         ...state,
