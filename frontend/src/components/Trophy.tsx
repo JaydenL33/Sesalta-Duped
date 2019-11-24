@@ -46,8 +46,9 @@ export default function Trophy(props: Iprops) {
     data: []
   });
   useEffect(() => {
+    console.log(props.name);
     axios
-    .get(`${process.env.REACT_APP_API_URL}/api/user/trophies?user=${props.name}`)
+    .get(`${process.env.REACT_APP_API_URL}/api/user/trophies/?user=${props.name}`)
     .then(function(response) {
       console.log(response);
       let data = response.data;

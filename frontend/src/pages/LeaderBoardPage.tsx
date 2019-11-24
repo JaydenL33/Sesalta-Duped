@@ -86,7 +86,8 @@ export default function MaterialTableDemo(props: Props) {
       // { name: 'Frozen yoghurt', date: '2019-11-14', score: 900, mode: 1 },
     ],
     title: "",
-    name: localStorage.getItem('localStoragePublicName') || "",
+    // @ts-ignore
+    name: localStorage.getItem('localStoragePublicName'),
     isauthenticated: user!==null,
     isLoading: true
   });
