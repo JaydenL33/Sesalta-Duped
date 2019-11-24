@@ -96,7 +96,7 @@ export default function GameHome(props: IProps) {
   const [state, setState] = React.useState<IState>({
     dialog: false,
     publicName: "",
-    userEmail: user.email
+    userEmail: ""
   });
 
   const checkUserToOpenDialog = async (user: any) => {

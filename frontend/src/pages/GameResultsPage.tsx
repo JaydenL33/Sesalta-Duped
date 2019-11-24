@@ -91,8 +91,8 @@ class ResultsPage extends React.Component<IProps, IState> {
       console.log(result.data, "rival data");
       
       const gameID = this.props.location.state.gameID;
-      const trophyUrl = `${process.env.REACT_APP_API_URL}/api/game/trophies/?user={this.props.location.state.publicName}&game=${gameID}`;
-      const res = await axios.get(url);
+      const trophyUrl = `${process.env.REACT_APP_API_URL}/api/game/trophies/?user=${this.props.location.state.publicName}&game=${gameID}`;
+      const res = await axios.get(trophyUrl);
       let response = res.data;
       console.log("this is the trophy response", response);
       
