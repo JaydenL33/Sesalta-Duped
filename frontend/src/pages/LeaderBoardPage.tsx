@@ -6,6 +6,8 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import useAuth from '../utils/AuthContext';
+import Setting from '../components/Setting';
 
 interface Row {
   name: string;
@@ -48,6 +50,8 @@ const useStyles = makeStyles((theme: Theme) =>
 // component from: https://material-table.com/#/docs/all-props
 export default function MaterialTableDemo(props: Props) {
   const classes = useStyles();
+  const { user } = useAuth();
+
   const [value, setValue] = React.useState(1);
   // handle tab change
   const handleChange = async (
@@ -79,16 +83,11 @@ export default function MaterialTableDemo(props: Props) {
       // this is the data we need to put into table
       // { name: 'Mehmet', date: '2019-11-14', score: 999, mode: 0 },
       // { name: 'Frozen yoghurt', date: '2019-11-14', score: 900, mode: 1 },
-      // { name: 'Eclair', date: '2019-11-14', score: 900, mode: 1 },
-      // { name: 'Cupcake', date: '2019-11-14', score: 850, mode: 4 },
-      // { name: 'Ice cream sandwichcake', date: '2019-11-14', score: 850, mode: 4 },
-      // { name: 'Ice cream sandwich', date: '2019-11-10', score: 600, mode: 3 },
-      // { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
-      // { name: 'Gingerbread', date: '2019-11-13', score: 850, mode: 2 },
     ],
     title: "",
-    name: "prasadsuniquename", // should be sth like props.name
-    isauthenticated: true, // should be sth like props.isauthenticated
+    // @ts-ignore
+    name: user!==null ? user.displayName: "",
+    isauthenticated: user!==null,
     isLoading: true
   });
 
@@ -119,6 +118,7 @@ export default function MaterialTableDemo(props: Props) {
   useEffect(() => {
     addNewDataToState(1);
     console.log("mount it!");
+    console.log(user);
     // need to read more about react hooks, a temporaty fix:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -189,21 +189,27 @@ export default function MaterialTableDemo(props: Props) {
         <Tab label="My Score" disabled={!state.isauthenticated} />
         <Tab label="leaderboard" />
       </Tabs>
+      
       {state.isLoading ? (
         <div className={classes.spinner}>
           <CircularProgress />
         </div>
       ) : (
-        <MaterialTable
-          title={state.title}
-          columns={state.columns}
-          data={state.data}
-          options={{
-            search: true,
-            filtering: true,
-            pageSize: 10
-          }}
-        />
+        <div>
+          { value === 0 ? <Setting shared={true}/> // should be state.shared, get value from existingg api or new api
+          : <div/>
+          }
+          <MaterialTable
+            title={state.title}
+            columns={state.columns}
+            data={state.data}
+            options={{
+              search: true,
+              filtering: true,
+              pageSize: 10
+            }}
+          />
+        </div>
       )}
     </Container>
   );

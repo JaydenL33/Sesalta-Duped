@@ -23,8 +23,15 @@ const styles = (theme: Theme) => ({
   },
   title: {
     flexGrow: 1,
-    justifyContent: "center"
+    textAlign: "left" as "left",
+    // justifyText: "left",
   },
+  toolbar: {
+  
+  },
+  icon: {
+    marginRight: 1,
+  }
 });
 
 interface P {
@@ -108,16 +115,16 @@ class NavBar extends React.Component<P, S> {
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Toolbar>
+          <Toolbar className={classes.toolbar}>
+            <Typography variant="h6" noWrap className={classes.title}>
+              {HomeLink}
+            </Typography>
             {LangButton}
-            <IconButton color="inherit">
+            <IconButton color="inherit" edge="end" className={classes.icon}>
               <Link color="inherit" component={RouterLink} to="/en/leaderboard">
                 <FormatListNumberedIcon />
               </Link>
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              {HomeLink}
-            </Typography>
             <LoginButton />
           </Toolbar>
         </AppBar>
