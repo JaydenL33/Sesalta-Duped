@@ -167,6 +167,7 @@ def get_bad_words():
     if cached_bad_words is None:
         bad_words = firebase_session.child('badWords').get()
         cache.set_bad_words(cached_bad_words)
+        return bad_words
     else:
         return cached_bad_words
 
