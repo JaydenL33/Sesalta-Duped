@@ -4,6 +4,7 @@ import axios from "axios";
 
 interface P {
   match: any;
+  location: any;
 }
 
 interface option {
@@ -89,7 +90,7 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
-    const usersUniqueName = "not_a_user";
+    const usersUniqueName = this.props.location.state.publicName;
     let paramString = "?given=";
     if (parseInt(this.props.match.params.id) === 0)
       paramString += "Country&asked_for=Captial";
@@ -138,18 +139,19 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     if (this.state.gameID !== "") {
       return (
         <div>
-            <SelectCapitalOrCountry
-              gameID={this.state.gameID}
-              questionCountry={this.state.question.name}
-              questionCapital={this.state.question.capital}
-              optionsList={this.state.optionsList}
-              countryList={this.state.countryList}
-              capitalList={this.state.capitalList}
-              callback={this.nextQuestionPlsCallback}
-              indexCallback={this.indexCallback}
-              selectedIndex={this.state.selectedIndex}
-              mode={this.state.mode}
-            />
+          <SelectCapitalOrCountry
+            gameID={this.state.gameID}
+            questionCountry={this.state.question.name}
+            questionCapital={this.state.question.capital}
+            optionsList={this.state.optionsList}
+            countryList={this.state.countryList}
+            capitalList={this.state.capitalList}
+            callback={this.nextQuestionPlsCallback}
+            indexCallback={this.indexCallback}
+            selectedIndex={this.state.selectedIndex}
+            mode={this.state.mode}
+            publicName={this.props.location.state.publicName}
+          />
         </div>
       );
     } else {

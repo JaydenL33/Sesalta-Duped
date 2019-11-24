@@ -100,17 +100,23 @@ export default function GameHome(props: IProps) {
 
   const checkUserToOpenDialog = async (user: any) => {
     let result = false;
+    let publicName = state.publicName;
     if (user) {
       console.log(user.uid);
       const url = `${process.env.REACT_APP_API_URL}/api/user/get_id/?email=${user.email}`;
       const response = await axios.get(url);
       if (response.data === "None") result = true;
-      else result = false;
+      else {
+        result = false;
+        publicName = response.data;
+      }
+    } else {
+      publicName = "not_a_user";
     }
-    console.log(result, "the res");
+    console.log(result, "the res", publicName);
     setState({
       dialog: result,
-      publicName: state.publicName,
+      publicName: publicName,
       userEmail: state.userEmail
     });
   };
@@ -193,12 +199,17 @@ export default function GameHome(props: IProps) {
         <img src={mainLogo} className={classes.img} alt="Logo" />
       </Box>
       <Typography className={classes.title} variant="h2" color="textSecondary">
-        Welcome To Sesalta! {state.dialog.toString()} {state.publicName}
+        Welcome To Sesalta!
       </Typography>
       <div className={classes.horizontalItems}>
         <Chip
           clickable
-          onClick={() => history.push("/en/game/options")}
+          onClick={() =>
+            history.push({
+              pathname: "/en/game/options",
+              state: { publicName: state.publicName }
+            })
+          }
           color="secondary"
           className={classes.chip}
           label="Play"

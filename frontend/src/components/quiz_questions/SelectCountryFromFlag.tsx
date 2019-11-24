@@ -65,6 +65,7 @@ interface IProps {
   callback: any;
   selectedIndex?: number | undefined;
   indexCallback: any;
+  publicName: string;
 }
 
 class SelectCountryFromFlag extends React.Component<IProps, IState> {
@@ -123,8 +124,18 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
-      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
+      if (currentQuestion === 3)
+        this.setState({
+          showFinishButton: true,
+          pointsScored: gameResults[currentQuestion - 1].points,
+          progBar: 1
+        });
+      else
+        this.setState({
+          showButton: true,
+          pointsScored: gameResults[currentQuestion - 1].points,
+          progBar: 1
+        });
     }
   }
 
@@ -168,7 +179,8 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
             pathname: "/jp/game/results/",
             state: {
               stateData: this.state.gameResults,
-              gameID: this.props.gameID
+              gameID: this.props.gameID,
+              publicName: this.props.publicName
             }
           }}
         >
@@ -213,7 +225,8 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
             pathname: "/en/game/results/",
             state: {
               stateData: this.state.gameResults,
-              gameID: this.props.gameID
+              gameID: this.props.gameID,
+              publicName: this.props.publicName
             }
           }}
         >
@@ -231,10 +244,10 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
       );
     }
 
-    if(this.state.progBar === 0) {
-      ProgBar = <LinearDeterminate/>
+    if (this.state.progBar === 0) {
+      ProgBar = <LinearDeterminate />;
     } else {
-      ProgBar = <div></div>
+      ProgBar = <div></div>;
     }
 
     return (
@@ -255,7 +268,14 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
           />
           {ResponseText}
           <Typography
-            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
+            className={
+              this.state.showButton || this.state.showFinishButton
+                ? classes.button
+                : classes.hidden
+            }
+          >
+            You scored {this.state.pointsScored}!
+          </Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}

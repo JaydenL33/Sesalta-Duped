@@ -1,10 +1,10 @@
-// import QuizElement from '../components/quiz_questions/QuizElement';
 import React from "react";
 import SelectCountryFromMap from "../components/quiz_questions/SelectCountryFromMap";
 import axios from "axios";
-// import AnswerComponent from "../components/quiz_questions/AnswerComponent";
 
-interface P {}
+interface P {
+  location: any;
+}
 
 interface S {
   gameID: string;
@@ -62,7 +62,7 @@ export default class GamePlayPage extends React.Component<P, S> {
     get game id for this game
   */
   async getGameID(): Promise<string> {
-    const usersUniqueName = "not_a_user";
+    const usersUniqueName = this.props.location.state.publicName;
     const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/?given=Map&asked_for=Country&users_unique_name=${usersUniqueName}`;
     const response = await axios.get(url);
     return response.data;
@@ -110,6 +110,7 @@ export default class GamePlayPage extends React.Component<P, S> {
             optionsList={this.state.optionsList}
             callback={this.nextQuestionPlsCallback}
             indexCallback={this.indexCallback}
+            publicName={this.props.location.state.publicName}
           />
         </div>
       );

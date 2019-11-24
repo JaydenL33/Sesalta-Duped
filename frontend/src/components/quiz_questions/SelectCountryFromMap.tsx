@@ -54,6 +54,7 @@ interface IProps {
   callback: any;
   indexCallback: any;
   selectedIndex?: number | undefined;
+  publicName: string;
 }
 interface QuestionData {
   expected_answer: string;
@@ -103,8 +104,18 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
-      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
+      if (currentQuestion === 3)
+        this.setState({
+          showFinishButton: true,
+          pointsScored: gameResults[currentQuestion - 1].points,
+          progBar: 1
+        });
+      else
+        this.setState({
+          showButton: true,
+          pointsScored: gameResults[currentQuestion - 1].points,
+          progBar: 1
+        });
       console.log(this.state.pointsScored);
     }
   }
@@ -121,7 +132,12 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
   };
 
   handleButtonClick = (e: React.SyntheticEvent) => {
-    this.setState({ showButton: false, isCorrect: undefined, progBar: 0, pointsScored: 0 });
+    this.setState({
+      showButton: false,
+      isCorrect: undefined,
+      progBar: 0,
+      pointsScored: 0
+    });
     this.props.callback(); // trigger getting new quiz and render
   };
 
@@ -160,7 +176,8 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
             pathname: "/jp/game/results/",
             state: {
               stateData: this.state.gameResults,
-              gameID: this.props.gameID
+              gameID: this.props.gameID,
+              publicName: this.props.publicName
             }
           }}
         >
@@ -205,7 +222,8 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
             pathname: "/en/game/results/",
             state: {
               stateData: this.state.gameResults,
-              gameID: this.props.gameID
+              gameID: this.props.gameID,
+              publicName: this.props.publicName
             }
           }}
         >
@@ -223,10 +241,10 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
       );
     }
 
-    if(this.state.progBar === 0) {
-      ProgBar = <LinearDeterminate/>
+    if (this.state.progBar === 0) {
+      ProgBar = <LinearDeterminate />;
     } else {
-      ProgBar = <div></div>
+      ProgBar = <div></div>;
     }
 
     return (
@@ -234,7 +252,7 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
         <Card className={classes.card}>
           <CardContent>
             <div>
-              <Map country={this.props.countryExpected} initialScale={1}/>
+              <Map country={this.props.countryExpected} initialScale={1} />
             </div>
             {QuestionTitle}
             {ProgBar}
@@ -247,7 +265,14 @@ class SelectCountryFromMap extends React.Component<IProps, IState> {
           />
           {ResponseText}
           <Typography
-            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
+            className={
+              this.state.showButton || this.state.showFinishButton
+                ? classes.button
+                : classes.hidden
+            }
+          >
+            You scored {this.state.pointsScored}!
+          </Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}

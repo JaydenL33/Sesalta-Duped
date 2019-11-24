@@ -12,24 +12,23 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Link as RouterLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const style = (theme: Theme) => (
+const style = (theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
       alignItems: "center",
-      alignContent: "center",
-      
+      alignContent: "center"
     },
     card: {
       marginTop: 40,
       marginBottom: 4,
       maxHeight: 500,
       width: 500,
-      [theme.breakpoints.down('lg')]: {
-        maxWidth: 400,
-      },
+      [theme.breakpoints.down("lg")]: {
+        maxWidth: 400
+      }
     },
     title: {
       fontSize: 25
@@ -45,10 +44,11 @@ const style = (theme: Theme) => (
       marginBottom: 1,
       marginLeft: 1
     }
-}));
+  });
 
 interface Props {
   classes: any;
+  location: any;
 }
 
 interface States {
@@ -150,15 +150,22 @@ class OptionsPage extends React.Component<Props, States> {
             </List>
           </CardContent>
           <CardActions style={{ justifyContent: "center" }}>
-            <Button
-              component={RouterLink}
-              to={URLs[this.state.selected]}
-              size="medium"
-              className={classes.button}
-              color="secondary"
+            <Link
+              to={{
+                pathname: URLs[this.state.selected],
+                state: {
+                  publicName: this.props.location.state.publicName
+                }
+              }}
             >
-              Start
-            </Button>
+              <Button
+                className={classes.button}
+                color="secondary"
+                size="medium"
+              >
+                Start
+              </Button>
+            </Link>
           </CardActions>
         </Card>
       </Container>

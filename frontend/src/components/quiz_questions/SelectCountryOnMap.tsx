@@ -46,10 +46,11 @@ interface IProps {
   countryExpected: string;
   classes: any;
   callback: any;
+  publicName: string;
 }
 interface QuestionData {
   isCorrect: any;
-  countryObserved: string,
+  countryObserved: string;
   showFinishButton: boolean;
   showButton: boolean;
   gameResults: any;
@@ -91,8 +92,18 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
       correctBoolean === 1
     ) {
       console.log("setting show button");
-      if (currentQuestion === 3) this.setState({ showFinishButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
-      else this.setState({ showButton: true, pointsScored: gameResults[currentQuestion - 1].points, progBar: 1 });
+      if (currentQuestion === 3)
+        this.setState({
+          showFinishButton: true,
+          pointsScored: gameResults[currentQuestion - 1].points,
+          progBar: 1
+        });
+      else
+        this.setState({
+          showButton: true,
+          pointsScored: gameResults[currentQuestion - 1].points,
+          progBar: 1
+        });
     }
   }
 
@@ -146,7 +157,8 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
             pathname: "/jp/game/results/",
             state: {
               stateData: this.state.gameResults,
-              gameID: this.props.gameID
+              gameID: this.props.gameID,
+              publicName: this.props.publicName
             }
           }}
         >
@@ -192,7 +204,8 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
             pathname: "/en/game/results/",
             state: {
               stateData: this.state.gameResults,
-              gameID: this.props.gameID
+              gameID: this.props.gameID,
+              publicName: this.props.publicName
             }
           }}
         >
@@ -209,11 +222,11 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
         </Link>
       );
     }
-    
-    if(this.state.progBar === 0) {
-      ProgBar = <LinearDeterminate/>
+
+    if (this.state.progBar === 0) {
+      ProgBar = <LinearDeterminate />;
     } else {
-      ProgBar = <div></div>
+      ProgBar = <div></div>;
     }
 
     return (
@@ -221,14 +234,21 @@ class SelectCountryOnMap extends React.Component<IProps, QuestionData> {
         <Card className={classes.card}>
           <CardContent>
             <div>
-              <Map callback={this.handleMapClickCallback} initialScale={1}/>
+              <Map callback={this.handleMapClickCallback} initialScale={1} />
             </div>
             {ProgBar}
             {QuestionText}
           </CardContent>
           {ResponseText}
           <Typography
-            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
+            className={
+              this.state.showButton || this.state.showFinishButton
+                ? classes.button
+                : classes.hidden
+            }
+          >
+            You scored {this.state.pointsScored}!
+          </Typography>
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}
