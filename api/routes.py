@@ -253,7 +253,7 @@ def rankRivalAndDistanceToRival():
             game_data = all_users_with_games_and_scores[users_name][gameName]
             if game_data['Mode'] == mode_of_this_game:
                 rank_list_of_relevant_game_data.append(
-                    {"name": users_name, "score": game_data["Score"], "gameID":  all_user_data[users_name]["gameIDs"]["GamesPlayed"][gameName]})
+                    {"name": users_name, "score": game_data["Score"], "gameID":  all_user_data[users_name]["gameIDs"]["gamesPlayed"][gameName]})
 
     sorted_rank_list_of_relevant_game_data = sorted(
         rank_list_of_relevant_game_data, key=lambda k: k['score'], reverse=True)
@@ -317,12 +317,12 @@ def retrieve_all_users_with_games_and_scores():
 
 def extract_games_and_score_for_user(name):
     user_data = firebase_routes.get_user_by_id(name)
-    game_count = user_data['gameIDs']['GameCount']
+    game_count = user_data['gameIDs']['gameCount']
 
     if game_count == 0:
         return {}
     else:
-        games_played = user_data['gameIDs']['GamesPlayed']
+        games_played = user_data['gameIDs']['gamesPlayed']
         game_number_and_score = {}
 
         for game_name, game_id in games_played.items():
@@ -368,12 +368,12 @@ def update_user_data(user_name, new_game_id):
     if "not_a_user" == user_name:
         return
     user_data = firebase_routes.get_user_by_id(user_name)
-    total_games_played = user_data["gameIDs"]["GameCount"] + 1
+    total_games_played = user_data["gameIDs"]["gameCount"] + 1
     game_number_string = "Game" + str(total_games_played)
-    user_data["gameIDs"]["GameCount"] = total_games_played
-    if "GamesPlayed" not in user_data["gameIDs"]:
-        user_data["gameIDs"]["GamesPlayed"] = {}
-    user_data["gameIDs"]["GamesPlayed"][game_number_string] = new_game_id
+    user_data["gameIDs"]["gameCount"] = total_games_played
+    if "gamesPlayed" not in user_data["gameIDs"]:
+        user_data["gameIDs"]["gamesPlayed"] = {}
+    user_data["gameIDs"]["gamesPlayed"][game_number_string] = new_game_id
 
     firebase_routes.update_user(user_name, user_data)
 

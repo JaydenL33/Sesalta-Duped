@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Container, Box, Chip } from "@material-ui/core";
 import mainLogo from "../assets/sesaltaLogo.png";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
+import useAuth from "../utils/AuthContext";
+import axios from "axios";
+import LoginForm from "../components/LoginForm";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,17 +25,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
+        "-apple-system",
+        "BlinkMacSystemFont",
         '"Segoe UI"',
-        'Roboto',
+        "Roboto",
         '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
+        "Arial",
+        "sans-serif",
         '"Apple Color Emoji"',
         '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
+        '"Segoe UI Symbol"'
+      ].join(",")
     },
     list: {
       width: "100%",
@@ -52,36 +62,138 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       // alignItems: 'center',
       justifyContent: "center",
-      [theme.breakpoints.down('sm')]: {
-        display: "block",
-      },
+      [theme.breakpoints.down("sm")]: {
+        display: "block"
+      }
     },
     chip: {
       padding: 50,
       margin: 5,
       maxWidth: 220,
-      [theme.breakpoints.down('sm')]: {
-        maxWidth: 200,
-      },
+      [theme.breakpoints.down("sm")]: {
+        maxWidth: 200
+      }
     }
   })
 );
 
-interface Props {
+interface IProps {
   classes: any;
 }
+interface IState {
+  dialog: boolean;
+  publicName: string;
+  userEmail: string;
+}
 
-export default function GameHome(props: Props) {
+export default function GameHome(props: IProps) {
   const classes = useStyles(props);
   const history = useHistory();
+  const { user }: any = useAuth();
+  const [value, setValue] = React.useState(1);
+
+  const [state, setState] = React.useState<IState>({
+    dialog: false,
+    publicName: "",
+    userEmail: user.email
+  });
+
+  const checkUserToOpenDialog = async (user: any) => {
+    let result = false;
+    if (user) {
+      console.log(user.uid);
+      const url = `${process.env.REACT_APP_API_URL}/api/user/get_id/?email=${user.email}`;
+      const response = await axios.get(url);
+      if (response.data === "None") result = true;
+      else result = false;
+    }
+    console.log(result, "the res");
+    setState({
+      dialog: result,
+      publicName: state.publicName,
+      userEmail: state.userEmail
+    });
+  };
+
+  useEffect(() => {
+    console.log("does this run in redirect");
+    checkUserToOpenDialog(user);
+    // console.log(dialogResult, "wfsdfsfs");
+  }, []);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = async (e: any) => {
+    // console.log(e.target.value);
+    // console.log(user);
+    console.log(state.publicName, state.userEmail);
+    let response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/user/update_name/?name=${state.publicName}&email=${state.userEmail}`
+    );
+    console.log(response.data);
+    if (response.data == "0") {
+      return;
+    }
+    setState({
+      dialog: false,
+      publicName: state.publicName,
+      userEmail: state.userEmail
+    });
+  };
+
+  const onChange = (e: any) => {
+    // console.log(e.target.value);
+    setState({
+      dialog: state.dialog,
+      publicName: e.target.value,
+      userEmail: state.userEmail
+    });
+  };
 
   return (
     <Container maxWidth="md" className={classes.root}>
+      {/* {state.dialog ? handleClickOpen() : null} */}
+      <div>
+        {/* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+          Open form dialog
+        </Button> */}
+        <Dialog
+          open={state.dialog}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">
+            Just a bit more information before you can start playing!
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="3 Character Public Name"
+              // type="email"
+              fullWidth
+              onChange={e => onChange(e)}
+              inputProps={{ maxLength: 3 }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={e => handleClose(e)} color="primary">
+              Lets Go!
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
       <Box component="span" m={1}>
         <img src={mainLogo} className={classes.img} alt="Logo" />
       </Box>
       <Typography className={classes.title} variant="h2" color="textSecondary">
-        Welcome To Sesalta!
+        Welcome To Sesalta! {state.dialog.toString()} {state.publicName}
       </Typography>
       <div className={classes.horizontalItems}>
         <Chip
@@ -89,14 +201,7 @@ export default function GameHome(props: Props) {
           onClick={() => history.push("/en/game/options")}
           color="secondary"
           className={classes.chip}
-          label="Lone Warrior"
-        />
-        <Chip
-          clickable
-          onClick={() => history.push("/en/game/options")}
-          color="primary"
-          className={classes.chip}
-          label="I Have Friends To Dethrone"
+          label="Play"
         />
       </div>
     </Container>

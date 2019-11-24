@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import './App.css';
-import NavBar from './components/Navbar';
-import Routes from './Routes';
-import { BrowserRouter } from 'react-router-dom';
-import firebase from 'firebase';
+import React, { useState } from "react";
+import "./App.css";
+import NavBar from "./components/Navbar";
+import Routes from "./Routes";
+import { BrowserRouter } from "react-router-dom";
+import firebase from "firebase";
 
 class App extends React.Component {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      authUser: null,
+      authUser: null
     };
   }
 

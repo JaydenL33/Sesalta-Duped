@@ -91,7 +91,7 @@ def new_user(user_id, email, public_scores=False):
             {
                 "email": email,
                 "gameIDs": {
-                    "gameCount": 0, "gamesPlayed": []
+                    "gameCount": 0,
                 },
                 "publicScores": public_scores
             }
@@ -138,7 +138,7 @@ def get_user_id_by_email(email):
         if "email" in data:
             if data["email"] == email:
                 return user_id
-    return None
+    return "None"
 
 
 # Can be optimised with cache
