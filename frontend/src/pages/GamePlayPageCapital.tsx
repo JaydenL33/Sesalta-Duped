@@ -93,7 +93,7 @@ export default class GamePlayPageCapital extends React.Component<P, S> {
     const usersUniqueName = this.props.location.state.publicName;
     let paramString = "?given=";
     if (parseInt(this.props.match.params.id) === 0)
-      paramString += "Country&asked_for=Captial";
+      paramString += "Country&asked_for=Capital";
     else paramString += "Capital&asked_for=Country";
     const url = `${process.env.REACT_APP_API_URL}/api/country/new_game/${paramString}&users_unique_name=${usersUniqueName}`;
     const response = await axios.get(url);
