@@ -34,16 +34,9 @@ Example usage:
 
 """
 
-# NOTE: The functions used by this route are not complete.
-# Names can't be updated yet since users don't exist. Raycole will add this.
-# Prasad suggested using public name as a unique key. This isn't implemented yet.
-#
+
 # Will update the user's public name IF it is valid (3 letters, not profane).
 # Returns "1" if update is successful, otherwise "0"
-# Params:
-# name: the desired public name
-# Needs some kind of user id included as well
-
 # Must give new name as param "name"
 # Must give either "email". This is unique between users and is used for verification
 # Give existing name as parm "old" if the user already has a public name
@@ -55,7 +48,6 @@ def update_user():
     old_name = get_arg(args, "old", required=False)
     email = get_arg(args, "email", required=True)
 
-    # TODO: finish country_system.update_name()
     name_was_updated = country_system.update_name(
         new_name, old_name, email)
     if name_was_updated:
