@@ -14,7 +14,8 @@ import {
 import mainLogo from "../assets/sesaltaLogo.png";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
+// import Link from "@material-ui/core/Link";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
@@ -161,32 +162,35 @@ class ResultsPage extends React.Component<IProps, IState> {
             </Paper>
 
             <div>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
+              <Link
+                to={{
+                  pathname: "/en/leaderboard"
+                }}
               >
-                <Link
-                  color="inherit"
-                  component={RouterLink}
-                  to="/en/leaderboard"
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
                 >
                   Leaderboard
-                </Link>
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
+                </Button>
+              </Link>
+              <Link
+                to={{
+                  pathname: "/en/game/options",
+                  state: {
+                    publicName: this.props.location.state.publicName
+                  }
+                }}
               >
-                <Link
-                  color="inherit"
-                  component={RouterLink}
-                  to="/en/game/options"
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
                 >
                   Play Again
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </div>
           </div>
         )}
