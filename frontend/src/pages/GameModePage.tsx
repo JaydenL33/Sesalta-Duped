@@ -105,6 +105,7 @@ export default function GameHome(props: IProps) {
     let email = state.userEmail;
     if (user) {
       console.log(user.uid);
+      email = user.email;
       const url = `${process.env.REACT_APP_API_URL}/api/user/get_id/?email=${user.email}`;
       const response = await axios.get(url);
       if (response.data === "None") result = true;
@@ -122,7 +123,7 @@ export default function GameHome(props: IProps) {
     setState({
       dialog: result,
       publicName: publicName,
-      userEmail: state.userEmail
+      userEmail: email
     });
     localStorage.setItem('localStoragePublicName', state.publicName);
   };
