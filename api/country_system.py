@@ -83,7 +83,7 @@ class CountrySystem:
                     is_allowed = False
 
         if is_allowed:
-            firebase_routes.update_name(
+            firebase_routes.update_user_id(
                 new_name, old_name, email)
 
         return is_allowed
