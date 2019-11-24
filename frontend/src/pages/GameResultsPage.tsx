@@ -19,7 +19,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import StarsIcon from '@material-ui/icons/Stars';
-// import Link from '@material-ui/core/Link';
 
 const styles = (theme: Theme) => ({
   root: {},
@@ -73,7 +72,11 @@ class ResultsPage extends React.Component<IProps, IState> {
       finalScore: 0,
       rivalData: "",
       isLoading: true,
+<<<<<<< HEAD
       trophies: [],
+=======
+      trophies: []
+>>>>>>> jp-localisation
     };
   }
   async componentDidMount() {
@@ -86,13 +89,14 @@ class ResultsPage extends React.Component<IProps, IState> {
         console.log(questionData.points);
         scoreSum += questionData.points;
       }
-      const url = `${process.env.REACT_APP_API_URL}/api/rank_rival_and_distance_to_rival/?game_id=${this.props.location.state.gameID}&user_name=${this.props.location.state.publicName}`;
-      const result = await axios.get(url);
+      
+      const rivalUrl = `${process.env.REACT_APP_API_URL}/api/rank_rival_and_distance_to_rival/?game_id=${this.props.location.state.gameID}&user_name=${this.props.location.state.publicName}`;
+      const result = await axios.get(rivalUrl);
       console.log(result.data, "rival data");
       
       const gameID = this.props.location.state.gameID;
-      const newurl = `${process.env.REACT_APP_API_URL}/api/game/trophies/?game=${gameID}`;
-      const res = await axios.get(newurl);
+      const trophyUrl = `${process.env.REACT_APP_API_URL}/api/game/trophies/?user=${this.props.location.state.publicName}&game=${gameID}`;
+      const res = await axios.get(trophyUrl);
       let response = res.data;
       console.log("this is the trophy response", response);
       
@@ -193,7 +197,10 @@ class ResultsPage extends React.Component<IProps, IState> {
                 </TableBody>
               </Table>
             </Paper>
-
+            {TrophyHeader}
+            <ul list-style-type="none">
+              {this.state.trophies.map(name => <li>{name}</li>)}
+            </ul>
             <div>
               <Link
                 to={{

@@ -275,16 +275,7 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
             callback={this.answerComponentCallback}
           />
           {ResponseText}
-          <Typography
-            className={
-              this.state.showButton || this.state.showFinishButton
-                ? classes.button
-                : classes.hidden
-            }
-          >
-            You scored {this.state.pointsScored}!
-          </Typography>
-          {/* {PointsText} */}
+          {PointsText}
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}
