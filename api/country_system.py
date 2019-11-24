@@ -88,6 +88,9 @@ class CountrySystem:
 
         return is_allowed
 
+    def update_public_scores(name, state):
+        return firebase_routes.update_public_scores(name, state)
+
     def get_trophies_for_game(self, user_id, game_id):
         game = self._get_game(game_id)
 

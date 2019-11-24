@@ -34,13 +34,58 @@ Example usage:
 
 """
 
+# NOTE: The functions used by this route are not complete.
+# Names can't be updated yet since users don't exist. Raycole will add this.
+# Prasad suggested using public name as a unique key. This isn't implemented yet.
+#
+# Will update the user's public name IF it is valid (3 letters, not profane).
+# Returns "1" if update is successful, otherwise "0"
+# Params:
+# name: the desired public name
+# Needs some kind of user id included as well
 
-@app.route("/api/user/new/")
+# Must give new name as param "name"
+# Must give either "email". This is unique between users and is used for verification
+# Give existing name as parm "old" if the user already has a public name
+@app.route("/api/user/update_name/")
 @timer
-def new_user():
+def update_user():
     args = request.args
+    new_name = get_arg(args, "name", required=True)
+    old_name = get_arg(args, "old", required=False)
+    email = get_arg(args, "email", required=True)
 
-    user_id = get_arg(args, "user_id", required=True)
+    # TODO: finish country_system.update_name()
+    name_was_updated = country_system.update_name(
+        new_name, old_name, email)
+    if name_was_updated:
+        return SUCCESS
+    else:
+        return FAILURE
+
+
+@app.route("/api/user/public/")
+@timer
+def update_public_scores():
+    args = request.args
+    name = get_arg(args, "name", required=True)
+    requested_state = get_arg(args, "new", required=True)
+
+    success_status = country_system.update_public_scores(name, requested_state)
+
+    if success_status:
+        return SUCCESS
+    else:
+        return FAILURE
+
+
+# Don't use this!
+# @app.route("/api/user/new/")
+# @timer
+# def new_user():
+#     args = request.args
+#
+#     user_id = get_arg(args, "user_id", required=True)
 
 
 # Returns the id of a new game of Sesalta
@@ -116,36 +161,6 @@ def get_results():
     id = get_arg(args, "id", required=True)
 
     return json.dumps(country_system.get_results(id))
-
-
-# NOTE: The functions used by this route are not complete.
-# Names can't be updated yet since users don't exist. Raycole will add this.
-# Prasad suggested using public name as a unique key. This isn't implemented yet.
-#
-# Will update the user's public name IF it is valid (3 letters, not profane).
-# Returns "1" if update is successful, otherwise "0"
-# Params:
-# name: the desired public name
-# Needs some kind of user id included as well
-
-# Must give new name as param "name"
-# Must give either "email" or "old" (the user's old existing public name)
-@app.route("/api/user/update_name/")
-@timer
-def update_user():
-    args = request.args
-    new_name = get_arg(args, "name", required=True)
-    old_name = get_arg(args, "old", required=False)
-    email = get_arg(args, "email", required=True)
-    # public_scores = get_arg(args, "publicScores", required=False)
-
-    # TODO: finish country_system.update_name()
-    name_was_updated = country_system.update_name(
-        new_name, old_name, email)
-    if name_was_updated:
-        return SUCCESS
-    else:
-        return FAILURE
 
 
 @app.route("/api/user/get_id/")
