@@ -7,7 +7,8 @@ import Tab from "@material-ui/core/Tab";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import useAuth from '../utils/AuthContext';
-import Setting from '../components/Setting';
+import Trophy from '../components/Trophy';
+
 
 interface Row {
   name: string;
@@ -85,8 +86,7 @@ export default function MaterialTableDemo(props: Props) {
       // { name: 'Frozen yoghurt', date: '2019-11-14', score: 900, mode: 1 },
     ],
     title: "",
-    // @ts-ignore
-    name: user!==null ? user.displayName: "",
+    name: localStorage.getItem('localStoragePublicName') || "",
     isauthenticated: user!==null,
     isLoading: true
   });
@@ -118,16 +118,22 @@ export default function MaterialTableDemo(props: Props) {
   useEffect(() => {
     addNewDataToState(1);
     console.log("mount it!");
-    console.log(user);
+    // let name = localStorage.getItem('localStoragePublicName') || "";
+    console.log("pub name: ", state.name);
+    // setState({
+    //   ...state,
+    //   name: name
+    // });
     // need to read more about react hooks, a temporaty fix:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Make a request for a player's record with a given publicName
-  const getPlayerData: any = async (name: string) =>
-    await axios
+  const getPlayerData: any = async (name: string) => {
+    console.log(name);
+    return await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/getPlayersScoreboard?name=${name}`
+        `${process.env.REACT_APP_API_URL}/api/getPlayersScoreboard?name=${state.name}`
       )
       .then(function(response) {
         console.log(response.data);
@@ -148,7 +154,7 @@ export default function MaterialTableDemo(props: Props) {
       .catch(function(error) {
         console.log(error);
       });
-
+    }
   // Make a request to get all game records
   const getGlobalData: any = async () =>
     await axios
@@ -196,9 +202,10 @@ export default function MaterialTableDemo(props: Props) {
         </div>
       ) : (
         <div>
-          { value === 0 ? <Setting shared={true}/> // should be state.shared, get value from existingg api or new api
-          : <div/>
+          { value === 0 &&
+            <Trophy name={state.name}/>
           }
+          
           <MaterialTable
             title={state.title}
             columns={state.columns}
