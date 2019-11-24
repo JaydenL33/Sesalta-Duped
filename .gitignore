@@ -32,3 +32,11 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+.vscode
+firebase_key.json
+env
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

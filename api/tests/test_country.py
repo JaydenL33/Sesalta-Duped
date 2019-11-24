@@ -1,3 +1,4 @@
+import copy
 import os
 import pytest
 import sys
@@ -51,13 +52,13 @@ def system_fixture():
 class TestRandomCountry:
 
     def test_random_country(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
         country = system_fixture.random_countries(id, 1)[0]
         assert country in countries
 
     def test_random_countries_separate(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
         random_countries = []
 
@@ -67,7 +68,7 @@ class TestRandomCountry:
             random_countries.append(random_country)
 
     def test_random_countries_together(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
         random_countries = system_fixture.random_countries(id, 4)
         for index, country in enumerate(random_countries[:-1]):
@@ -77,7 +78,7 @@ class TestRandomCountry:
 class TestCheckAnswer:
 
     def test_correct_single_answer(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
 
         answer = system_fixture.random_countries(id, 1)[0]
@@ -85,13 +86,14 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        assert results["points"] == 100
+        assert results["points"] > 95
+        assert results["points"] < 101
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
         assert results["observed_answers"] == [answer_name]
 
     def test_correct_with_multiple_answers(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
 
         answer = system_fixture.random_countries(id, 4)[2]
@@ -99,13 +101,14 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        assert results["points"] == 100
+        assert results["points"] > 95
+        assert results["points"] < 101
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
         assert results["observed_answers"] == [answer_name]
 
     def test_incorrect_single_answer(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
 
         answer = system_fixture.random_countries(id, 1)[0]
@@ -115,13 +118,15 @@ class TestCheckAnswer:
         assert system_fixture.check_answer(id, answer_name, answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
+        assert results["points"] > 45
+        assert results["points"] < 51
         assert results["potential"] == 100
         assert results["expected_answer"] == answer_name
         assert results["observed_answers"].sort() == [wrong_answer,
                                                       answer_name].sort()
 
     def test_incorrect_then_correct_answers(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
 
         options = system_fixture.random_countries(id, 3)
@@ -136,14 +141,15 @@ class TestCheckAnswer:
             id, expected_answer_name, expected_answer_name) == 1
 
         results = system_fixture.get_results(id)[0]
-        assert results["points"] == 50
+        assert results["points"] > 45
+        assert results["points"] < 51
         assert results["potential"] == 100
         assert results["expected_answer"] == expected_answer_name
         assert results["observed_answers"].sort() == [
             wrong_answer_name_1, expected_answer_name].sort()
 
     def test_incorrect_multiple_answers(self, system_fixture):
-        game = system_fixture.new_game(None, None)
+        game = system_fixture.new_game(copy.deepcopy(countries), None, None)
         id = game.id
 
         options = system_fixture.random_countries(id, 3)

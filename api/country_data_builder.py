@@ -7,7 +7,7 @@ topo_data = [
             [0, 1, 2, 3, 4, 5]
         ],
         "type": "Polygon",
-                "properties": {
+        "properties": {
             "NAME": "Afghanistan",
             "NAME_LONG": "Afghanistan",
             "ABBREV": "Afg.",
@@ -885,27 +885,6 @@ topo_data = [
             "CONTINENT": "North America",
             "REGION_UN": "Americas",
             "SUBREGION": "Caribbean"
-        }
-    }, {
-        "arcs": [
-            [215, 216]
-        ],
-        "type": "Polygon",
-                "properties": {
-            "NAME": "N. Cyprus",
-            "NAME_LONG": "Northern Cyprus",
-            "ABBREV": "N. Cy.",
-            "FORMAL_EN": "Turkish Republic of Northern Cyprus",
-            "POP_EST": 265100,
-            "POP_RANK": 10,
-            "GDP_MD_EST": 3600,
-            "POP_YEAR": 2013,
-            "GDP_YEAR": 2013,
-            "ISO_A2": "-99",
-            "ISO_A3": "-99",
-            "CONTINENT": "Asia",
-            "REGION_UN": "Asia",
-            "SUBREGION": "Western Asia"
         }
     }, {
         "arcs": [
@@ -3333,27 +3312,6 @@ topo_data = [
         }
     }, {
         "arcs": [
-            [-230, 550, 551, -262]
-        ],
-        "type": "Polygon",
-                "properties": {
-            "NAME": "Somaliland",
-            "NAME_LONG": "Somaliland",
-            "ABBREV": "Solnd.",
-            "FORMAL_EN": "Republic of Somaliland",
-            "POP_EST": 3500000,
-            "POP_RANK": 12,
-            "GDP_MD_EST": 12250,
-            "POP_YEAR": 2013,
-            "GDP_YEAR": 2013,
-            "ISO_A2": "-99",
-            "ISO_A3": "-99",
-            "CONTINENT": "Africa",
-            "REGION_UN": "Africa",
-            "SUBREGION": "Eastern Africa"
-        }
-    }, {
-        "arcs": [
             [-263, -552, 552, -388]
         ],
         "type": "Polygon",
@@ -4046,6 +4004,7 @@ topo_data = [
     }
 ]
 
+
 country_capitals = [
     {
         "country": "Afghanistan",
@@ -4149,7 +4108,7 @@ country_capitals = [
     },
     {
         "country": "Bolivia",
-        "city": "Sucre/La Paz"
+        "city": "Sucre"
     },
     {
         "country": "Bosnia and Herzegovina",
@@ -4213,15 +4172,15 @@ country_capitals = [
     },
     {
         "country": "Chad",
-        "city": "N'Djam"
+        "city": "N'Djamena"
     },
     {
         "country": "Chile",
-        "city": "Santiago de Chile"
+        "city": "Santiago"
     },
     {
         "country": "China",
-        "city": "Peking"
+        "city": "Beijing"
     },
     {
         "country": "Christmas Island",
@@ -4233,7 +4192,7 @@ country_capitals = [
     },
     {
         "country": "Colombia",
-        "city": "Santaf"
+        "city": "Bogota"
     },
     {
         "country": "Comoros",
@@ -4249,7 +4208,7 @@ country_capitals = [
     },
     {
         "country": "Costa Rica",
-        "city": "San Jos"
+        "city": "San Jose"
     },
     {
         "country": "Croatia",
@@ -4257,7 +4216,7 @@ country_capitals = [
     },
     {
         "country": "Cuba",
-        "city": "La Habana"
+        "city": "Havana"
     },
     {
         "country": "Cyprus",
@@ -4269,7 +4228,7 @@ country_capitals = [
     },
     {
         "country": "Czech Republic",
-        "city": "Praha"
+        "city": "Prague"
     },
     {
         "country": "Denmark",
@@ -4277,7 +4236,7 @@ country_capitals = [
     },
     {
         "country": "Djibouti",
-        "city": "Djibouti"
+        "city": "Djibouti City"
     },
     {
         "country": "Dominica",
@@ -4285,7 +4244,7 @@ country_capitals = [
     },
     {
         "country": "Dominican Republic",
-        "city": "Santo Domingo de Guzm"
+        "city": "Santo Domingo"
     },
     {
         "country": "Timor-Leste",
@@ -4321,7 +4280,7 @@ country_capitals = [
     },
     {
         "country": "Ethiopia",
-        "city": "Addis Abeba"
+        "city": "Addis Ababa"
     },
     {
         "country": "Falkland Islands",
@@ -4381,7 +4340,7 @@ country_capitals = [
     },
     {
         "country": "Greece",
-        "city": "Athenai"
+        "city": "Athens"
     },
     {
         "country": "Greenland",
@@ -4397,11 +4356,11 @@ country_capitals = [
     },
     {
         "country": "Guam",
-        "city": "Aga"
+        "city": "Hagåtña"
     },
     {
         "country": "Guatemala",
-        "city": "Ciudad de Guatemala"
+        "city": "Guatemala City"
     },
     {
         "country": "Guinea",
@@ -4431,17 +4390,17 @@ country_capitals = [
         "country": "Honduras",
         "city": "Tegucigalpa"
     },
-    {
-        "country": "Hong Kong",
-        "city": "Victoria"
-    },
+    # {
+    #     "country": "Hong Kong",
+    #     "city": "Victoria"
+    # },
     {
         "country": "Hungary",
         "city": "Budapest"
     },
     {
         "country": "Iceland",
-        "city": "Reykjav"
+        "city": "Reykjavík"
     },
     {
         "country": "India",
@@ -4469,7 +4428,7 @@ country_capitals = [
     },
     {
         "country": "Italy",
-        "city": "Roma"
+        "city": "Rome"
     },
     {
         "country": "Côte d'Ivoire",
@@ -4489,7 +4448,7 @@ country_capitals = [
     },
     {
         "country": "Kazakhstan",
-        "city": "Astana"
+        "city": "Nur-Sultan"
     },
     {
         "country": "Kenya",
@@ -4497,7 +4456,7 @@ country_capitals = [
     },
     {
         "country": "Kiribati",
-        "city": "Bairiki"
+        "city": "Tarawa"
     },
     {
         "country": "Kosovo",
@@ -4505,7 +4464,7 @@ country_capitals = [
     },
     {
         "country": "Kuwait",
-        "city": "Kuwait"
+        "city": "Kuwait City"
     },
     {
         "country": "Kyrgyzstan",
@@ -4545,7 +4504,7 @@ country_capitals = [
     },
     {
         "country": "Luxembourg",
-        "city": "Luxembourg [Luxemburg/L"
+        "city": "Luxembourg City"
     },
     {
         "country": "Macao",
@@ -4601,7 +4560,7 @@ country_capitals = [
     },
     {
         "country": "Mexico",
-        "city": "Ciudad de M"
+        "city": "Mexico City"
     },
     {
         "country": "Micronesia, Federated States of",
@@ -4611,13 +4570,13 @@ country_capitals = [
         "country": "Moldova",
         "city": "Chisinau"
     },
-    {
-        "country": "Monaco",
-        "city": "Monaco-Ville"
-    },
+    # {
+    #     "country": "Monaco",
+    #     "city": "Monaco-Ville"
+    # },
     {
         "country": "Mongolia",
-        "city": "Ulan Bator"
+        "city": "Ulaanbaatar"
     },
     {
         "country": "Montenegro",
@@ -4637,7 +4596,7 @@ country_capitals = [
     },
     {
         "country": "Myanmar",
-        "city": "Rangoon (Yangon)"
+        "city": "Naypyidaw"
     },
     {
         "country": "Namibia",
@@ -4661,7 +4620,7 @@ country_capitals = [
     },
     {
         "country": "New Caledonia",
-        "city": "Noum"
+        "city": "Noumea"
     },
     {
         "country": "New Zealand",
@@ -4705,7 +4664,7 @@ country_capitals = [
     },
     {
         "country": "Oman",
-        "city": "Masqat"
+        "city": "Muscat"
     },
     {
         "country": "Pakistan",
@@ -4713,7 +4672,7 @@ country_capitals = [
     },
     {
         "country": "Palau",
-        "city": "Koror"
+        "city": "Ngerulmud"
     },
     {
         "country": "Palestine",
@@ -4721,7 +4680,7 @@ country_capitals = [
     },
     {
         "country": "Panama",
-        "city": "Ciudad de Panam"
+        "city": "Panama City"
     },
     {
         "country": "Papua New Guinea",
@@ -4729,7 +4688,7 @@ country_capitals = [
     },
     {
         "country": "Paraguay",
-        "city": "Asunci"
+        "city": "Asunción"
     },
     {
         "country": "Peru",
@@ -4745,11 +4704,11 @@ country_capitals = [
     },
     {
         "country": "Poland",
-        "city": "Warszawa"
+        "city": "Warsaw"
     },
     {
         "country": "Portugal",
-        "city": "Lisboa"
+        "city": "Lisbon"
     },
     {
         "country": "Puerto Rico",
@@ -4765,7 +4724,7 @@ country_capitals = [
     },
     {
         "country": "Romania",
-        "city": "Bucuresti"
+        "city": "Bucharest"
     },
     {
         "country": "Russian Federation",
@@ -4805,7 +4764,7 @@ country_capitals = [
     },
     {
         "country": "Sao Tome and Principe",
-        "city": "S"
+        "city": "Sao Tome"
     },
     {
         "country": "Saudi Arabia",
@@ -4857,7 +4816,7 @@ country_capitals = [
     },
     {
         "country": "South Africa",
-        "city": "Pretoria"
+        "city": "Cape Town, Bloemfontein, Pretoria"
     },
     # {
     #     "country": "South Georgia and the South Sandwich Islands",
@@ -4893,7 +4852,7 @@ country_capitals = [
     },
     {
         "country": "Swaziland",
-        "city": "Mbabane"
+        "city": "Mbabane, Lobamba"
     },
     {
         "country": "Sweden",
@@ -4929,12 +4888,12 @@ country_capitals = [
     },
     {
         "country": "Togo",
-        "city": "Lom"
+        "city": "Lomé"
     },
-    {
-        "country": "Tokelau",
-        "city": "Fakaofo"
-    },
+    # {
+    #     "country": "Tokelau",
+    #     "city": "Fakaofo"
+    # },
     {
         "country": "Tonga",
         "city": "Nuku'alofa"
@@ -4981,7 +4940,7 @@ country_capitals = [
     },
     {
         "country": "United States",
-        "city": "Washington"
+        "city": "Washington D.C."
     },
     # {
     #     "country": "United States Minor Outlying Islands",
@@ -4993,7 +4952,7 @@ country_capitals = [
     },
     {
         "country": "Uzbekistan",
-        "city": "Toskent"
+        "city": "Tashkent"
     },
     {
         "country": "Vanuatu",
@@ -5025,7 +4984,7 @@ country_capitals = [
     },
     {
         "country": "Western Sahara",
-        "city": "El-Aai"
+        "city": "Laayoune"
     },
     {
         "country": "Yemen",
@@ -5033,7 +4992,7 @@ country_capitals = [
     },
     {
         "country": "Yugoslavia",
-        "city": "Beograd"
+        "city": "Belgrade"
     },
     {
         "country": "Zambia",
@@ -5047,9 +5006,17 @@ country_capitals = [
 
 map_capitals = {}
 
+filtered_topo_data = {}
+
 for stats in topo_data:
-    country = (stats["properties"])["NAME_LONG"]
+    properties = stats["properties"]
+    country = properties["NAME_LONG"]
     map_capitals[country] = None
+    filtered_topo_data[country] = {
+        "name": country,
+        "iso_a2": properties["ISO_A2"]
+        # "continent": properties["CONTINENT"]
+    }
 
 for country_capital in country_capitals:
     country = country_capital["country"]
@@ -5057,17 +5024,19 @@ for country_capital in country_capitals:
 
     if country in map_capitals:
         map_capitals[country] = capital
+        filtered_topo_data[country]["capital"] = capital
 
 countries = []
 
-for country, capital in map_capitals.items():
+for country, data in filtered_topo_data.items():
     if capital == None:
         print(f"{country} has no capital")
 
     countries.append(
         {
-            "name": country,
-            "capital": capital
+            "name": data["name"],
+            "capital": data["capital"],
+            "iso_a2": data["iso_a2"],
         }
     )
 

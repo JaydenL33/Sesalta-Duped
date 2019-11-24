@@ -1,0 +1,112 @@
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:8.15
+
+jobs:
+  secrets_scan:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+         name: git-secrets scan
+         command: |
+           pushd /var/tmp
+           git clone https://github.com/awslabs/git-secrets.git
+           cd git-secrets
+           sudo make install
+           popd
+           git secrets --register-aws --global
+           git secrets --scan
+  yarn_audit:
+    executor: node-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "frontend/yarn.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: cd frontend && yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "frontend/yarn.lock" }}
+      - run:
+          name: audit
+          command: |
+            cd frontend
+            echo yarn audit
+  yarn_deploy:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+         name: deploy UI
+         command: |
+           cd frontend
+           sudo apt -y update
+           sudo apt install -y python-pip
+           sudo pip install --upgrade awscli
+           aws --version
+           yarn install --frozen-lockfile
+           yarn deploy
+  deploy_flask:
+    working_directory: ~/api
+    docker:
+      - image: circleci/ruby:2.4.3
+    steps:
+      - checkout
+      - run:
+          name: Installing deployment dependencies
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install --upgrade setuptools
+            sudo pip install awsebcli --upgrade
+      - run:
+          name: Deploying
+          command: |
+            cd api
+            ls
+            eb deploy
+workflows:
+  deploy_client:
+    jobs:
+      - secrets_scan:
+          name: secrets_scan
+          filters:  # using regex filters requires the entire branch to match
+            branches:
+              only:  # only branches matching the below regex filters will run
+                - deploy
+                - master
+      - yarn_audit:
+          name: yarn_audit
+          requires:
+            - secrets_scan
+          filters:  # using regex filters requires the entire branch to match
+            branches:
+              only:  # only branches matching the below regex filters will run
+                - deploy
+                - master
+      - yarn_deploy:
+          filters:  # using regex filters requires the entire branch to match
+            branches:
+              only:  # only branches matching the below regex filters will run
+                - deploy
+                - master
+          name: yarn_deploy
+          requires:
+            - yarn_audit
+  delpoy_api:
+    jobs:
+      - deploy_flask:
+          filters:  # using regex filters requires the entire branch to match
+              branches:
+                only:  # only branches matching the below regex filters will run
+                  - deploy
+                  - master
+          name: deploy_flask
