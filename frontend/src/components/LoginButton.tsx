@@ -19,13 +19,21 @@ export default function LoginButton() {
       signInSuccessWithAuthResult: () => false,
     },
   };
+  
+  let LogoutText;
+  
+  if (window.location.pathname.substr(1, 2) === 'jp') {
+    LogoutText = "サインアウト";
+  } else {
+    LogoutText = "Sign Out";
+  }
 
   return !!user ? (
     <Button
       color="inherit"
       onClick={signout} style={{ cursor: 'pointer' }}
     >
-      Sign Out
+      {LogoutText}
     </Button>
     
   ) : (

@@ -13,6 +13,7 @@ import GamePlayPageCapital from './pages/GamePlayPageCapital';
 import GameResultsPage from './pages/GameResultsPage';
 import GameResultsPageJp from './pages/GameResultsPage-jp';
 import LeaderBoardPage from './pages/LeaderBoardPage';
+import LeaderBoardPageJp from './pages/LeaderBoardPage-jp';
 import AppliedRoute from './components/AppliedRoute';
 
 interface RouteProps {
@@ -116,6 +117,12 @@ const Routes: React.FC<RouteProps> = ({ appProps }) => (
       path="/jp/game/results"
       exact
       component={GameResultsPageJp}
+      props={appProps}
+    />
+    <AppliedRoute
+      path="/jp/leaderboard"
+      exact
+      component={LeaderBoardPageJp}
       props={appProps}
     />{' '}
     */}

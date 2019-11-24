@@ -5,47 +5,66 @@ import jpLogo from '../assets/sesaltaLogo-jp.png';
 import Typography from '@material-ui/core/Typography';
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) => 
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-    },
+    root: {},
     card: {
       marginTop: theme.spacing(5),
       marginBottom: theme.spacing(4),
-      maxHeight: 400,
+      maxHeight: 400
     },
     title: {
-      fontSize: 25,
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
     },
     list: {
-      width: '100%',
-      display: 'block',
-      backgroundColor: theme.palette.background.paper,
+      width: "100%",
+      display: "block",
+      backgroundColor: theme.palette.background.paper
     },
     button: {
-      display: 'block',
+      display: "block",
       maxWidth: 50,
       marginBottom: theme.spacing(),
-      marginLeft: theme.spacing(),
+      marginLeft: theme.spacing()
     },
     img: {
-        padding: 10,
-        flex: 1,
-        width: 225,
-        height: 200,
-        resizeMode: 'contain' 
+      padding: 10,
+      flex: 1,
+      width: 225,
+      height: 200,
+      resizeMode: "contain"
     },
     horizontalItems: {
-        padding: 20,
-        flex: 1,
-        display: 'flex',
-        // alignItems: 'center',
-        justifyContent: 'center'
+      paddingTop: 50,
+      padding: 20,
+      flex: 1,
+      display: "flex",
+      // alignItems: 'center',
+      justifyContent: "center",
+      [theme.breakpoints.down('sm')]: {
+        display: "block",
+      },
     },
     chip: {
-        padding: 50
+      padding: 50,
+      margin: 5,
+      maxWidth: 220,
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: 200,
+      },
     }
-  }),
+  })
 );
 
 interface Props {

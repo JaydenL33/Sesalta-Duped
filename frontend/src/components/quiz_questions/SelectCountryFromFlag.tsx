@@ -135,7 +135,7 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
-    let QuestionText, ResponseText, QuizButton, EndButton, ProgBar;
+    let QuestionText, ResponseText, QuizButton, EndButton, ProgBar, PointsText;
 
     if (window.location.pathname.substr(1, 2) === "jp") {
       QuestionText = (
@@ -150,6 +150,10 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
           {this.state.isCorrect !== undefined &&
             (this.state.isCorrect ? "正解" : "不正解")}
         </Typography>
+      );
+      PointsText = (
+        <Typography
+            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>{this.state.pointsScored}　得点した!</Typography>
       );
       QuizButton = (
         <Button
@@ -195,6 +199,10 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
           {this.state.isCorrect !== undefined &&
             (this.state.isCorrect ? "Correct" : "Wrong")}
         </Typography>
+      );
+      PointsText = (
+        <Typography
+            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
       );
       QuizButton = (
         <Button
@@ -254,8 +262,7 @@ class SelectCountryFromFlag extends React.Component<IProps, IState> {
             callback={this.answerComponentCallback}
           />
           {ResponseText}
-          <Typography
-            className={this.state.showButton || this.state.showFinishButton ? classes.button : classes.hidden}>You scored {this.state.pointsScored}!</Typography>
+          {PointsText}
           <CardActions style={{ justifyContent: "center" }}>
             {QuizButton}
             {EndButton}

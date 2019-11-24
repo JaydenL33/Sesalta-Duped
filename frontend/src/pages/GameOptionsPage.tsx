@@ -60,13 +60,13 @@ class OptionsPage extends React.Component<Props, States> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      checked: [true, false, false, false],
+      checked: [true, false, false, false, false],
       selected: 0
     };
   }
 
   handleToggle = (value: number) => () => {
-    let newChecked = [false, false, false, false];
+    let newChecked = [false, false, false, false, false];
     newChecked[value] = this.state.checked[value] === false;
     console.log(newChecked);
     console.log(this.state.selected);
