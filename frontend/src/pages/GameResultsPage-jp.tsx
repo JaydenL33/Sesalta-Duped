@@ -1,5 +1,5 @@
 import React from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { withStyles, Theme } from "@material-ui/core/styles";
 import {
   Container,
   Box,
@@ -7,13 +7,19 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
+  Button,
+  Paper
 } from "@material-ui/core";
 import { Furigana } from "furigana-react";
 import mainLogo from "../assets/sesaltaLogo-jp.png";
 import Typography from "@material-ui/core/Typography";
+import { Link as RouterLink } from 'react-router-dom'
+import Link from '@material-ui/core/Link';
+import axios from "axios";
+import StarsIcon from '@material-ui/icons/Stars';
 
-const styles = {
+const styles = (theme: Theme) => ({
   root: {},
   img: {
     padding: 10,
@@ -21,8 +27,17 @@ const styles = {
     width: 225,
     height: 200,
     resizeMode: "contain"
+  },
+  paper: {
+    marginTop: theme.spacing(3),
+    width: '100%',
+    overflow: 'auto',
+    marginBottom: theme.spacing(2),
+  },
+  button: {
+    margin: 5,
   }
-};
+});
 
 interface QuestionData {
   expected_answer: string;
@@ -31,13 +46,16 @@ interface QuestionData {
   potentional: number;
   question_num: number;
 }
+
 interface IState {
   gameData: QuestionData[];
+  trophies: string[];
   finalScore: number;
 }
 interface IProps {
   classes: any;
   location: any;
+  gameId: string;
 }
 
 class ResultsPage extends React.Component<IProps, IState> {
@@ -45,18 +63,32 @@ class ResultsPage extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       gameData: [],
+      trophies: [],
       finalScore: 0
     };
   }
   async componentDidMount() {
     console.log("Mounting GRP");
     try {
+      console.log(this.props.location.state);
       const gameResults = this.props.location.state.stateData;
       let scoreSum = 0;
       for (const questionData of gameResults) {
         console.log(questionData.points);
         scoreSum += questionData.points;
       }
+      
+      const gameID = this.props.location.state.gameID;
+      const url = `${process.env.REACT_APP_API_URL}/api/game/trophies/?game=${gameID}`;
+      const res = await axios.get(url);
+      let response = res.data;
+      console.log("this is the trophy response", response);
+      
+      for (const trophyData of response) {
+        console.log(trophyData.name);
+        this.setState({ trophies: [ ...this.state.trophies, trophyData.name] });
+      }
+      
       this.setState({
         gameData: this.props.location.state.stateData,
         finalScore: scoreSum
@@ -68,7 +100,7 @@ class ResultsPage extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
-    let PointText, TableHeaders;
+    let PointText, TableHeaders, TrophyHeader;
     
     if(window.location.pathname.substr(1,2) === "jp") {
       PointText = <Typography variant="h4" color="textSecondary">
@@ -98,6 +130,19 @@ class ResultsPage extends React.Component<IProps, IState> {
                     得点
                   </Furigana></TableCell>
               </TableRow>
+      if(this.state.trophies.length > 0) {
+        if(this.state.trophies.length === 1) {
+          TrophyHeader = <Typography variant="h4" color="textSecondary">
+              <StarsIcon /> あなたもトロフィーをつかみました! 
+              <StarsIcon />
+            </Typography>;
+        } else {
+          TrophyHeader = <Typography variant="h4" color="textSecondary">
+              <StarsIcon /> あなたも{this.state.trophies.length}トロフィーをつかみました! 
+              <StarsIcon />
+            </Typography>;
+        }
+      }
     } else {
       PointText = <Typography variant="h4" color="textSecondary">
           You scored {this.state.finalScore} points!
@@ -109,6 +154,19 @@ class ResultsPage extends React.Component<IProps, IState> {
                 <TableCell align="left">Attempts</TableCell>
                 <TableCell align="right">Points Received</TableCell>
               </TableRow>
+      if(this.state.trophies.length > 0) {
+        if(this.state.trophies.length === 1) {
+          TrophyHeader = <Typography variant="h4" color="textSecondary">
+              <StarsIcon /> You also obtained {this.state.trophies.length} trophy! 
+              <StarsIcon />
+            </Typography>;
+        } else {
+          TrophyHeader = <Typography variant="h4" color="textSecondary">
+              <StarsIcon /> You also obtained {this.state.trophies.length} trophies! 
+              <StarsIcon />
+            </Typography>;
+        }
+      }
     }
     
     return (
@@ -117,7 +175,7 @@ class ResultsPage extends React.Component<IProps, IState> {
           <img src={mainLogo} className={classes.img} alt="Logo" />
         </Box>
         {PointText}
-        <div>
+        <Paper className={classes.paper}>
           <Table
             className={classes.table}
             size="small"
@@ -154,6 +212,18 @@ class ResultsPage extends React.Component<IProps, IState> {
               )}
             </TableBody>
           </Table>
+        </Paper>
+        {TrophyHeader}
+        <ul list-style-type="none">
+          {this.state.trophies.map(name => <li>{name}</li>)}
+        </ul>
+        <div>
+          <Button variant="contained" color="primary" className={classes.button}>
+            <Link color="inherit" component={RouterLink} to="/jp/leaderboard">リーダーボード</Link>
+          </Button>
+          <Button variant="contained" color="secondary" className={classes.button}>
+            <Link color="inherit" component={RouterLink} to="/jp/game/options">再びプレー</Link>
+          </Button>
         </div>
       </Container>
     );

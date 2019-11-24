@@ -18,6 +18,8 @@ import { Link as RouterLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import StarsIcon from '@material-ui/icons/Stars';
+// import Link from '@material-ui/core/Link';
 
 const styles = (theme: Theme) => ({
   root: {},
@@ -50,8 +52,10 @@ interface QuestionData {
   potentional: number;
   question_num: number;
 }
+
 interface IState {
   gameData: QuestionData[];
+  trophies: string[];
   finalScore: number;
   rivalData: string;
   isLoading: boolean;
@@ -68,7 +72,8 @@ class ResultsPage extends React.Component<IProps, IState> {
       gameData: [],
       finalScore: 0,
       rivalData: "",
-      isLoading: true
+      isLoading: true,
+      trophies: [],
     };
   }
   async componentDidMount() {
@@ -84,6 +89,18 @@ class ResultsPage extends React.Component<IProps, IState> {
       const url = `${process.env.REACT_APP_API_URL}/api/rank_rival_and_distance_to_rival/?game_id=${this.props.location.state.gameID}&user_name=${this.props.location.state.publicName}`;
       const result = await axios.get(url);
       console.log(result.data, "rival data");
+      
+      const gameID = this.props.location.state.gameID;
+      const newurl = `${process.env.REACT_APP_API_URL}/api/game/trophies/?game=${gameID}`;
+      const res = await axios.get(newurl);
+      let response = res.data;
+      console.log("this is the trophy response", response);
+      
+      for (const trophyData of response) {
+        console.log(trophyData.name);
+        this.setState({ trophies: [ ...this.state.trophies, trophyData.name] });
+      }
+      
       this.setState({
         gameData: this.props.location.state.stateData,
         finalScore: scoreSum,
@@ -97,6 +114,22 @@ class ResultsPage extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
+    let TrophyHeader;
+    
+    if(this.state.trophies.length > 0) {
+      if(this.state.trophies.length === 1) {
+        TrophyHeader = <Typography variant="h4" color="textSecondary">
+            <StarsIcon /> You also obtained {this.state.trophies.length} trophy! 
+            <StarsIcon />
+          </Typography>;
+      } else {
+        TrophyHeader = <Typography variant="h4" color="textSecondary">
+            <StarsIcon /> You also obtained {this.state.trophies.length} trophies! 
+            <StarsIcon />
+          </Typography>;
+      }
+    }
+    
     return (
       <Container maxWidth="md" className={classes.root}>
         <Box component="span" m={1}>
