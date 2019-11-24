@@ -61,7 +61,7 @@ class OptionsPage extends React.Component<Props, States> {
     super(props);
     this.state = {
       checked: [true, false, false, false, false],
-      selected: 0
+      selected: 0,
     };
   }
 

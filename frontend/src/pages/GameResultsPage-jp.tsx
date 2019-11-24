@@ -15,8 +15,10 @@ import { Furigana } from "furigana-react";
 import mainLogo from "../assets/sesaltaLogo-jp.png";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from 'react-router-dom'
-import Link from '@material-ui/core/Link';
+// import Link from "@material-ui/core/Link";
+import { Link } from "react-router-dom";
 import axios from "axios";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import StarsIcon from '@material-ui/icons/Stars';
 
 const styles = (theme: Theme) => ({
@@ -30,12 +32,16 @@ const styles = (theme: Theme) => ({
   },
   paper: {
     marginTop: theme.spacing(3),
-    width: '100%',
-    overflow: 'auto',
-    marginBottom: theme.spacing(2),
+    width: "100%",
+    overflow: "auto",
+    marginBottom: theme.spacing(2)
   },
   button: {
-    margin: 5,
+    margin: 5
+  },
+  spinner: {
+    display: "block",
+    marginTop: theme.spacing(10)
   }
 });
 
@@ -51,11 +57,12 @@ interface IState {
   gameData: QuestionData[];
   trophies: string[];
   finalScore: number;
+  rivalData: string;
+  isLoading: boolean;
 }
 interface IProps {
   classes: any;
   location: any;
-  gameId: string;
 }
 
 class ResultsPage extends React.Component<IProps, IState> {
@@ -63,8 +70,10 @@ class ResultsPage extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       gameData: [],
-      trophies: [],
-      finalScore: 0
+      finalScore: 0,
+      rivalData: "",
+      isLoading: true,
+      trophies: []
     };
   }
   async componentDidMount() {
@@ -78,9 +87,13 @@ class ResultsPage extends React.Component<IProps, IState> {
         scoreSum += questionData.points;
       }
       
+      const rivalUrl = `${process.env.REACT_APP_API_URL}/api/rank_rival_and_distance_to_rival/?game_id=${this.props.location.state.gameID}&user_name=${this.props.location.state.publicName}`;
+      const result = await axios.get(rivalUrl);
+      console.log(result.data, "rival data");
+      
       const gameID = this.props.location.state.gameID;
-      const url = `${process.env.REACT_APP_API_URL}/api/game/trophies/?game=${gameID}`;
-      const res = await axios.get(url);
+      const trophyUrl = `${process.env.REACT_APP_API_URL}/api/game/trophies/?user=${this.props.location.state.publicName}&game=${gameID}`;
+      const res = await axios.get(trophyUrl);
       let response = res.data;
       console.log("this is the trophy response", response);
       
@@ -91,7 +104,9 @@ class ResultsPage extends React.Component<IProps, IState> {
       
       this.setState({
         gameData: this.props.location.state.stateData,
-        finalScore: scoreSum
+        finalScore: scoreSum,
+        rivalData: result.data.rival_info,
+        isLoading: false
       });
     } catch (e) {
       console.log(e);
@@ -174,57 +189,93 @@ class ResultsPage extends React.Component<IProps, IState> {
         <Box component="span" m={1}>
           <img src={mainLogo} className={classes.img} alt="Logo" />
         </Box>
-        {PointText}
-        <Paper className={classes.paper}>
-          <Table
-            className={classes.table}
-            size="small"
-            aria-label="a dense table"
-          >
-            <TableHead>
-              {TableHeaders}
-            </TableHead>
-            <TableBody>
-              {this.state.gameData.map(
-                (questionData: QuestionData, index: number) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell align="left" component="th" scope="row">
-                        {index + 1}
-                      </TableCell>
-                      <TableCell align="left">
-                        {questionData.expected_answer}
-                      </TableCell>
-                      <TableCell align="left">
-                        {
-                          questionData.observed_answers[
-                            questionData.observed_answers.length - 1
-                          ]
-                        }
-                      </TableCell>
-                      <TableCell align="left">
-                        {questionData.observed_answers.length}
-                      </TableCell>
-                      <TableCell align="right">{questionData.points}</TableCell>
-                    </TableRow>
-                  );
-                }
-              )}
-            </TableBody>
-          </Table>
-        </Paper>
-        {TrophyHeader}
-        <ul list-style-type="none">
-          {this.state.trophies.map(name => <li>{name}</li>)}
-        </ul>
-        <div>
-          <Button variant="contained" color="primary" className={classes.button}>
-            <Link color="inherit" component={RouterLink} to="/jp/leaderboard">リーダーボード</Link>
-          </Button>
-          <Button variant="contained" color="secondary" className={classes.button}>
-            <Link color="inherit" component={RouterLink} to="/jp/game/options">再びプレー</Link>
-          </Button>
-        </div>
+        {this.state.isLoading ? (
+          <div className={classes.spinner}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <div>
+            {PointText}
+            <Typography variant="h5" color="textSecondary">
+              {this.state.rivalData}
+            </Typography>
+            <Paper className={classes.paper}>
+              <Table
+                className={classes.table}
+                size="small"
+                aria-label="a dense table"
+              >
+                <TableHead>
+                  {TableHeaders}
+                </TableHead>
+                <TableBody>
+                  {this.state.gameData.map(
+                    (questionData: QuestionData, index: number) => {
+                      return (
+                        <TableRow key={index}>
+                          <TableCell align="left" component="th" scope="row">
+                            {index + 1}
+                          </TableCell>
+                          <TableCell align="left">
+                            {questionData.expected_answer}
+                          </TableCell>
+                          <TableCell align="left">
+                            {
+                              questionData.observed_answers[
+                                questionData.observed_answers.length - 1
+                              ]
+                            }
+                          </TableCell>
+                          <TableCell align="left">
+                            {questionData.observed_answers.length}
+                          </TableCell>
+                          <TableCell align="right">
+                            {questionData.points}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
+                  )}
+                </TableBody>
+              </Table>
+            </Paper>
+            {TrophyHeader}
+            <ul list-style-type="none">
+              {this.state.trophies.map(name => <li>{name}</li>)}
+            </ul>
+            <div>
+              <Link
+                to={{
+                  pathname: "/jp/leaderboard"
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
+                    リーダーボード
+                </Button>
+              </Link>
+              <Link
+                to={{
+                  pathname: "/jp/game/options",
+                  state: {
+                    publicName: this.props.location.state.publicName
+                  }
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                >
+                  再びプレー
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </Container>
     );
   }
