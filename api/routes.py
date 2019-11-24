@@ -35,6 +35,51 @@ Example usage:
 """
 
 
+# Will update the user's public name IF it is valid (3 letters, not profane).
+# Returns "1" if update is successful, otherwise "0"
+# Must give new name as param "name"
+# Must give either "email". This is unique between users and is used for verification
+# Give existing name as parm "old" if the user already has a public name
+@app.route("/api/user/update_name/")
+@timer
+def update_user():
+    args = request.args
+    new_name = get_arg(args, "name", required=True)
+    old_name = get_arg(args, "old", required=False)
+    email = get_arg(args, "email", required=True)
+
+    name_was_updated = country_system.update_name(
+        new_name, old_name, email)
+    if name_was_updated:
+        return SUCCESS
+    else:
+        return FAILURE
+
+
+@app.route("/api/user/public/")
+@timer
+def update_public_scores():
+    args = request.args
+    name = get_arg(args, "name", required=True)
+    requested_state = get_arg(args, "new", required=True)
+
+    success_status = country_system.update_public_scores(name, requested_state)
+
+    if success_status:
+        return SUCCESS
+    else:
+        return FAILURE
+
+
+# Don't use this!
+# @app.route("/api/user/new/")
+# @timer
+# def new_user():
+#     args = request.args
+#
+#     user_id = get_arg(args, "user_id", required=True)
+
+
 # Returns the id of a new game of Sesalta
 # Params:
 # given: the given game mode for each question (not yet needed)
@@ -110,29 +155,13 @@ def get_results():
     return json.dumps(country_system.get_results(id))
 
 
-# NOTE: The functions used by this route are not complete.
-# Names can't be updated yet since users don't exist. Raycole will add this.
-# Prasad suggested using public name as a unique key. This isn't implemented yet.
-#
-# Will update the user's public name IF it is valid (3 letters, not profane).
-# Returns "1" if update is successful, otherwise "0"
-# Params:
-# name: the desired public name
-# Needs some kind of user id included as well
-@app.route("/api/user/update/")
+@app.route("/api/user/get_id/")
 @timer
-def update_name():
+def get_id_from_email():
     args = request.args
-    name = get_arg(args, "name", required=True)
+    email = get_arg(args, "email", required=True)
 
-    bad_words = firebase_routes.get_bad_words()       # list of strings
-
-    # TODO: finish country_system.update_name()
-    name_was_updated = country_system.update_name(name, bad_words)
-    if name_was_updated:
-        return SUCCESS
-    else:
-        return FAILURE
+    return firebase_routes.get_user_id_by_email(email)
 
 
 # tested and working, just need to uncomment out the args stuff and delete the hardcoded name
@@ -216,7 +245,7 @@ def rankRivalAndDistanceToRival():
             game_data = all_users_with_games_and_scores[users_name][gameName]
             if game_data['Mode'] == mode_of_this_game:
                 rank_list_of_relevant_game_data.append(
-                    {"name": users_name, "score": game_data["Score"], "gameID":  all_user_data[users_name]["gameIDs"]["GamesPlayed"][gameName]})
+                    {"name": users_name, "score": game_data["Score"], "gameID":  all_user_data[users_name]["gameIDs"]["gamesPlayed"][gameName]})
 
     sorted_rank_list_of_relevant_game_data = sorted(
         rank_list_of_relevant_game_data, key=lambda k: k['score'], reverse=True)
@@ -280,12 +309,12 @@ def retrieve_all_users_with_games_and_scores():
 
 def extract_games_and_score_for_user(name):
     user_data = firebase_routes.get_user_by_id(name)
-    game_count = user_data['gameIDs']['GameCount']
+    game_count = user_data['gameIDs']['gameCount']
 
     if game_count == 0:
         return {}
     else:
-        games_played = user_data['gameIDs']['GamesPlayed']
+        games_played = user_data['gameIDs']['gamesPlayed']
         game_number_and_score = {}
 
         for game_name, game_id in games_played.items():
@@ -331,12 +360,12 @@ def update_user_data(user_name, new_game_id):
     if "not_a_user" == user_name:
         return
     user_data = firebase_routes.get_user_by_id(user_name)
-    total_games_played = user_data["gameIDs"]["GameCount"] + 1
+    total_games_played = user_data["gameIDs"]["gameCount"] + 1
     game_number_string = "Game" + str(total_games_played)
-    user_data["gameIDs"]["GameCount"] = total_games_played
-    if "GamesPlayed" not in user_data["gameIDs"]:
-        user_data["gameIDs"]["GamesPlayed"] = {}
-    user_data["gameIDs"]["GamesPlayed"][game_number_string] = new_game_id
+    user_data["gameIDs"]["gameCount"] = total_games_played
+    if "gamesPlayed" not in user_data["gameIDs"]:
+        user_data["gameIDs"]["gamesPlayed"] = {}
+    user_data["gameIDs"]["gamesPlayed"][game_number_string] = new_game_id
 
     firebase_routes.update_user(user_name, user_data)
 

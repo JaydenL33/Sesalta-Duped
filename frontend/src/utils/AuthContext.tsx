@@ -1,6 +1,8 @@
-import React from 'react';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import React from "react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import axios from "axios";
+import LoginForm from "../components/LoginForm";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_apiKey,
@@ -9,12 +11,12 @@ const firebaseConfig = {
   projectId: process.env.REACT_APP_projectId,
   storageBucket: process.env.REACT_APP_storageBucket,
   messagingSenderId: process.env.REACT_APP_messagingSenderId,
-  appId: process.env.REACT_APP_appId,
+  appId: process.env.REACT_APP_appId
 };
 
 AuthProvider.actions = {
-  setUser: 'SET_USER',
-  toggleLoading: 'TOGGLE_LOADING',
+  setUser: "SET_USER",
+  toggleLoading: "TOGGLE_LOADING"
 };
 
 const reducer = (state: any, action: any) => {
@@ -23,12 +25,12 @@ const reducer = (state: any, action: any) => {
       return {
         user: action.payload.user,
         isInitiallyLoading: false,
-        isLoading: false,
+        isLoading: false
       };
     case AuthProvider.actions.toggleLoading:
       return {
         ...state,
-        isLoading: action.payload.value,
+        isLoading: action.payload.value
       };
     default:
       throw new Error(`No case for type ${action.type} found.`);
@@ -41,7 +43,7 @@ export function AuthProvider({ initialUser, children }: any) {
   const [state, dispatch] = React.useReducer(reducer, {
     isInitiallyLoading: true,
     isLoading: false,
-    user: null,
+    user: null
   });
 
   const signingInSoDontDispatchOnAuthStateChange = React.useRef(false);
@@ -51,10 +53,12 @@ export function AuthProvider({ initialUser, children }: any) {
       firebase.initializeApp(firebaseConfig);
     }
 
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(async function(user) {
       if (user) {
         // User is signed in.
+        console.log("if");
         if (signingInSoDontDispatchOnAuthStateChange.current) {
+          console.log("the other if");
           signingInSoDontDispatchOnAuthStateChange.current = false;
           return;
         }
@@ -62,18 +66,29 @@ export function AuthProvider({ initialUser, children }: any) {
         dispatch({
           type: AuthProvider.actions.setUser,
           payload: {
-            user,
-          },
+            user
+          }
         });
+        // gonna check if user exists in the backend, if not then ask for public name
+        // console.log(user.email);
+
+        // const url = `${process.env.REACT_APP_API_URL}/api/user/get_id/?email=${user.email}`;
+        // const response = await axios.get(url);
+        // if (response.data === "None") {
+        // }
+
+        // console.log(response, "the res");
       } else {
         // User is signed out.
+        console.log("else");
         dispatch({
           type: AuthProvider.actions.setUser,
           payload: {
-            user: null,
-          },
+            user: null
+          }
         });
       }
+      console.log("on state changed");
     });
   }, []);
 
@@ -87,7 +102,7 @@ export function AuthProvider({ initialUser, children }: any) {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log('errorCode', errorCode, 'errorMessage', errorMessage);
+        console.log("errorCode", errorCode, "errorMessage", errorMessage);
       });
   };
 
@@ -111,8 +126,8 @@ export function AuthProvider({ initialUser, children }: any) {
     dispatch({
       type: AuthProvider.actions.toggleLoading,
       payload: {
-        value: isLoading,
-      },
+        value: isLoading
+      }
     });
   };
 
@@ -120,7 +135,7 @@ export function AuthProvider({ initialUser, children }: any) {
     user: initialUser || state.user,
     signin,
     signout,
-    isLoading: state.isLoading,
+    isLoading: state.isLoading
   };
 
   return state.isInitiallyLoading ? null : (
@@ -133,7 +148,7 @@ export default function useAuth() {
   const context = React.useContext(AuthContext);
 
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
 
   return context;

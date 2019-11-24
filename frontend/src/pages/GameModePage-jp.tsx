@@ -1,8 +1,8 @@
-import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Container, Box, Chip } from '@material-ui/core';
-import jpLogo from '../assets/sesaltaLogo-jp.png';
-import Typography from '@material-ui/core/Typography';
+import React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { Container, Box, Chip } from "@material-ui/core";
+import jpLogo from "../assets/sesaltaLogo-jp.png";
+import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  classes: any
+  classes: any;
 }
 
 export default function GameHome(props: Props) {
@@ -76,18 +76,22 @@ export default function GameHome(props: Props) {
   const history = useHistory();
 
   return (
-    <Container maxWidth="md" className={classes.root} >
-        <Box component="span" m={1}>
-            <img src={jpLogo} className={classes.img} alt="Logo"/>
-        </Box>
-        <Typography variant="h2" color="textSecondary">
-                ようこそセサルタへ!
-        </Typography>
-        <div className={classes.horizontalItems}>
-            <Chip clickable onClick={() => history.push("/jp/game/options")} color="secondary" className={classes.chip} label="シングルプレイ" />
-            <Chip clickable onClick={() => history.push("/jp/game/options")} color="primary" className={classes.chip} label="マルチプレイ" />
-        </div>
+    <Container maxWidth="md" className={classes.root}>
+      <Box component="span" m={1}>
+        <img src={jpLogo} className={classes.img} alt="Logo" />
+      </Box>
+      <Typography variant="h2" color="textSecondary">
+        ようこそセサルタへ!
+      </Typography>
+      <div className={classes.horizontalItems}>
+        <Chip
+          clickable
+          onClick={() => history.push("/jp/game/options")}
+          color="secondary"
+          className={classes.chip}
+          label="シングルプレイ"
+        />
+      </div>
     </Container>
   );
-
 }

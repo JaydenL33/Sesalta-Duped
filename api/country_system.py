@@ -66,24 +66,30 @@ class CountrySystem:
         return game.get_results()
 
     # add a parameter for user id if needed
-    def update_name(self, new_name, bad_words):
+    def update_name(self, new_name, old_name, email):
+        bad_words = firebase_routes.get_bad_words()       # list of strings
+
         is_allowed = True
 
-        if len(new_name) != NAME_LENGTH:
+        if new_name is None or email is None or "@" not in email:
             is_allowed = False
-
-        for char in new_name:
-            if char.lower() not in ALLOWED_NAME_CHARS:
-                is_allowed = False
-
-        if new_name.lower() in bad_words:
+        elif len(new_name) != NAME_LENGTH:
             is_allowed = False
+        elif new_name.lower() in bad_words:
+            is_allowed = False
+        else:
+            for char in new_name:
+                if char.lower() not in ALLOWED_NAME_CHARS:
+                    is_allowed = False
 
         if is_allowed:
-            # TODO: update the user's name
-            pass
+            firebase_routes.update_name(
+                new_name, old_name, email)
 
         return is_allowed
+
+    def update_public_scores(name, state):
+        return firebase_routes.update_public_scores(name, state)
 
     def get_trophies_for_game(self, user_id, game_id):
         game = self._get_game(game_id)
