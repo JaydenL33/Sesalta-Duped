@@ -13,6 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Link as RouterLink } from "react-router-dom";
 import { Furigana } from "furigana-react";
+import { Link } from "react-router-dom";
 
 const styles = {
   root: {
@@ -178,15 +179,22 @@ class OptionsPage extends React.Component<Props, States> {
             </List>
           </CardContent>
           <CardActions style={{ justifyContent: "center" }}>
-            <Button
-              component={RouterLink}
-              to={URLs[this.state.selected]}
-              size="large"
-              className={classes.button}
-              color="secondary"
+            <Link
+              to={{
+                pathname: URLs[this.state.selected],
+                state: {
+                  publicName: this.props.location.state.publicName
+                }
+              }}
             >
-              はじめる！
-            </Button>
+              <Button
+                className={classes.button}
+                color="secondary"
+                size="medium"
+              >
+                はじめる！
+              </Button>
+            </Link>
           </CardActions>
         </Card>
       </Container>

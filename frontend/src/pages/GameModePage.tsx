@@ -95,12 +95,13 @@ export default function GameHome(props: IProps) {
   const [state, setState] = React.useState<IState>({
     dialog: false,
     publicName: "",
-    userEmail: user.email
+    userEmail: ""
   });
 
   const checkUserToOpenDialog = async (user: any) => {
     let result = false;
     let publicName = state.publicName;
+    let email = state.userEmail;
     if (user) {
       console.log(user.uid);
       const url = `${process.env.REACT_APP_API_URL}/api/user/get_id/?email=${user.email}`;
@@ -109,6 +110,7 @@ export default function GameHome(props: IProps) {
       else {
         result = false;
         publicName = response.data;
+        email = user.email;
       }
     } else {
       publicName = "not_a_user";
@@ -162,11 +164,7 @@ export default function GameHome(props: IProps) {
 
   return (
     <Container maxWidth="md" className={classes.root}>
-      {/* {state.dialog ? handleClickOpen() : null} */}
       <div>
-        {/* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-          Open form dialog
-        </Button> */}
         <Dialog
           open={state.dialog}
           onClose={handleClose}
