@@ -229,7 +229,8 @@ def rankRivalAndDistanceToRival():
     args = request.args
     game_id = get_arg(args, "game_id", required=True)
     user_name = get_arg(args, "user_name", required=True)
-
+    if user_name == "not_a_user":
+        return json.dumps({ "rival_info": "Sign in to see your rival."})
     all_users_with_games_and_scores = retrieve_all_users_with_games_and_scores()
     all_games = firebase_routes.get_all_games()
     all_user_data = firebase_routes.get_all_users()
@@ -264,13 +265,9 @@ def rankRivalAndDistanceToRival():
             break
         your_highest_game_rank += 1
 
-    print(sorted_rank_list_of_relevant_game_data)
-    print(your_highest_game_rank)
-    print(this_game_rank)
     string_to_return = "You placed Number " + str(this_game_rank) + " out of " + str(
         len(sorted_rank_list_of_relevant_game_data)) + " on the World leaderboard. "
     if your_highest_game_rank <= 10:
-        print("dis")
         if your_highest_game_rank == this_game_rank:
             if this_game_rank == 1:
                 string_to_return += "You are the global leader. Congratulations!"
@@ -288,7 +285,6 @@ def rankRivalAndDistanceToRival():
                 string_to_return += rival_finder(sorted_rank_list_of_relevant_game_data,
                                                  user_name, your_highest_game_rank-2, this_game_score, "")
     else:
-        print("make")
         string_to_return += "Try to aim for the top 10 next time!"
 
     return json.dumps({"rival_info": string_to_return})
