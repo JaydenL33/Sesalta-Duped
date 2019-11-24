@@ -15,6 +15,8 @@ import mainLogo from "../assets/sesaltaLogo.png";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from 'react-router-dom'
 import Link from '@material-ui/core/Link';
+import axios from "axios";
+import StarsIcon from '@material-ui/icons/Stars';
 
 const styles = (theme: Theme) => ({
   root: {},
@@ -43,8 +45,10 @@ interface QuestionData {
   potentional: number;
   question_num: number;
 }
+
 interface IState {
   gameData: QuestionData[];
+  trophies: string[];
   finalScore: number;
 }
 interface IProps {
@@ -58,6 +62,7 @@ class ResultsPage extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       gameData: [],
+      trophies: [],
       finalScore: 0
     };
   }
@@ -71,6 +76,18 @@ class ResultsPage extends React.Component<IProps, IState> {
         console.log(questionData.points);
         scoreSum += questionData.points;
       }
+      
+      const gameID = this.props.location.state.gameID;
+      const url = `${process.env.REACT_APP_API_URL}/api/game/trophies/?game=${gameID}`;
+      const res = await axios.get(url);
+      let response = res.data;
+      console.log("this is the trophy response", response);
+      
+      for (const trophyData of response) {
+        console.log(trophyData.name);
+        this.setState({ trophies: [ ...this.state.trophies, trophyData.name] });
+      }
+      
       this.setState({
         gameData: this.props.location.state.stateData,
         finalScore: scoreSum
@@ -82,6 +99,22 @@ class ResultsPage extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
+    let TrophyHeader;
+    
+    if(this.state.trophies.length > 0) {
+      if(this.state.trophies.length === 1) {
+        TrophyHeader = <Typography variant="h4" color="textSecondary">
+            <StarsIcon /> You also obtained {this.state.trophies.length} trophy! 
+            <StarsIcon />
+          </Typography>;
+      } else {
+        TrophyHeader = <Typography variant="h4" color="textSecondary">
+            <StarsIcon /> You also obtained {this.state.trophies.length} trophies! 
+            <StarsIcon />
+          </Typography>;
+      }
+    }
+    
     return (
       <Container maxWidth="md" className={classes.root}>
         <Box component="span" m={1}>
@@ -134,6 +167,10 @@ class ResultsPage extends React.Component<IProps, IState> {
             </TableBody>
           </Table>
         </Paper>
+        {TrophyHeader}
+        <ul list-style-type="none">
+          {this.state.trophies.map(name => <li>{name}</li>)}
+        </ul>
         <div>
           <Button variant="contained" color="primary" className={classes.button}>
             <Link color="inherit" component={RouterLink} to="/en/leaderboard">Leaderboard</Link>
