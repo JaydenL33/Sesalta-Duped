@@ -77,6 +77,7 @@ class NavBar extends React.Component<P, S> {
     const id = open ? 'simple-popover' : undefined;
     let LangButton;
     let HomeLink;
+    let LeaderBoardLink;
 
     if (isEnglish) {
       LangButton = (
@@ -94,6 +95,7 @@ class NavBar extends React.Component<P, S> {
           Sesalta
         </Link>
       );
+      LeaderBoardLink = "/en/leaderboard";
     } else {
       LangButton = (
         <Button
@@ -110,6 +112,7 @@ class NavBar extends React.Component<P, S> {
           セサルタ
         </Link>
       );
+      LeaderBoardLink = "/jp/leaderboard";
     }
 
     return (
@@ -121,7 +124,7 @@ class NavBar extends React.Component<P, S> {
             </Typography>
             {LangButton}
             <IconButton color="inherit" edge="end" className={classes.icon}>
-              <Link color="inherit" component={RouterLink} to="/en/leaderboard">
+              <Link color="inherit" component={RouterLink} to={LeaderBoardLink}>
                 <FormatListNumberedIcon />
               </Link>
             </IconButton>

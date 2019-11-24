@@ -1,5 +1,5 @@
 import React from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { withStyles, Theme } from "@material-ui/core/styles";
 import {
   Container,
   Box,
@@ -7,13 +7,17 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
+  Button,
+  Paper
 } from "@material-ui/core";
 import { Furigana } from "furigana-react";
 import mainLogo from "../assets/sesaltaLogo-jp.png";
 import Typography from "@material-ui/core/Typography";
+import { Link as RouterLink } from 'react-router-dom'
+import Link from '@material-ui/core/Link';
 
-const styles = {
+const styles = (theme: Theme) => ({
   root: {},
   img: {
     padding: 10,
@@ -21,8 +25,17 @@ const styles = {
     width: 225,
     height: 200,
     resizeMode: "contain"
+  },
+  paper: {
+    marginTop: theme.spacing(3),
+    width: '100%',
+    overflow: 'auto',
+    marginBottom: theme.spacing(2),
+  },
+  button: {
+    margin: 5,
   }
-};
+});
 
 interface QuestionData {
   expected_answer: string;
@@ -117,7 +130,7 @@ class ResultsPage extends React.Component<IProps, IState> {
           <img src={mainLogo} className={classes.img} alt="Logo" />
         </Box>
         {PointText}
-        <div>
+        <Paper className={classes.paper}>
           <Table
             className={classes.table}
             size="small"
@@ -154,6 +167,14 @@ class ResultsPage extends React.Component<IProps, IState> {
               )}
             </TableBody>
           </Table>
+        </Paper>
+        <div>
+          <Button variant="contained" color="primary" className={classes.button}>
+            <Link color="inherit" component={RouterLink} to="/jp/leaderboard">リーダーボード</Link>
+          </Button>
+          <Button variant="contained" color="secondary" className={classes.button}>
+            <Link color="inherit" component={RouterLink} to="/jp/game/options">再びプレー</Link>
+          </Button>
         </div>
       </Container>
     );
