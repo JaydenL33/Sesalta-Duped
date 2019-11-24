@@ -362,7 +362,7 @@ def update_user_data(user_name, new_game_id):
         return
     user_data = firebase_routes.get_user_by_id(user_name)
     total_games_played = user_data["gameIDs"]["gameCount"] + 1
-    game_number_string = "Game" + str(total_games_played)
+    game_number_string = "game" + str(total_games_played)
     user_data["gameIDs"]["gameCount"] = total_games_played
     if "gamesPlayed" not in user_data["gameIDs"]:
         user_data["gameIDs"]["gamesPlayed"] = {}
