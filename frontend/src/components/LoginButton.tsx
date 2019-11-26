@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 
 export default function LoginButton() {
-  const { isLoading, user, signin, signout } = useAuth();
+  const { user, signout } = useAuth();
   const history = useHistory();
 
   const uiConfig: any = {

@@ -1,8 +1,8 @@
 import React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import axios from "axios";
-import LoginForm from "../components/LoginForm";
+// import axios from "axios";
+// import LoginForm from "../components/LoginForm";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_apiKey,

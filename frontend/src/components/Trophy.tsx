@@ -5,7 +5,6 @@ import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
 import axios from "axios";
-import { async } from "q";
 
 
 interface Iprops {

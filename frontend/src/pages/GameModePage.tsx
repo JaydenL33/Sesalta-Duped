@@ -6,13 +6,13 @@ import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 import useAuth from "../utils/AuthContext";
 import axios from "axios";
-import LoginForm from "../components/LoginForm";
+// import LoginForm from "../components/LoginForm";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
+// import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -90,7 +90,7 @@ export default function GameHome(props: IProps) {
   const classes = useStyles(props);
   const history = useHistory();
   const { user }: any = useAuth();
-  const [value, setValue] = React.useState(1);
+  // const [value, setValue] = React.useState(1);
 
   const [state, setState] = React.useState<IState>({
     dialog: false,
@@ -131,14 +131,14 @@ export default function GameHome(props: IProps) {
   useEffect(() => {
     console.log("does this run in redirect");
     checkUserToOpenDialog(user);
-    // console.log(dialogResult, "wfsdfsfs");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
   const handleClose = async (e: any) => {
     // console.log(e.target.value);
@@ -148,7 +148,7 @@ export default function GameHome(props: IProps) {
       `${process.env.REACT_APP_API_URL}/api/user/update_name/?name=${state.publicName}&email=${state.userEmail}`
     );
     console.log(response.data);
-    if (response.data == "0") {
+    if (response.data === "0") {
       return;
     }
     setState({

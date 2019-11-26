@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,12 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
-import Popover from '@material-ui/core/Popover';
+// import Popover from '@material-ui/core/Popover';
 
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import IconButton from '@material-ui/core/IconButton';
-import firebase from 'firebase';
-import useAuth from '../utils/AuthContext';
+// import firebase from 'firebase';
+// import useAuth from '../utils/AuthContext';
 import LoginButton from './LoginButton';
 
 const styles = (theme: Theme) => ({
@@ -72,9 +72,9 @@ class NavBar extends React.Component<P, S> {
 
   render() {
     const { classes } = this.props;
-    const { isEnglish, anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
+    const { isEnglish } = this.state;
+    // const open = Boolean(anchorEl);
+    // const id = open ? 'simple-popover' : undefined;
     let LangButton;
     let HomeLink;
     let LeaderBoardLink;

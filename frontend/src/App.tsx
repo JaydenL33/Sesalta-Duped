@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
 import NavBar from "./components/Navbar";
 import Routes from "./Routes";
 import { BrowserRouter } from "react-router-dom";
-import firebase from "firebase";
+// import firebase from "firebase";
 
 class App extends React.Component {
   constructor(props: any) {
