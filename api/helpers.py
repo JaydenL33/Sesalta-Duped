@@ -25,8 +25,9 @@ def extract_games_and_score_for_user(name):
 
         for game_name, game_id in games_played.items():
             game_data = firebase_routes.get_game_data_by_id(game_id)
-            game_number_and_score[game_name] = calculate_mode_score_and_date(
-                game_data)
+            if 'questions' in game_data:
+                game_number_and_score[game_name] = calculate_mode_score_and_date(
+                    game_data)
 
         return game_number_and_score
 

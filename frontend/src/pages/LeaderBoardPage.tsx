@@ -119,6 +119,7 @@ export default function MaterialTableDemo(props: Props) {
   useEffect(() => {
     addNewDataToState(1);
     console.log("mount it!");
+    console.log(user);
     // let name = localStorage.getItem('localStoragePublicName') || "";
     console.log("pub name: ", state.name);
     // setState({

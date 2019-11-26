@@ -101,7 +101,7 @@ export default function GameHome(props: IProps) {
   const checkUserToOpenDialog = async (user: any) => {
     let result = false;
     let publicName = state.publicName;
-    localStorage.setItem('localStoragePublicName', state.publicName);
+    // localStorage.setItem('localStoragePublicName', state.publicName);
     let email = state.userEmail;
     if (user) {
       console.log(user.uid);
@@ -112,12 +112,12 @@ export default function GameHome(props: IProps) {
       else {
         result = false;
         publicName = response.data;
-        localStorage.setItem('localStoragePublicName', publicName);
+        // localStorage.setItem('localStoragePublicName', publicName);
         email = user.email;
       }
     } else {
       publicName = "not_a_user";
-      localStorage.setItem('localStoragePublicName', publicName);
+      // localStorage.setItem('localStoragePublicName', publicName);
     }
     console.log(result, "the res", publicName);
     setState({
@@ -125,7 +125,7 @@ export default function GameHome(props: IProps) {
       publicName: publicName,
       userEmail: email
     });
-    localStorage.setItem('localStoragePublicName', state.publicName);
+    localStorage.setItem('localStoragePublicName', publicName);
   };
 
   useEffect(() => {

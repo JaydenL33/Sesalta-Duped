@@ -194,9 +194,12 @@ class ResultsPage extends React.Component<IProps, IState> {
               </Table>
             </Paper>
             {TrophyHeader}
-            <ul list-style-type="none">
-              {this.state.trophies.map(name => <li>{name}</li>)}
-            </ul>
+            
+            {this.state.trophies.map(name => 
+              <Typography gutterBottom variant="h4" color="textSecondary">
+                {name}
+              </Typography>)}
+            
             <div>
               <Link
                 to={{
